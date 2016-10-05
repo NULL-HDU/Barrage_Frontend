@@ -10,7 +10,7 @@
 
 production环境下编译还具有代码压缩能力。默认有三种环境： **development**，**testing**， **production**[^footnote1]。
 
-webpack-dev-server 会监听本地 **8080** 端口，以`./`文件夹为服务文件夹，不过 `/`路径和 `/index.html` 都会被重写到 `/static/index.html`路径，所以开启webpack-dev-server后能够直接访问导出的index.html。
+webpack-dev-server 会监听本地 **8080** 端口，以`./`文件夹为服务文件夹，不过 `/`路径和 `/index.html` 都会被重写到 `/static/index.html`路径，所以开启webpack-dev-server后能够直接访问导出的index.html。webpack-dev-server 具有热更新能力。
 
 webpack-dev-server 会将 `/api/*`路径重定向到 `http://localhost:3000`，便于后期api拓展时的开发。
 

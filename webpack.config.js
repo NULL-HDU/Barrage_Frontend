@@ -89,6 +89,7 @@ let webpackconfig = {
     // a server for front end development
     devServer: {
         hot: true,
+        inline: true,
         historyApiFallback: {
             rewrites: [{
                 from: /^\/(|index.html)$/,
