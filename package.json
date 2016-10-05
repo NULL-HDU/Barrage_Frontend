@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "webpack": "NODE_ENV=development webpack",
-    "webpack-server": "NODE_ENV=development webpack-dev-server --inline --hot",
+    "webpack-server": "NODE_ENV=development webpack && NODE_ENV=development webpack-dev-server --inline --hot",
     "webpack-pro": "NODE_ENV=production webpack",
     "webpack-test": "NODE_ENV=testing webpack"
   },
