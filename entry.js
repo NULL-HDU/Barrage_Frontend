@@ -10,7 +10,7 @@ let entry_dir = join(__dirname, "./src");
 module.exports = {
   //name: path
   //regist which file should be compile
-  test: [join(entry_dir, "./test/webpack_test.js")],
+  test: [join(entry_dir, "./test/webpack_test.jsx")],
 }
 
 /* entry.js ends here */
