@@ -1,0 +1,5 @@
+/node_modules/
+/static/dist/
+/static/index.html
+*.swp
+npm-debug.log
