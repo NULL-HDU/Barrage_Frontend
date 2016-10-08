@@ -7,6 +7,8 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
+import Knowlege from "../img/knowlege.png"
+
 class TestComponent extends Component {
 
   constructor(props){
@@ -15,7 +17,7 @@ class TestComponent extends Component {
 
   render() {
     return (
-      <img src="/static/img/knowlege.png" />
+      <img src={Knowlege} />
     );
   }
 }
