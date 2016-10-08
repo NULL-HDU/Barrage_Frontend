@@ -4,6 +4,8 @@
  * Email: mephistommm@gmail.com
  */
 
+import Knowlege from "../img/knowlege.png";
+
 window.onload = () => {
   let a = "just a test";
   console.log(a);
@@ -11,7 +13,7 @@ window.onload = () => {
   console.log(b);
 
   let img = document.createElement("img");
-  img.src = "/static/img/knowlege.png";
+  img.src = Knowlege;
   document.body.appendChild(img);
 };
 
