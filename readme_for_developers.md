@@ -18,6 +18,7 @@ webpack-dev-server 会将 `/api/*`路径重定向到 `http://localhost:3000`，�
 
 该开发环境还配置了 `.eslintrc` 作为linter配置文件。
 
+使用 mocha 和 chai 作为测试工具, 测试文件放在  `./test` 文件加下面（请参照 mocha_test.js）。
 
 ## ready
 
@@ -28,6 +29,10 @@ npm install
 ```
 
 ## command
+
+### unit test
+```sh
+npm test```
 
 ### development环境下编译
 ```sh
@@ -45,6 +50,7 @@ npm run webpack-test
 ```
 
 ### production环境下编译
+
 ```sh 
 npm run webpack-pro
 ```
