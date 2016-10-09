@@ -19,7 +19,7 @@ var validNick() {
 };
 
 window.onload = function() {
-    var
+    var 
 }
 
 
