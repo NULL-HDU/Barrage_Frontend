@@ -20,7 +20,7 @@ var validNick = function() {
 };
 
 function startGame() {
-    
+    document.getElementById('gameWrapper').style.opacity = 0;
 }
 
 window.onload = function() {
@@ -36,8 +36,8 @@ window.onload = function() {
             p[1].style.cssText = "color: white";
             p[0].innerHTML = "Hi!";
             p[1].innerHTML = "Press enter and let's fighting";
-            if (key === global.KEY_ENTER) {
-                //start game
+            if (key === global.KEY_ENTER && playerNameInput.value.length !== 0) {
+                startGame();
 
             }
         } else {
