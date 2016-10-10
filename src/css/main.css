@@ -14,11 +14,19 @@ html, body {
     padding: 0;
 }
 
-#startMenu {
-    position: relative;
+#gameWrapper {
+    display: inline-block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     margin: auto;
-    margin-top: 100px;
     width: 270px;
+    height: 200px;
+}
+
+#startMenu {
     padding: 20px;
     border-radius: 5px;
     -moz-border-radius: 5px;
@@ -46,10 +54,6 @@ html, body {
     margin-top: 0;
     color: white;
 }
-
-
-
-
 
 #playerNameInput {
     width: 100%;
