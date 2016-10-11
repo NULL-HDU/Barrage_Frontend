@@ -5,6 +5,8 @@
  */
 
 import global from "../engine/global"
+import engine from "../engine/engine"
+import {initGame} from "../view/treasureHunter"
 
 var playerNameInput = document.getElementById('playerNameInput');
 
@@ -21,13 +23,13 @@ var validNick = function() {
 
 function startGame() {
     document.getElementById('gameWrapper').style.opacity = 0;
+    initGame();
 }
 
 window.onload = function() {
 
     var inputTextField = document.querySelector('#startMenu input');
     var p = document.getElementsByTagName('p');
-    //keyup 能监听到修改之后的值
     playerNameInput.addEventListener('keyup', function (e) {
         var key = e.which || e.keycode;
         if (validNick()) {
@@ -37,8 +39,8 @@ window.onload = function() {
             p[0].innerHTML = "Hi!";
             p[1].innerHTML = "Press enter and let's fighting";
             if (key === global.KEY_ENTER && playerNameInput.value.length !== 0) {
+                debug(engine);
                 startGame();
-
             }
         } else {
             inputTextField.style.cssText = "border-color: red; box-shadow: 0 0 3px 1px red";
