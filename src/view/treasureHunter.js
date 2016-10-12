@@ -124,6 +124,8 @@ function setup() {
 
   gameOverScene.addChild(message);
 
+
+  //处理用户输入
   //Assign the player's keyboard controllers
   var left = keyboard(37),
       up = keyboard(38),

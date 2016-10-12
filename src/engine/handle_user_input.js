@@ -5,6 +5,7 @@
  */
 
 import global from "../engine/global"
+import gamemodel from "../model/gamemodel"
 import engine from "../engine/engine"
 import {initGame} from "../view/treasureHunter"
 
@@ -31,6 +32,10 @@ window.onload = function() {
     var inputTextField = document.querySelector('#startMenu input');
     var p = document.getElementsByTagName('p');
     playerNameInput.addEventListener('keyup', function (e) {
+        //test area
+        gamemodel.background = 'seat';
+        console.log(gamemodel);
+
         var key = e.which || e.keycode;
         if (validNick()) {
             inputTextField.style.cssText = "border-color: #DCDCDC; box-shadow: 0 0 3px 1px #DDDDDD";
