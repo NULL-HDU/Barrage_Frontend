@@ -9,5 +9,7 @@ export default {
     KEY_RIGHT: 39,
     KEY_DOWN: 40,
     KEY_BIGBOOM: 81,
-
+    
+    LOCAL_HEIGHT: 1280,
+    LOCAL_WIDTH: 705,
 }
