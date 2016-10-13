@@ -9,11 +9,15 @@ export default {
     KEY_RIGHT: 39,
     KEY_DOWN: 40,
     KEY_BIGBOOM: 81,
+
     KEY_SPACE: 32,
     KET_SHIFT: 16,
     KEY_W: 87,
     KEY_A: 65,
     KEY_S: 83,
     KEY_D: 68,
+
+    LOCAL_HEIGHT: 1280,
+    LOCAL_WIDTH: 705,
 
 }

@@ -19,8 +19,8 @@ export default class Ball {
         this.alive = true;
         this.isKilled = false;
         this.locationCurrent = {
-            x:0,
-            y:0,
+            x:640,
+            y:320,
         };
     }
 }
