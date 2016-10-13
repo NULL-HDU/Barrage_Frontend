@@ -5,3 +5,4 @@
 *.swp
 .#*
 npm-debug.log
+.DS_Store

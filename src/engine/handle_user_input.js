@@ -6,7 +6,7 @@
 
 import global from "../engine/global"
 import engine from "../engine/engine"
-import {initGame} from "../view/treasureHunter"
+import {initScenes} from "../view/view"
 
 var playerNameInput = document.getElementById('playerNameInput');
 
@@ -23,17 +23,15 @@ var validNick = function() {
 
 function startGame() {
     document.getElementById('gameWrapper').style.opacity = 0;
-    initGame();
+    initScenes();
 }
 
 window.onload = function() {
-
-    var inputTextField = document.querySelector('#startMenu input');
     var p = document.getElementsByTagName('p');
     playerNameInput.addEventListener('keyup', function (e) {
         var key = e.which || e.keycode;
         if (validNick()) {
-            inputTextField.style.cssText = "border-color: #DCDCDC; box-shadow: 0 0 3px 1px #DDDDDD";
+            playerNameInput.style.cssText = "color: white; border-color: white;";
             p[0].style.cssText = "color: white";
             p[1].style.cssText = "color: white";
             p[0].innerHTML = "Hi!";
@@ -43,11 +41,11 @@ window.onload = function() {
                 startGame();
             }
         } else {
-            inputTextField.style.cssText = "border-color: red; box-shadow: 0 0 3px 1px red";
+            playerNameInput.style.cssText = "color: red; border-color: red;";
             p[0].style.cssText = "color: red";
             p[1].style.cssText = "color: red";
             p[0].innerHTML = "Hey~";
-            p[1].innerHTML = "Please tell me your correct name,warrior";
+            p[1].innerHTML = "Please tell me your correct name, warrior";
           }
     });
 };
