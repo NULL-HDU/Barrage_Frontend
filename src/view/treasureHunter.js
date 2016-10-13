@@ -33,6 +33,7 @@ export function initGame() {
 var state, explorer, treasure, blobs, chimes, exit, player, dungeon,
     door, healthBar, message, gameScene, gameOverScene, enemies, id;
 
+//
 function setup() {
   //Create the `gameScene` group
   gameScene = new Container();
@@ -248,6 +249,7 @@ function end() {
 
 //The game's helper functions:
 //`keyboard`, `hitTestRectangle`, `contain` and `randomInt`
+
 
 // keyboard Function
 function keyboard(keyCode) {
