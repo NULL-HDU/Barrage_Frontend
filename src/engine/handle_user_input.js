@@ -14,6 +14,7 @@ import {initScenes} from "../view/view"
 
 var playerNameInput = document.getElementById('playerNameInput');
 var airPlane = new Airplane();
+var vx = 0, vy = 0;
 
 var debug = function(args) {
     if (console && console.log) {
@@ -31,6 +32,15 @@ function startGame() {
     initScenes();
     gamemodel.data.engineControlData.airPlane = airPlane;
     changeKeyEventBindings();
+    startGameLoop();
+}
+
+function startGameLoop() {
+    setTimeout(() => {
+        airPlane.locationCurrent.x += vx;
+        airPlane.locationCurrent.y += vy;
+        console.log('looping');
+    },(1/120)*1000);
 }
 
 function changeKeyEventBindings() {
@@ -38,43 +48,55 @@ function changeKeyEventBindings() {
     var left = keyboard(global.KEY_LEFT),
         up = keyboard(global.KEY_UP),
         right = keyboard(global.KEY_RIGHT),
-        down = keyboard(global.KEY_DOWN);
+        down = keyboard(global.KEY_DOWN),
+        space = keyboard(global.KEY_SPACE);
+
+    space.press = function() {
+        console.log('space press');
+    };
+
+    space.release = function() {
+        console.log('space release');
+    };
 
     up.press = function() {
         console.log('up press');
-        airPlane.locationCurrent.y += 5;
-        console.log(gamemodel.data.engineControlData.airPlane);
+        vx = -1;
     };
 
     up.release = function() {
         console.log('up release');
+        vx = 0;
     };
 
     down.press = function() {
         console.log('down press');
-        airplane.locationCurrent.y -= 5;
+        vx = 1;
     };
 
     down.release = function() {
         console.log('down release');
+        vx = 0;
     };
 
     left.press = function() {
         console.log('left press');
-        airplane.locationCurrent.x -= 5;
+        vy = 1;
     };
 
     left.release = function() {
         console.log('left release');
+        vy = 0;
     };
 
     right.press = function() {
         console.log('right press');
-        airplane.locationCurrent += 5;
+        vy = -1;
     };
 
     right.release = function() {
         console.log('right release');
+        vy = 0;
     };
     
 }

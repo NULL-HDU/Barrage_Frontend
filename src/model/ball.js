@@ -1,3 +1,9 @@
+/* ball.js
+ * 
+ * Maintainer: Arthury (ArthurYV)
+ * Email: arthury.me@gmail.com
+ */
+
 export default class Ball {
     constructor() {
         this.ballType = null;
@@ -17,5 +23,6 @@ export default class Ball {
             y:0,
         };
     }
-
 }
+
+/*ball.js ends here*/

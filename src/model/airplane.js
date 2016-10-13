@@ -1,3 +1,9 @@
+ /* airplane.js
+ * 
+ * Maintainer: Arthury (ArthurYV)
+ * Email: arthury.me@gmail.com
+ */
+
 import Ball from "../model/ball"
 
 export default class Airplane extends Ball {
@@ -5,3 +11,5 @@ export default class Airplane extends Ball {
         super();
     };
 }
+
+/*airplane.js ends here*/
