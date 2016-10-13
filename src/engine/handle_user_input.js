@@ -36,12 +36,14 @@ function startGame() {
 }
 
 function startGameLoop() {
-    setTimeout(() => {
+    looper(() => {
         airPlane.locationCurrent.x += vx;
         airPlane.locationCurrent.y += vy;
         console.log('looping');
     },(1/120)*1000);
 }
+
+let looper = (f, t) => setTimeout(()=>{f();looper(f, t)}, t);
 
 function changeKeyEventBindings() {
     playerNameInput.removeEventListener('keyup',bindNameInputEvent);
@@ -61,42 +63,42 @@ function changeKeyEventBindings() {
 
     up.press = function() {
         console.log('up press');
-        vx = -1;
+        vy = -1;
     };
 
     up.release = function() {
         console.log('up release');
-        vx = 0;
+        vy = 0;
     };
 
     down.press = function() {
         console.log('down press');
-        vx = 1;
+        vy = 1;
     };
 
     down.release = function() {
         console.log('down release');
-        vx = 0;
+        vy = 0;
     };
 
     left.press = function() {
         console.log('left press');
-        vy = 1;
+        vx = -1;
     };
 
     left.release = function() {
         console.log('left release');
-        vy = 0;
+        vx = 0;
     };
 
     right.press = function() {
         console.log('right press');
-        vy = -1;
+        vx = 1;
     };
 
     right.release = function() {
         console.log('right release');
-        vy = 0;
+        vx = 0;
     };
     
 }
