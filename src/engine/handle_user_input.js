@@ -68,7 +68,11 @@ function changeKeyEventBindings() {
 
     up.release = function() {
         console.log('up release');
-        vy = 0;
+        if(down.isUp){
+            vy = 0;
+        }else{
+            down.press()
+        };
     };
 
     down.press = function() {
@@ -78,7 +82,11 @@ function changeKeyEventBindings() {
 
     down.release = function() {
         console.log('down release');
-        vy = 0;
+        if(up.isUp){
+            vy = 0;
+        }else{
+            up.press();
+        }
     };
 
     left.press = function() {
@@ -88,7 +96,11 @@ function changeKeyEventBindings() {
 
     left.release = function() {
         console.log('left release');
-        vx = 0;
+        if(right.isUp){
+            vx = 0;
+        }else{
+            right.press();
+        }
     };
 
     right.press = function() {
@@ -98,7 +110,11 @@ function changeKeyEventBindings() {
 
     right.release = function() {
         console.log('right release');
-        vx = 0;
+        if(left.isUp){
+            vx = 0;
+        }else{
+            left.press();
+        }
     };
     
 }
