@@ -5,6 +5,7 @@
  */
 
 import global from "../engine/global"
+import gamemodel from "../model/gamemodel"
 import engine from "../engine/engine"
 import {initScenes} from "../view/view"
 
@@ -29,6 +30,10 @@ function startGame() {
 window.onload = function() {
     var p = document.getElementsByTagName('p');
     playerNameInput.addEventListener('keyup', function (e) {
+        //test area
+        gamemodel.background = 'seat';
+        console.log(gamemodel);
+
         var key = e.which || e.keycode;
         if (validNick()) {
             playerNameInput.style.cssText = "color: white; border-color: white;";
