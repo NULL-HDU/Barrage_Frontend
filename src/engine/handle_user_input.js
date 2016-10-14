@@ -10,6 +10,7 @@ import Airplane from "../model/airplane"
 import engine from "../engine/engine"
 import {initScenes} from "../view/view"
 import transmitted from "../socket/transmitted"
+import screenfull from "../engine/screenfull.js"
 // Global Alias
 
 var playerNameInput = document.getElementById('playerNameInput');
@@ -147,6 +148,9 @@ function bindNameInputEvent(e){
         p[1].innerHTML = "Press enter and let's fighting";
         if (key === global.KEY_ENTER && playerNameInput.value.length !== 0) {
             debug(engine);
+            if (screenfull.enabled) {
+                screenfull.request();
+            }
             startGame();
         }
     } else {

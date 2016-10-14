@@ -1,3 +1,9 @@
+/* gamemodel.js
+ * 
+ * Maintainer: Arthury (ArthurYV)
+ * Email: arthury.me@gmail.com
+ */
+
 export default {
     background: null,
     data: {
@@ -26,3 +32,5 @@ export default {
     },
     config: null,
 }
+
+/*gamemodel.js ends here*/

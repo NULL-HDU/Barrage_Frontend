@@ -5,7 +5,6 @@
  */
 
 import PIXI from "../view/pixi.js";
-import Gameglobal from "../engine/global.js";
 import gamemodel from "../model/gamemodel.js"
 import Prototype from "../view/images/Prototype.png";
 
