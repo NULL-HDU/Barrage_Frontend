@@ -17,7 +17,7 @@ let Container = PIXI.Container,
     Sprite = PIXI.Sprite;
 
 let stage = new Container(),
-    renderer = autoDetectRenderer(Gameglobal.LOCAL_HEIGHT, Gameglobal.LOCAL_WIDTH);
+    renderer = autoDetectRenderer(window.screen.width, window.screen.height);
 
 // Export for engine/handle_user_input.js
 export function initScenes() {
