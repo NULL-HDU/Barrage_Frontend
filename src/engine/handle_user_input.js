@@ -50,8 +50,8 @@ function reductAngle(angle) {
     let a = angle % (2 * Math.PI);
     //斜边速度
     let bevelEdge = 1;
-    vx = Math.sin(a + (3/2)*Math.PI) * bevelEdge;
-    vy = Math.cos(a + (3/2)*Math.PI) * bevelEdge;
+    vx = Math.cos(a + (3/2)*Math.PI) * bevelEdge;
+    vy = Math.sin(a + (3/2)*Math.PI) * bevelEdge;
 }
 
 let looper = (f, t) => setTimeout(()=>{f();looper(f, t)}, t);
