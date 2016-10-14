@@ -6,6 +6,7 @@
 
 import PIXI from "../view/pixi.js";
 import gamemodel from "../model/gamemodel.js"
+import Gameglobal from "../engine/global.js"
 import Prototype from "../view/images/Prototype.png";
 
 // Global alias
@@ -57,9 +58,11 @@ function play() {
     var airplaneInfo = gamemodel.data.engineControlData.airPlane;
     console.log(airplaneInfo);
     var x = airplaneInfo.locationCurrent.x,
-        y = airplaneInfo.locationCurrent.y;
+        y = airplaneInfo.locationCurrent.y,
+        ro = airplaneInfo.attackDir;
     airplane.x = x;
     airplane.y = y;
+    airplane.rotation = ro;
     
 }
 

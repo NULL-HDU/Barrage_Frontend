@@ -118,7 +118,7 @@ function changeKeyEventBindings() {
     left.press = function() {
         if (test==1)
             console.log('left press');
-        vangle = Math.PI / 180;
+        vangle = -Math.PI / 180;
         //vx = Math.PI / 180;
     };
 
@@ -136,7 +136,7 @@ function changeKeyEventBindings() {
     right.press = function() {
         if( test==1 )
             console.log('right press');
-        vangle = -Math.PI / 180;
+        vangle = Math.PI / 180;
         //vx = -Math.PI / 180;
     };
 
