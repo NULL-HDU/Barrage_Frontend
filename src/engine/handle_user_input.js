@@ -9,12 +9,13 @@ import gamemodel from "../model/gamemodel"
 import Airplane from "../model/airplane"
 import engine from "../engine/engine"
 import {initScenes} from "../view/view"
-
+import transmitted from "../socket/transmitted"
 // Global Alias
 
 var playerNameInput = document.getElementById('playerNameInput');
 var airPlane = new Airplane();
 var vx = 0, vy = 0, vangle = 0;
+var test = 3;        //0 for view,1 for engine,2 for socket
 
 var debug = function(args) {
     if (console && console.log) {
@@ -41,7 +42,6 @@ function startGameLoop() {
         airPlane.locationCurrent.x += vx;
         airPlane.locationCurrent.y += vy;
         airPlane.attackDir += vangle;
-        console.log('looping');
     },(1/120)*1000);
 }
 
@@ -66,21 +66,25 @@ function changeKeyEventBindings() {
         space = keyboard(global.KEY_SPACE);
 
     space.press = function() {
-        console.log('space press');
+        if( test==1 )
+            console.log('space press');
     };
 
     space.release = function() {
-        console.log('space release');
+        if( test==1 )
+            console.log('space release');
     };
 
     up.press = function() {
-        console.log('up press');
+        if( test==1 )
+            console.log('up press');
         reductAngle(airPlane.attackDir);
         // vy = -1;
     };
 
     up.release = function() {
-        console.log('up release');
+        if( test==1 )
+            console.log('up release');
         if(down.isUp){
              vx = 0;
              vy = 0;
@@ -90,7 +94,8 @@ function changeKeyEventBindings() {
     };
 
     down.press = function() {
-        console.log('down press');
+        if( test==1 )
+            console.log('down press');
         reductAngle(airPlane.attackDir);
         vx = -vx;
         vy = -vy;
@@ -98,7 +103,8 @@ function changeKeyEventBindings() {
     };
 
     down.release = function() {
-        console.log('down release');
+        if( test==1 )
+            console.log('down release');
         if(up.isUp){
             vx = 0
             vy = 0;
@@ -109,14 +115,16 @@ function changeKeyEventBindings() {
 
     
     left.press = function() {
-        console.log('left press');
+        if (test==1)
+            console.log('left press');
         vangle = Math.PI / 180;
         //vx = Math.PI / 180;
     };
 
 
     left.release = function() {
-        console.log('left release');
+        if( test==1 )
+            console.log('left release');
         if(right.isUp){
             vangle = 0;
         }else{
@@ -125,13 +133,15 @@ function changeKeyEventBindings() {
     };
 
     right.press = function() {
-        console.log('right press');
+        if( test==1 )
+            console.log('right press');
         vangle = -Math.PI / 180;
         //vx = -Math.PI / 180;
     };
 
     right.release = function() {
-        console.log('right release');
+        if( test==1 )
+            console.log('right release');
         if(left.isUp){
             vangle = 0;
             //vx = 0;
