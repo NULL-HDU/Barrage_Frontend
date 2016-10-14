@@ -15,7 +15,7 @@ export default class Ball {
         this.roleId = 0;
         this.special = null;
         this.speed = 100;
-        this.attackDir = Math.PI;
+        this.attackDir = Math.PI * (3/2);
         this.alive = true;
         this.isKilled = false;
         this.locationCurrent = {

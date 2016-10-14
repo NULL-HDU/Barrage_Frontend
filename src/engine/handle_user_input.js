@@ -15,8 +15,8 @@ import screenfull from "../engine/screenfull.js"
 
 var playerNameInput = document.getElementById('playerNameInput');
 var airPlane = new Airplane();
-var vx = 0, vy = 0;
-var test = 3;       //0 for view,1 for engine,2 for socket
+var vx = 0, vy = 0, vangle = 0;
+var test = 3;        //0 for view,1 for engine,2 for socket
 
 var debug = function(args) {
     if (console && console.log) {
@@ -37,20 +37,30 @@ function startGame() {
     startGameLoop();
 }
 
+
 function startGameLoop() {
     looper(() => {
         airPlane.locationCurrent.x += vx;
         airPlane.locationCurrent.y += vy;
-        if( test==1 )
-            console.log('looping');
+        airPlane.attackDir += vangle;
     },(1/120)*1000);
+}
+
+function reductAngle(angle) {
+    let a = angle % (2 * Math.PI);
+    //斜边速度
+    let bevelEdge = 1;
+    vx = Math.sin(a + (3/2)*Math.PI) * bevelEdge;
+    vy = Math.cos(a + (3/2)*Math.PI) * bevelEdge;
 }
 
 let looper = (f, t) => setTimeout(()=>{f();looper(f, t)}, t);
 
 function changeKeyEventBindings() {
+
     playerNameInput.removeEventListener('keyup',bindNameInputEvent);
-    var left = keyboard(global.KEY_LEFT),
+
+    let left = keyboard(global.KEY_LEFT),
         up = keyboard(global.KEY_UP),
         right = keyboard(global.KEY_RIGHT),
         down = keyboard(global.KEY_DOWN),
@@ -69,67 +79,78 @@ function changeKeyEventBindings() {
     up.press = function() {
         if( test==1 )
             console.log('up press');
-        vy = -1;
+        reductAngle(airPlane.attackDir);
+        // vy = -1;
     };
 
     up.release = function() {
         if( test==1 )
             console.log('up release');
         if(down.isUp){
-            vy = 0;
+             vx = 0;
+             vy = 0;
         }else{
-            down.press()
+            down.press();
         };
     };
 
     down.press = function() {
         if( test==1 )
             console.log('down press');
-        vy = 1;
+        reductAngle(airPlane.attackDir);
+        vx = -vx;
+        vy = -vy;
+        // vy = 1;
     };
 
     down.release = function() {
         if( test==1 )
             console.log('down release');
         if(up.isUp){
+            vx = 0
             vy = 0;
         }else{
             up.press();
-        }
+        };
     };
 
+    
     left.press = function() {
-        if( test==1 )
+        if (test==1)
             console.log('left press');
-        vx = -1;
+        vangle = Math.PI / 180;
+        //vx = Math.PI / 180;
     };
+
 
     left.release = function() {
         if( test==1 )
             console.log('left release');
         if(right.isUp){
-            vx = 0;
+            vangle = 0;
         }else{
             right.press();
-        }
+        };
     };
 
     right.press = function() {
         if( test==1 )
             console.log('right press');
-        vx = 1;
+        vangle = -Math.PI / 180;
+        //vx = -Math.PI / 180;
     };
 
     right.release = function() {
         if( test==1 )
             console.log('right release');
         if(left.isUp){
-            vx = 0;
+            vangle = 0;
+            //vx = 0;
         }else{
             left.press();
-        }
+        };
     };
-    
+
 }
 
 function bindNameInputEvent(e){
