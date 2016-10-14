@@ -1,12 +1,12 @@
-/**
- **  date      :  2016/9/30
- **  author    :  yummyLcj
- **  function  :  socket 
-**/
+/*
+*	websocket engine
+*	author:yummyLcj
+*	email:luchenjiemail@gmail.com
+*/
 
-//switch the status of socket to update the socket
-var socketStatusSwitcher = function(){
-	var status = true;
+//switch the status of is updating socket
+let socketStatusSwitcher = function(){
+	let status = true;
 
 	this.setStatus = function(sta){
 		status = sta;
@@ -17,86 +17,45 @@ var socketStatusSwitcher = function(){
 	}
 }
 
-socket = new socket();
-socket.socketPolling();
+//action for websocket
+export default class socket {
+	
+	constructor(wsUrl="ws://myfickle.cn:1234/ws",rollingTime=11){
+		this.wsUrl = wsUrl;
+		this.rollingTime=rollingTime;
+	}
 
-//operate socket
-function socket(){
-	var wsUrl = "ws://myfickle.cn:1234/ws";
-	var pollingTime = 200;
-	var websocket = null;
+	setUrl(url){
+		this.wsUrl = url;
+	}
 
-	this.getusUrl = function(){
+	getUrl(){
 		return wsUrl;
 	}
 
-	this.setwsUrl = function(url){
-		wsUrl = url;
-	}
-
-	this.getPollingTime = function(){
-		return pollingTime;
-	}
-
-	this.setPollingTime = function(pt){
-		pollingTime = pt;
-	}
-
-	this.init = function(){
-		websocket = new WebSocket(wsUrl);
-	    websocket.binaryType = "arraybuffer";
-
-	    websocket.onopen = function(evt) {
-	      onOpen(evt);
+	init(){
+		let ws = new WebSocket(this.wsUrl);
+		ws.binaryType = "arraybuffer";
+		ws.onopen = function(e) {
+	      	onOpen(e);
 	    };
 
-	    websocket.onclose = function(evt) {
-	      onClose(evt);
+	    ws.onclose = function(e) {
+	      	onClose(e);
 	    };
 
-	    websocket.onmessage = function(evt) {
-	      var messageReceive =  onMessage(evt);
-	      console.log(messageReceive);
-	      var message = convertToObject(messageReceive);
+	    ws.onmessage = function(e) {
+	    	onMessage(e);
 	    };
 	    
-	    websocket.onerror = function(evt) {
-	      onError(evt.data);
+	    ws.onerror = function(e) {
+	      	onError(e.data);
 	    };
-	}
-
-	this.send = function(){
-		var dv = convertToArrayBuffer();
-		websocket.send(dv);
-	}
-
-	this.socketPolling = function(){
-		var that=this;
-		var switcher = new socketStatusSwitcher();
-		var status = switcher.getStatus();
-		if( status==true ){
-			that.init();
-		}
-		// if(websocket!=null)
-			// this.send();
-		// setTimeout(function(){
-			// that.socketPolling();
-		// },pollingTime);
+		return ws;
 	}
 }
 
-function onOpen(e){
-	console.log("connected succeed!!");
-}
-
-function onClose(e){
-	console.log("connected closed!!!");
-}
-
-function onError(e){
-	console.log("wobsocket error:"+e);
-}
-
+//when socket is receiving message
 function onMessage(e){
 	// console.log(e.data.byteLength);
     var dv = new DataView(e.data)
@@ -107,67 +66,23 @@ function onMessage(e){
     		char = "0"+char;
     	}
     	str=str+char+" ";
-    	// str+=char;
     }
+    console.log(str);
 	return str;
 }
 
-function convertToObject(mR){
-	var length = getLength(mR);
-	var time = getTime(mR);
-	var type = getType(mR);
-	var messageBody = getBody(mR);
+//when socket is open
+function onOpen(e){
+	console.log("websocket connected secceed!!");
 }
 
-function getBody(mR){
-	var body = mR.slice(39);
-	// body = body.replace(/\s/g, "");
-	return body;
+//when socket is close
+function onClose(e){
+	console.log("websocket closed secceed!!");
 }
 
-function getType(mR){
-	var type = "0x";
-	for(var i=0;i<3;i++){
-		if(mR[35+i]!=" "){
-			type+=mR[i+35];
-		}
-	}
-	return parseInt(type);
+//when socket is error
+function onError(e){
+	console.log("Socket error code: "+e.code);
+	console.log("Socket error: "+e.data);
 }
-
-function getLength(mR){
-	var length = "0x";
-	for(var i=0;i<11;i++){
-		if ( mR[i]!=" " ){
-			length+=mR[i];
-		}
-	}
-	return parseInt(length);
-}
-
-function getTime(mR){
-	var timestamp = getTimestamp(mR);
-	// var time=new Date(parseInt(timestamp)*1000 ).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ")
-	var time = new Date(timestamp*1000);
-	return time;
-}
-
-function getTimestamp(mR){
-	var timestamp = "0x";
-	for(var i=0;i<24;i++){
-		if ( mR[i+11]!=" " ){
-			timestamp+=mR[i+11];
-		}
-	}
-	return parseInt(timestamp);
-}
-
-
-function convertToArrayBuffer(){
-	var dv = "00 00 00 00 00 00 00 28 63 00 00 00 00 00 00 00 63 00 00 00 63 00 63 63 00 00 00 00 00 00 00 63 73 75 63 63 65 73 73 21 ";
-	return dv;
-}
-
-
-
-//00 00 00 00 00 00 00 28 63 00 00 00 00 00 00 00 63 00 00 00 63 00 63 63 00 00 00 00 00 00 00 63 73 75 63 63 65 73 73 21 
