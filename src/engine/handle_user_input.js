@@ -80,7 +80,6 @@ function changeKeyEventBindings() {
         if( test==1 )
             console.log('up press');
         reductAngle(airPlane.attackDir);
-        // vy = -1;
     };
 
     up.release = function() {
@@ -100,7 +99,6 @@ function changeKeyEventBindings() {
         reductAngle(airPlane.attackDir);
         vx = -vx;
         vy = -vy;
-        // vy = 1;
     };
 
     down.release = function() {
@@ -119,7 +117,6 @@ function changeKeyEventBindings() {
         if (test==1)
             console.log('left press');
         vangle = -Math.PI / 180;
-        //vx = Math.PI / 180;
     };
 
 
@@ -137,7 +134,6 @@ function changeKeyEventBindings() {
         if( test==1 )
             console.log('right press');
         vangle = Math.PI / 180;
-        //vx = -Math.PI / 180;
     };
 
     right.release = function() {
@@ -145,7 +141,6 @@ function changeKeyEventBindings() {
             console.log('right release');
         if(left.isUp){
             vangle = 0;
-            //vx = 0;
         }else{
             left.press();
         };
@@ -155,11 +150,6 @@ function changeKeyEventBindings() {
 
 function bindNameInputEvent(e){
     var p = document.getElementsByTagName('p');
-    //test area
-    // gamemodel.background = 'seat';
-    // console.log(gamemodel);
-    // console.log(airplane);
-
     var key = e.which || e.keycode;
     if (validNick()) {
         playerNameInput.style.cssText = "color: white; border-color: white;";
@@ -188,6 +178,19 @@ window.onload = function() {
 };
 
 //helper functions
+
+//mouse event
+function mouse(){
+    var mouse = {};
+    mouse.move = undefined;
+    mouse.up = undefined;
+    mouse.down = undefined;
+    mouse.over = undefined;
+
+    mouse.upHandler = function(event) {
+        event.preventDefault();
+    }
+}
 
 //keyboard
 function keyboard(keyCode) {
