@@ -23,6 +23,10 @@ export default class Ball {
             y:320,
         };
     }
+
+    pathCalculate(){
+    }
+
 }
 
 /*ball.js ends here*/

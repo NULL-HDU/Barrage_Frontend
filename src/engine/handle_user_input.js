@@ -7,6 +7,7 @@
 import global from "../engine/global"
 import gamemodel from "../model/gamemodel"
 import Airplane from "../model/airplane"
+import Bullet from "../model/bullet"
 import engine from "../engine/engine"
 import {initScenes} from "../view/view"
 import transmitted from "../socket/transmitted.js"
@@ -16,7 +17,9 @@ import screenfull from "../engine/screenfull.js"
 var playerNameInput = document.getElementById('playerNameInput');
 var airPlane = new Airplane();
 var vx = 0, vy = 0, vangle = 0;
-var test = 2;        //0 for view,1 for engine,2 for socket
+var test = 1;        //0 for view,1 for engine,2 for socket
+
+var bulletMaker = undefined;
 
 var debug = function(args) {
     if (console && console.log) {
@@ -29,10 +32,27 @@ var validNick = function() {
     return regex.exec(playerNameInput.value) !== null;
 };
 
+function enableBulletEnigne(){
+    bulletMaker = bulletMakerEngine (() => {
+        let bullet = new Bullet();
+        bullet.locationCurrent.x = airPlane.locationCurrent.x;
+        bullet.locationCurrent.y = airPlane.locationCurrent.y;
+        bullet.pathCalculate();
+        gamemodel.data.engineControlData.bullet.push(bullet);
+        console.log(gamemodel.data.engineControlData.bullet);
+    },1*1000);
+}
+
+function disableBulletEngine(){
+    window.clearTimeout(bulletMaker);
+    bulletMaker = undefined;
+}
+
 function startGame() {
     document.getElementById('gameWrapper').style.opacity = 0;
     initScenes();
     gamemodel.data.engineControlData.airPlane = airPlane;
+    //init socket
     let tm = new transmitted();
     tm.login(airPlane);
     changeKeyEventBindings();
@@ -57,6 +77,7 @@ function reductAngle(angle) {
 }
 
 let looper = (f, t) => setTimeout(()=>{f();looper(f, t)}, t);
+let bulletMakerEngine = (f, t) => window.bulletMaker = setTimeout(() => {f();bulletMakerEngine(f,t)},t )
 
 function changeKeyEventBindings() {
 
@@ -71,11 +92,13 @@ function changeKeyEventBindings() {
     space.press = function() {
         if( test==1 )
             console.log('space press');
+        enableBulletEnigne();
     };
 
     space.release = function() {
         if( test==1 )
             console.log('space release');
+        disableBulletEngine();
     };
 
     up.press = function() {
