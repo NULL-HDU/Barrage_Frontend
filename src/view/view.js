@@ -9,6 +9,8 @@ import gamemodel from "../model/gamemodel.js"
 import Gameglobal from "../engine/global.js"
 import Prototype from "../view/images/Prototype.png";
 
+
+var test = 2;        //0 for view,1 for engine,2 for socket
 // Global alias
 let Container = PIXI.Container,
     autoDetectRenderer = PIXI.autoDetectRenderer,
@@ -56,7 +58,8 @@ function gameLoop() {
 
 function play() {
     var airplaneInfo = gamemodel.data.engineControlData.airPlane;
-    console.log(airplaneInfo);
+    if( test==0 )
+        console.log(airplaneInfo);
     var x = airplaneInfo.locationCurrent.x,
         y = airplaneInfo.locationCurrent.y,
         ro = airplaneInfo.attackDir;

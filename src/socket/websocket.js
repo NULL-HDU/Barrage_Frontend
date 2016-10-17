@@ -23,6 +23,7 @@ export default class socket {
 	constructor(wsUrl="ws://myfickle.cn:1234/ws",rollingTime=11){
 		this.wsUrl = wsUrl;
 		this.rollingTime=rollingTime;
+		this.ws = null;
 	}
 
 	setUrl(url){
@@ -51,7 +52,25 @@ export default class socket {
 	    ws.onerror = function(e) {
 	      	onError(e.data);
 	    };
+	    this.ws = ws;
 		return ws;
+	}
+
+
+	sendMessage(dv,times=0){
+		console.log(this.ws.readyState);
+		if( this.ws.readyState ===1 ){
+			this.ws.send(dv);
+			return true;
+		}
+		else{
+			if(times==10){
+				return false;
+			}
+			console.log(times);
+			let that = this;
+			window.setTimeout(function() {that.sendMessage(dv,++times);},200);
+		}
 	}
 }
 
@@ -73,12 +92,12 @@ function onMessage(e){
 
 //when socket is open
 function onOpen(e){
-	console.log("websocket connected secceed!!");
+	console.log("websocket connected succeed!!");
 }
 
 //when socket is close
 function onClose(e){
-	console.log("websocket closed secceed!!");
+	console.log("websocket closed succeed!!");
 }
 
 //when socket is error

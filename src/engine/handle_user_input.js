@@ -9,14 +9,14 @@ import gamemodel from "../model/gamemodel"
 import Airplane from "../model/airplane"
 import engine from "../engine/engine"
 import {initScenes} from "../view/view"
-import transmitted from "../socket/transmitted"
+import transmitted from "../socket/transmitted.js"
 import screenfull from "../engine/screenfull.js"
 // Global Alias
 
 var playerNameInput = document.getElementById('playerNameInput');
 var airPlane = new Airplane();
 var vx = 0, vy = 0, vangle = 0;
-var test = 3;        //0 for view,1 for engine,2 for socket
+var test = 2;        //0 for view,1 for engine,2 for socket
 
 var debug = function(args) {
     if (console && console.log) {
@@ -33,6 +33,8 @@ function startGame() {
     document.getElementById('gameWrapper').style.opacity = 0;
     initScenes();
     gamemodel.data.engineControlData.airPlane = airPlane;
+    let tm = new transmitted();
+    tm.login(airPlane);
     changeKeyEventBindings();
     startGameLoop();
 }
