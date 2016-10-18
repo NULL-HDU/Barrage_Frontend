@@ -8,7 +8,7 @@
 /**以下定义了向量运算**/
 
 //设定向量
-function PVector(x, y){
+export default function PVector(x, y){
     this.x = x || 0
     this.y = y || 0
 }

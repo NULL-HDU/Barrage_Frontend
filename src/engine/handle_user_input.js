@@ -18,6 +18,7 @@ var playerNameInput = document.getElementById('playerNameInput');
 var airPlane = new Airplane();
 var vx = 0, vy = 0, vangle = 0;
 var test = 1;        //0 for view,1 for engine,2 for socket
+var bulletMakerStartFlag = 0; //0 for enable,1 for disable;
 
 var bulletMaker = undefined;
 
@@ -32,20 +33,49 @@ var validNick = function() {
     return regex.exec(playerNameInput.value) !== null;
 };
 
-function enableBulletEnigne(){
-    bulletMaker = bulletMakerEngine (() => {
+function bulletMakerLoop() {
+    setTimeout(function () {
         let bullet = new Bullet();
         bullet.locationCurrent.x = airPlane.locationCurrent.x;
         bullet.locationCurrent.y = airPlane.locationCurrent.y;
+        bullet.startPoint.x = airPlane.locationCurrent.x;
+        bullet.startPoint.y = airPlane.locationCurrent.y;
+        bullet.attackDir = airPlane.attackDir;
         bullet.pathCalculate();
         gamemodel.data.engineControlData.bullet.push(bullet);
         console.log(gamemodel.data.engineControlData.bullet);
-    },1*1000);
+        if (bulletMakerStartFlag === 0) {
+            bulletMakerLoop();
+        }
+    }, (1/10)*1000);
 }
 
+function enableBulletEnigne(){
+    bulletMakerStartFlag = 0;
+    bulletMakerLoop();
+}
+  
 function disableBulletEngine(){
-    window.clearTimeout(bulletMaker);
-    bulletMaker = undefined;
+    bulletMakerStartFlag = 1;
+}
+
+function uselessBulletsCollect(){
+    gamemodel.data.engineControlData.bullet.map(function(bullet){
+        if (bullet.alive === false && bullet.isKilled === true){
+            gamemodel.deadCache.push(bullet);
+        }else if(bullet.alive === false && bullet.isKilled === false){
+            gamemodel.disappearCache.push(bullet);
+        }
+        return bullet;
+    });
+
+    let i = gamemodel.data.engineControlData.bullet.length;
+    while (i--){
+        let bullet =  gamemodel.data.engineControlData.bullet[i];
+        if(bullet.alive === false){
+            gamemodel.data.engineControlData.bullet.splice(i,1);
+        }
+    }
 }
 
 function startGame() {
@@ -57,8 +87,14 @@ function startGame() {
     tm.login(airPlane);
     changeKeyEventBindings();
     startGameLoop();
+    enableBulletsCollectingEngine();
 }
 
+function enableBulletsCollectingEngine() {
+    looper(() => {
+        uselessBulletsCollect();
+    },1*1000);
+}
 
 function startGameLoop() {
     looper(() => {
@@ -71,7 +107,7 @@ function startGameLoop() {
 function reductAngle(angle) {
     let a = angle % (2 * Math.PI);
     //斜边速度
-    let bevelEdge = 1;
+    let bevelEdge = 5;
     vx = Math.cos(a + (3/2)*Math.PI) * bevelEdge;
     vy = Math.sin(a + (3/2)*Math.PI) * bevelEdge;
 }
@@ -141,7 +177,7 @@ function changeKeyEventBindings() {
     left.press = function() {
         if (test==1)
             console.log('left press');
-        vangle = -Math.PI / 180;
+        vangle = -Math.PI / 180 * 3;
     };
 
 
@@ -158,7 +194,7 @@ function changeKeyEventBindings() {
     right.press = function() {
         if( test==1 )
             console.log('right press');
-        vangle = Math.PI / 180;
+        vangle = Math.PI / 180 * 3;
     };
 
     right.release = function() {
