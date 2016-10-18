@@ -27,7 +27,7 @@ export default class Bullet extends Ball{
             let b = new PVector(this.locationCurrent.x,this.locationCurrent.y);
             let distance = PVector.dist(a,b);
 
-            if(distance >= 1000){
+            if(distance >= 800){
                 this.alive = false;
                 this.isKilled = false;
             }

@@ -93,7 +93,7 @@ function startGame() {
 function enableBulletsCollectingEngine() {
     looper(() => {
         uselessBulletsCollect();
-    },1*1000);
+    },(1/30)*1000);
 }
 
 function startGameLoop() {
