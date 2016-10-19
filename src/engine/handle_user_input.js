@@ -98,8 +98,14 @@ function enableBulletsCollectingEngine() {
 
 function startGameLoop() {
     looper(() => {
-        airPlane.locationCurrent.x += vx;
-        airPlane.locationCurrent.y += vy;
+     //   if(airPlane.locationCurrent.x < global.LOCAL_WIDTH && airPlane.locationCurrent.x > 0){
+            airPlane.locationCurrent.x += vx;
+     //   }
+
+     //   if(airPlane.locationCurrent.y < global.LOCAL_HEIGHT && airPlane.locationCurrent.y > 0){
+            airPlane.locationCurrent.y += vy;
+     //   }
+
         airPlane.attackDir += vangle;
     },(1/120)*1000);
 }
