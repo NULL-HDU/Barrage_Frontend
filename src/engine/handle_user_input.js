@@ -104,11 +104,7 @@ function startGame() {
     document.getElementById('gameWrapper').style.opacity = 0;
     initScenes();
     gamemodel.data.engineControlData.airPlane = airPlane;
-<<<<<<< HEAD
-=======
     //init socket
-    let tm = new transmitted();
->>>>>>> 0f0d6e2882b679fc31e4575b3db14e13360c21ab
     tm.login(airPlane);
     tm.communitate(airPlane);
     changeKeyEventBindings();
