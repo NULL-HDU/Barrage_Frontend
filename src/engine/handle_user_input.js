@@ -43,7 +43,15 @@ function configTestEnemyPlanes() {
 }
 
 function enemyBulletMakerLoop() {
-
+    setTimeout(function () {
+        let bullet = new Bullet();
+        bullet.locationCurrent.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x;
+        bullet.locationCurrent.y = gamemodel.data.backendControlData.airPlane[0].locationCurrent.y;
+        bullet.startPoint.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x;
+        bullet.startPoint.y = gamemodel.data.backendControlData.airPlane[0].locationCurrent.y;
+        bullet.attackDir = gamemodel.data.backendControlData.airPlane[0].attackDir;
+        gamemodel.data.backendControlData.bullet.push(bullet);
+    }, global.BULLET_MAKER_LOOP_INTERVAL);
 }
 
 function bulletMakerLoop() {
@@ -54,7 +62,6 @@ function bulletMakerLoop() {
         bullet.startPoint.x = airPlane.locationCurrent.x;
         bullet.startPoint.y = airPlane.locationCurrent.y;
         bullet.attackDir = airPlane.attackDir;
-        bullet.pathCalculate();
         gamemodel.data.engineControlData.bullet.push(bullet);
         console.log(gamemodel.data.engineControlData.bullet);
         if (bulletMakerStartFlag === 0) {
@@ -102,6 +109,10 @@ function startGame() {
     changeKeyEventBindings();
     startGameLoop();
     enableBulletsCollectingEngine();
+
+    //测试
+    configTestEnemyPlanes();
+    enemyBulletMakerLoop();
 }
 
 function enableBulletsCollectingEngine() {
