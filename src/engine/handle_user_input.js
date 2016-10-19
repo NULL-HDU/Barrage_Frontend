@@ -33,6 +33,19 @@ var validNick = function() {
     return regex.exec(playerNameInput.value) !== null;
 };
 
+//配置测试敌机
+function configTestEnemyPlanes() {
+    var enemyPlane0 = new Airplane();
+    gamemodel.data.backendControlData.airPlane.push(enemyPlane0);
+    enemyPlane0.locationCurrent.x = 100;
+    enemyPlane0.locationCurrent.y = 100;
+    enemyPlane0.attackDir = 1;
+}
+
+function enemyBulletMakerLoop() {
+
+}
+
 function bulletMakerLoop() {
     setTimeout(function () {
         let bullet = new Bullet();
@@ -47,8 +60,9 @@ function bulletMakerLoop() {
         if (bulletMakerStartFlag === 0) {
             bulletMakerLoop();
         }
-    }, (1/10)*1000);
+    }, global.BULLET_MAKER_LOOP_INTERVAL);
 }
+
 
 function enableBulletEnigne(){
     bulletMakerStartFlag = 0;
@@ -93,22 +107,20 @@ function startGame() {
 function enableBulletsCollectingEngine() {
     looper(() => {
         uselessBulletsCollect();
-    },(1/30)*1000);
+    },global.BULLET_COLLECTING_INTERVAL);
 }
 
 function startGameLoop() {
     looper(() => {
-     //   if(airPlane.locationCurrent.x < global.LOCAL_WIDTH && airPlane.locationCurrent.x > 0){
-            airPlane.locationCurrent.x += vx;
-     //   }
-
-     //   if(airPlane.locationCurrent.y < global.LOCAL_HEIGHT && airPlane.locationCurrent.y > 0){
-            airPlane.locationCurrent.y += vy;
-     //   }
-
-        airPlane.attackDir += vangle;
-    },(1/120)*1000);
+        airPlane.move(vx,vy,vangle);
+        gamemodel.data.engineControlData.bullet.map(function(bullet){
+            bullet.pathCalculate();
+            return bullet;
+        });
+        
+    },global.GAME_LOOP_INTERVAL);
 }
+
 
 function reductAngle(angle) {
     let a = angle % (2 * Math.PI);

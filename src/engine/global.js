@@ -17,7 +17,11 @@ export default {
     KEY_S: 83,
     KEY_D: 68,
 
-    LOCAL_HEIGHT: 1280,
-    LOCAL_WIDTH: 705,
+    BULLET_MAKER_LOOP_INTERVAL: (1/10)*1000,
+    BULLET_COLLECTING_INTERVAL: (1/30)*1000,
+    GAME_LOOP_INTERVAL: (1/120)*1000,
+
+    LOCAL_HEIGHT: window.screen.height,
+    LOCAL_WIDTH: window.screen.width,
 
 }
