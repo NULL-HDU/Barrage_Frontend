@@ -24,6 +24,7 @@ export default class socket {
 		this.wsUrl = wsUrl;
 		this.rollingTime=rollingTime;
 		this.ws = null;
+		this.wsMessage = null;
 	}
 
 	setUrl(url){
@@ -32,6 +33,10 @@ export default class socket {
 
 	getUrl(){
 		return wsUrl;
+	}
+
+	getWsMessage(){
+		return wsMessage;
 	}
 
 	init(){
@@ -46,19 +51,20 @@ export default class socket {
 	    };
 
 	    ws.onmessage = function(e) {
-	    	onMessage(e);
+	    	this.wsMessage = onMessage(e).replace(/\s/g, "");
 	    };
 	    
 	    ws.onerror = function(e) {
 	      	onError(e.data);
 	    };
 	    this.ws = ws;
+	    console.log(ws)
 		return ws;
 	}
 
 
 	sendMessage(dv,times=0){
-		console.log(this.ws.readyState);
+		// console.log(this.ws.readyState);
 		if( this.ws.readyState ===1 ){
 			this.ws.send(dv);
 			return true;
@@ -67,7 +73,6 @@ export default class socket {
 			if(times==10){
 				return false;
 			}
-			console.log(times);
 			let that = this;
 			window.setTimeout(function() {that.sendMessage(dv,++times);},200);
 		}
@@ -80,13 +85,10 @@ function onMessage(e){
     var dv = new DataView(e.data)
     var str = ""
     for(var i=0;i<dv.byteLength;i++){
-    	var char = dv.getUint8(i).toString(16);
-    	if(char.length<2){
-    		char = "0"+char;
-    	}
+    	var char = dv.getUint8(i);
     	str=str+char+" ";
     }
-    console.log(str);
+    // console.log(str);
 	return str;
 }
 

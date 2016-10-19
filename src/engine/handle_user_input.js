@@ -30,11 +30,12 @@ var validNick = function() {
 };
 
 function startGame() {
+    let tm = new transmitted();
     document.getElementById('gameWrapper').style.opacity = 0;
     initScenes();
     gamemodel.data.engineControlData.airPlane = airPlane;
-    let tm = new transmitted();
     tm.login(airPlane);
+    tm.communitate(airPlane);
     changeKeyEventBindings();
     startGameLoop();
 }
