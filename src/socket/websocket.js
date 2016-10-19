@@ -4,6 +4,8 @@
 *	email:luchenjiemail@gmail.com
 */
 
+import * as analyis from "./analyis.js"
+
 //switch the status of is updating socket
 let socketStatusSwitcher = function(){
 	let status = true;
@@ -24,8 +26,7 @@ export default class socket {
 		this.wsUrl = wsUrl;
 		this.rollingTime=rollingTime;
 		this.ws = null;
-		this.wsMessage = null;
-	}
+			}
 
 	setUrl(url){
 		this.wsUrl = url;
@@ -33,10 +34,6 @@ export default class socket {
 
 	getUrl(){
 		return wsUrl;
-	}
-
-	getWsMessage(){
-		return wsMessage;
 	}
 
 	init(){

@@ -15,7 +15,6 @@ export default class Ball {
         this.roleId = 0;
         this.special = null;
         this.speed = 100;
-        // this.attackDir = Math.PI * (3/2);
         this.attackDir = 0;
         this.alive = true;
         this.isKilled = false;
@@ -24,6 +23,10 @@ export default class Ball {
             y:320,
         };
     }
+
+    pathCalculate(){
+    }
+
 }
 
 /*ball.js ends here*/

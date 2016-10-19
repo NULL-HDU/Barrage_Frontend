@@ -40,11 +40,8 @@ function setup() {
     id = resources["src/view/images/Prototype.json"].textures;
 
     // Create the selfairplane
-    airplane = new Sprite(id["Airplane-Self.png"]);
-    airplane.position.set(Hcenter, Wcenter);
-    airplane.anchor.set(0.5, 0.5);
-    airplane.rotation = 0;
-    stage.addChild(airplane);
+    
+     
 
     state = play;
     gameLoop();
@@ -57,15 +54,34 @@ function gameLoop() {
 }
 
 function play() {
+
+    stage.removeChildren();
+
+    let airplane = new Sprite(id["Airplane-Self.png"]);
+    airplane.position.set(Hcenter, Wcenter);
+    airplane.anchor.set(0.5, 0.5);
+    airplane.rotation = 0;
+    stage.addChild(airplane);
     var airplaneInfo = gamemodel.data.engineControlData.airPlane;
     if( test==0 )
         console.log(airplaneInfo);
-    var x = airplaneInfo.locationCurrent.x,
-        y = airplaneInfo.locationCurrent.y,
-        ro = airplaneInfo.attackDir;
-    airplane.x = x;
-    airplane.y = y;
-    airplane.rotation = ro;
+    var Airx = airplaneInfo.locationCurrent.x,
+        Airy = airplaneInfo.locationCurrent.y,
+        Airro = airplaneInfo.attackDir;
+    airplane.x = Airx;
+    airplane.y = Airy;
+    airplane.rotation = Airro;
+
+    let modelBullets = gamemodel.data.engineControlData.bullet;
+        // console.log(gamemodel.data.engineControlData.bullet);
+    for (let i = 0 ;i < modelBullets.length; i ++) {
+        let bullet = new Sprite(id["Bullet-Harmless.png"]);
+        bullet.anchor.set(0.5, 0.5);
+        bullet.rotation = 0;
+        bullet.x = modelBullets[i].locationCurrent.x;
+        bullet.y = modelBullets[i].locationCurrent.y;
+        stage.addChild(bullet);
+    }
     
 }
 
