@@ -63,7 +63,7 @@ function bulletMakerLoop() {
         bullet.startPoint.y = airPlane.locationCurrent.y;
         bullet.attackDir = airPlane.attackDir;
         gamemodel.data.engineControlData.bullet.push(bullet);
-        console.log(gamemodel.data.engineControlData.bullet);
+        // console.log(gamemodel.data.engineControlData.bullet);
         if (bulletMakerStartFlag === 0) {
             bulletMakerLoop();
         }
@@ -97,6 +97,15 @@ function uselessBulletsCollect(){
             gamemodel.data.engineControlData.bullet.splice(i,1);
         }
     }
+
+    let j = gamemodel.data.backendControlData.bullet.length;
+    while (j--){
+        let bullet =  gamemodel.data.backendControlData.bullet[j];
+        if(bullet.alive === false){
+            gamemodel.data.backendControlData.bullet.splice(j,1);
+        }
+    }
+
 }
 
 function startGame() {
@@ -125,7 +134,13 @@ function enableBulletsCollectingEngine() {
 function startGameLoop() {
     looper(() => {
         airPlane.move(vx,vy,vangle);
+        //自主机子弹
         gamemodel.data.engineControlData.bullet.map(function(bullet){
+            bullet.pathCalculate();
+            return bullet;
+        });
+        //敌机子弹
+        gamemodel.data.backendControlData.bullet.map(function(bullet){
             bullet.pathCalculate();
             return bullet;
         });

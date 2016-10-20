@@ -5,6 +5,7 @@
  */
 
 import Ball from "../model/ball"
+import global from "../engine/global"
 
 export default class Airplane extends Ball {
     constructor() {
