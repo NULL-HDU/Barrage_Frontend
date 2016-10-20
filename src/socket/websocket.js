@@ -48,14 +48,15 @@ export default class socket {
 	    };
 
 	    ws.onmessage = function(e) {
-	    	this.wsMessage = onMessage(e).replace(/\s/g, "");
+	    	let message = analyis.receiveMessage( e );
+	    	console.log("receive : ");
+	    	console.log(message);
 	    };
 	    
 	    ws.onerror = function(e) {
 	      	onError(e.data);
 	    };
 	    this.ws = ws;
-	    console.log(ws)
 		return ws;
 	}
 
@@ -76,18 +77,7 @@ export default class socket {
 	}
 }
 
-//when socket is receiving message
-function onMessage(e){
-	// console.log(e.data.byteLength);
-    var dv = new DataView(e.data)
-    var str = ""
-    for(var i=0;i<dv.byteLength;i++){
-    	var char = dv.getUint8(i);
-    	str=str+char+" ";
-    }
-    // console.log(str);
-	return str;
-}
+
 
 //when socket is open
 function onOpen(e){
