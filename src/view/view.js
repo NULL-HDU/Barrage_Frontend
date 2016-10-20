@@ -76,12 +76,12 @@ function play() {
     stage.removeChildren();
 
     // Add the new sprites
-    renderObstacles();
-    renderResouces();
-    renderBullets();
-    renderEnemyAirplanes();
-    renderSelfAirplane();
+    let pos = renderSelfAirplane();
     renderUI();
+    renderEnemyAirplanes(pos);
+    renderBullets(pos);
+    renderResouces();
+    renderObstacles();
 
     stage.addChild(obstacleView);
     stage.addChild(resourceView);
@@ -104,21 +104,26 @@ function renderSelfAirplane() {
     let x = information.locationCurrent.x,
         y = information.locationCurrent.y,
         r = information.attackDir;
-    AirplaneSelf.x = x;
-    AirplaneSelf.y = y;
+    // AirplaneSelf.x = x;
+    // AirplaneSelf.y = y;
+    AirplaneSelf.x = localW / 2;
+    AirplaneSelf.y = localH / 2;
     AirplaneSelf.anchor.set(0.5, 0.5);
     AirplaneSelf.rotation = r;
     selfView.addChild(AirplaneSelf);
+    return [x , y];
 }
 
 // Render enemies
-function renderEnemyAirplanes() {
+function renderEnemyAirplanes(pos) {
     enemies = gamemodel.data.backendControlData.airPlane;
     for (let i = 0; i < enemies.length; i ++) {
         let AirplaneEnemy = new Sprite(id["Airplane-Enemy.png"]);
         let x = enemies[i].locationCurrent.x,
             y = enemies[i].locationCurrent.y,
             r = enemies[i].attackDir;
+        x = x - pos[0] + localW / 2;
+        y = y - pos[1] + localH / 2;
         AirplaneEnemy.x = x;
         AirplaneEnemy.y = y;
         AirplaneEnemy.anchor.set(0.5, 0.5);
@@ -128,7 +133,7 @@ function renderEnemyAirplanes() {
 }
 
 // Render the bullets
-function renderBullets() {
+function renderBullets(pos) {
     // Enemy bullets
     EnemyBullets = gamemodel.data.backendControlData.bullet;
     for (let i = 0; i < EnemyBullets.length; i ++) {
@@ -148,6 +153,8 @@ function renderBullets() {
         let bullet = new Sprite(id["Bullet-Harmless.png"]);
         let x = SelfBullets[i].locationCurrent.x,
             y = SelfBullets[i].locationCurrent.y;
+        x = x - pos[0] + localW / 2;
+        y = y - pos[1] + localH / 2;
         bullet.x = x;
         bullet.y = y;
         bullet.anchor.set(0.5, 0.5);
@@ -166,3 +173,6 @@ function renderResouces() {
 function renderObstacles() {
 
 } 
+
+// Calculate the locall x and y of balls depending on selfairplane
+// v 1.0, just +-
