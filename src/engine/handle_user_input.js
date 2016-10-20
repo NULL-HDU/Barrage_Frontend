@@ -100,12 +100,13 @@ function uselessBulletsCollect(){
 }
 
 function startGame() {
+    let tm = new transmitted();
     document.getElementById('gameWrapper').style.opacity = 0;
     initScenes();
     gamemodel.data.engineControlData.airPlane = airPlane;
     //init socket
-    let tm = new transmitted();
     tm.login(airPlane);
+    tm.communitate(airPlane);
     changeKeyEventBindings();
     startGameLoop();
     enableBulletsCollectingEngine();
