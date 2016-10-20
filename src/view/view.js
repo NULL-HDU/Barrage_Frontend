@@ -11,7 +11,9 @@ let autoDetectRenderer = PIXI.autoDetectRenderer,
 
 // Alias about local
 let localH = window.screen.height,
-    localW = window.screen.width;
+    localW = window.screen.width,
+    CenterH = localH / 2,
+    CenterW = localW / 2;
 
 // Pic json
 let id; 
@@ -84,10 +86,10 @@ function play() {
     renderObstacles();
 
     stage.addChild(obstacleView);
-    stage.addChild(resourceView);
-    stage.addChild(bulletView);
     stage.addChild(enemyView);
+    stage.addChild(bulletView);
     stage.addChild(selfView);
+    stage.addChild(resourceView);
     stage.addChild(uiView);
 }
 
@@ -106,8 +108,8 @@ function renderSelfAirplane() {
         r = information.attackDir;
     // AirplaneSelf.x = x;
     // AirplaneSelf.y = y;
-    AirplaneSelf.x = localW / 2;
-    AirplaneSelf.y = localH / 2;
+    AirplaneSelf.x = CenterW;
+    AirplaneSelf.y = CenterH;
     AirplaneSelf.anchor.set(0.5, 0.5);
     AirplaneSelf.rotation = r;
     selfView.addChild(AirplaneSelf);
@@ -122,8 +124,8 @@ function renderEnemyAirplanes(pos) {
         let x = enemies[i].locationCurrent.x,
             y = enemies[i].locationCurrent.y,
             r = enemies[i].attackDir;
-        x = x - pos[0] + localW / 2;
-        y = y - pos[1] + localH / 2;
+        x = centerSelfAirplane(x, pos[0], CenterW);
+        y = centerSelfAirplane(y, pos[1], CenterH);
         AirplaneEnemy.x = x;
         AirplaneEnemy.y = y;
         AirplaneEnemy.anchor.set(0.5, 0.5);
@@ -140,6 +142,8 @@ function renderBullets(pos) {
         let bullet = new Sprite(id["Bullet-Harmful.png"]);
         let x = EnemyBullets[i].locationCurrent.x,
             y = EnemyBullets[i].locationCurrent.y;
+        x = centerSelfAirplane(x, pos[0], CenterW);
+        y = centerSelfAirplane(y, pos[1], CenterH);
         bullet.x = x;
         bullet.y = y;
         bullet.anchor.set(0.5, 0.5);
@@ -153,8 +157,8 @@ function renderBullets(pos) {
         let bullet = new Sprite(id["Bullet-Harmless.png"]);
         let x = SelfBullets[i].locationCurrent.x,
             y = SelfBullets[i].locationCurrent.y;
-        x = x - pos[0] + localW / 2;
-        y = y - pos[1] + localH / 2;
+        x = centerSelfAirplane(x, pos[0], CenterW);
+        y = centerSelfAirplane(y, pos[1], CenterH);
         bullet.x = x;
         bullet.y = y;
         bullet.anchor.set(0.5, 0.5);
@@ -176,3 +180,6 @@ function renderObstacles() {
 
 // Calculate the locall x and y of balls depending on selfairplane
 // v 1.0, just +-
+function centerSelfAirplane (pre, selfAir, center) {
+    return pre - selfAir + center;
+}
