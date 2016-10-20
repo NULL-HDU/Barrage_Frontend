@@ -9,6 +9,21 @@ let autoDetectRenderer = PIXI.autoDetectRenderer,
     Container = PIXI.Container,
     Sprite = PIXI.Sprite;
 
+// Alias about local
+let localH = window.screen.height,
+    localW = window.screen.width;
+
+// Pic json
+let id; 
+
+// Used in game
+let stage;
+let uiView,selfView, enemyView, bulletView, resourceView, obstacleView;
+let AirplaneSelf, enemies, SelfBullets, EnemyBullets, GameResources, obstacles; 
+
+// Game state
+let state;
+
 // Export for engine/handle_user_input.js
 let renderer = autoDetectRenderer(localW, localH);
 export function playGame() {
@@ -26,27 +41,18 @@ function loadProgressHandler() {
 
 // renderGame with state
 function renderGame() {
-    // Pic json
-    let id = resources["src/view/images/Prototype.json"].textures;
-    
-    // Used in game
-    let stage = new Container();
-    let uiView = new Container(),
-        selfView = new Container(),
-        enemyView = new Container(),
-        bulletView = new Container(),
-        resourceView = new Container(),
-        obstacleView = new Container();
 
-    let AirplaneSelf, enemies, SelfBullets, EnemyBullets, resources, obstacles; 
+    stage = new Container();
+    uiView = new Container();
+    selfView = new Container();
+    enemyView = new Container();
+    bulletView = new Container();
+    resourceView = new Container();
+    obstacleView = new Container();
 
-    // Alias about local
-    let localH = window.screen.height,
-        localW = window.screen.width,
-        ;
+    id = resources["src/view/images/Prototype.json"].textures;
 
-    // Game state
-    let state = play;
+    state = play;
 
     // Loop rendering
     loopRendering();
@@ -60,7 +66,13 @@ function loopRendering() {
 }
 
 function play() {
-    // Remove the old sprites
+    // Remove old children
+    obstacleView.removeChildren();
+    resourceView.removeChildren();
+    bulletView.removeChildren();
+    enemyView.removeChildren();
+    selfView.removeChildren();
+    uiView.removeChildren();
     stage.removeChildren();
 
     // Add the new sprites
@@ -121,8 +133,8 @@ function renderBullets() {
     EnemyBullets = gamemodel.data.backendControlData.bullet;
     for (let i = 0; i < EnemyBullets.length; i ++) {
         let bullet = new Sprite(id["Bullet-Harmful.png"]);
-        let x = SelfBullets[i].locationCurrent.x,
-            y = SelfBullets[i].locationCurrent.y;
+        let x = EnemyBullets[i].locationCurrent.x,
+            y = EnemyBullets[i].locationCurrent.y;
         bullet.x = x;
         bullet.y = y;
         bullet.anchor.set(0.5, 0.5);
