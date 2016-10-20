@@ -9,7 +9,7 @@ import gamemodel from "../model/gamemodel"
 import Airplane from "../model/airplane"
 import Bullet from "../model/bullet"
 import engine from "../engine/engine"
-import {initScenes} from "../view/view"
+import {playGame} from "../view/view"
 import transmitted from "../socket/transmitted.js"
 import screenfull from "../engine/screenfull.js"
 // Global Alias
@@ -63,7 +63,7 @@ function bulletMakerLoop() {
         bullet.startPoint.y = airPlane.locationCurrent.y;
         bullet.attackDir = airPlane.attackDir;
         gamemodel.data.engineControlData.bullet.push(bullet);
-        console.log(gamemodel.data.engineControlData.bullet);
+        // console.log(gamemodel.data.engineControlData.bullet);
         if (bulletMakerStartFlag === 0) {
             bulletMakerLoop();
         }
@@ -97,12 +97,21 @@ function uselessBulletsCollect(){
             gamemodel.data.engineControlData.bullet.splice(i,1);
         }
     }
+
+    let j = gamemodel.data.backendControlData.bullet.length;
+    while (j--){
+        let bullet =  gamemodel.data.backendControlData.bullet[j];
+        if(bullet.alive === false){
+            gamemodel.data.backendControlData.bullet.splice(j,1);
+        }
+    }
+
 }
 
 function startGame() {
     let tm = new transmitted();
     document.getElementById('gameWrapper').style.opacity = 0;
-    initScenes();
+    playGame();
     gamemodel.data.engineControlData.airPlane = airPlane;
     //init socket
     tm.login(airPlane);
@@ -125,7 +134,13 @@ function enableBulletsCollectingEngine() {
 function startGameLoop() {
     looper(() => {
         airPlane.move(vx,vy,vangle);
+        //自主机子弹
         gamemodel.data.engineControlData.bullet.map(function(bullet){
+            bullet.pathCalculate();
+            return bullet;
+        });
+        //敌机子弹
+        gamemodel.data.backendControlData.bullet.map(function(bullet){
             bullet.pathCalculate();
             return bullet;
         });

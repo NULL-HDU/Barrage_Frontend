@@ -29,10 +29,14 @@ export default class transmitted{
 
 	//analyis receiving message
 	communitate(airplane){
+<<<<<<< HEAD
 		// let message = analyis.receiveMessage( this.ws.getWsMessage() );
+=======
+		// let message = analyis.receiveMessage( ws.getWsMessage() );
+>>>>>>> 1fe88c8415096a7f7b08546b4dedf1efcce345d8
 		// if(message!=null)
 		console.log("message : ")
-		console.log(message);
+		// console.log(message);
 	}
 
 }
