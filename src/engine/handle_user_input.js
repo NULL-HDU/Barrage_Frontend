@@ -97,6 +97,15 @@ function uselessBulletsCollect(){
             gamemodel.data.engineControlData.bullet.splice(i,1);
         }
     }
+
+    let j = gamemodel.data.backendControlData.bullet.length;
+    while (j--){
+        let bullet =  gamemodel.data.backendControlData.bullet[j];
+        if(bullet.alive === false){
+            gamemodel.data.backendControlData.bullet.splice(j,1);
+        }
+    }
+
 }
 
 function startGame() {
