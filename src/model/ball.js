@@ -3,6 +3,7 @@
  * Maintainer: Arthury (ArthurYV)
  * Email: arthury.me@gmail.com
  */
+import global from "../engine/global"
 
 export default class Ball {
     constructor() {
@@ -19,8 +20,8 @@ export default class Ball {
         this.alive = true;
         this.isKilled = false;
         this.locationCurrent = {
-            x:640,
-            y:320,
+            x:global.LOCAL_WIDTH/2,
+            y:global.LOCAL_HEIGHT/2,
         };
     }
 
