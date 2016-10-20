@@ -1,92 +1,178 @@
-/* view.js --- used to render the canvas with rich pics
- *
- * Maintainer: Neoco
- * Email: Neoco.wlp1002@gmail.com
- */
-
 import PIXI from "../view/pixi.js";
-import gamemodel from "../model/gamemodel.js"
-import Gameglobal from "../engine/global.js"
-import Prototype from "../view/images/Prototype.png";
+import gamemodel from "../model/gamemodel.js";
+import ProtoPics from "../view/images/Prototype.png";
 
-
-var test = 2;        //0 for view,1 for engine,2 for socket
-// Global alias
-let Container = PIXI.Container,
-    autoDetectRenderer = PIXI.autoDetectRenderer,
+// Alias for PIXI
+let autoDetectRenderer = PIXI.autoDetectRenderer,
     loader = PIXI.loader,
     resources = PIXI.loader.resources,
+    Container = PIXI.Container,
     Sprite = PIXI.Sprite;
 
-let stage = new Container(),
-    renderer = autoDetectRenderer(window.screen.width, window.screen.height);
+// Alias about local
+let localH = window.screen.height,
+    localW = window.screen.width;
+
+// Pic json
+let id; 
+
+// Used in game
+let stage;
+let uiView,selfView, enemyView, bulletView, resourceView, obstacleView;
+let AirplaneSelf, enemies, SelfBullets, EnemyBullets, GameResources, obstacles; 
+
+// Game state
+let state;
 
 // Export for engine/handle_user_input.js
-export function initScenes() {
+let renderer = autoDetectRenderer(localW, localH);
+export function playGame() {
     document.body.appendChild(renderer.view);
-      loader
+    loader
         .add("src/view/images/Prototype.json")
-        .load(setup);
+        .on("progress", loadProgressHandler)
+        .load(renderGame);
 }
 
-let airplane, enemies, bullets, obstacles, Xresources,
-    id,
-    state;
+// Handle when loading the resources
+function loadProgressHandler() {
+    console.log("loading");
+}
 
-let Hcenter = Gameglobal.LOCAL_HEIGHT / 2,
-    Wcenter = Gameglobal.LOCAL_WIDTH / 2;
+// renderGame with state
+function renderGame() {
 
-function setup() {
+    stage = new Container();
+    uiView = new Container();
+    selfView = new Container();
+    enemyView = new Container();
+    bulletView = new Container();
+    resourceView = new Container();
+    obstacleView = new Container();
+
     id = resources["src/view/images/Prototype.json"].textures;
 
-    // Create the selfairplane
-    
-     
-
     state = play;
-    gameLoop();
+
+    // Loop rendering
+    loopRendering();
 }
 
-function gameLoop() {
-    requestAnimationFrame(gameLoop);
+// Loop render the scenes
+function loopRendering() {
+    requestAnimationFrame(loopRendering);
     state();
     renderer.render(stage);
 }
 
 function play() {
-
+    // Remove old children
+    obstacleView.removeChildren();
+    resourceView.removeChildren();
+    bulletView.removeChildren();
+    enemyView.removeChildren();
+    selfView.removeChildren();
+    uiView.removeChildren();
     stage.removeChildren();
 
-    let airplane = new Sprite(id["Airplane-Self.png"]);
-    airplane.position.set(Hcenter, Wcenter);
-    airplane.anchor.set(0.5, 0.5);
-    airplane.rotation = 0;
-    stage.addChild(airplane);
-    var airplaneInfo = gamemodel.data.engineControlData.airPlane;
-    if( test==0 )
-        console.log(airplaneInfo);
-    var Airx = airplaneInfo.locationCurrent.x,
-        Airy = airplaneInfo.locationCurrent.y,
-        Airro = airplaneInfo.attackDir;
-    airplane.x = Airx;
-    airplane.y = Airy;
-    airplane.rotation = Airro;
+    // Add the new sprites
+    let pos = renderSelfAirplane();
+    renderUI();
+    renderEnemyAirplanes(pos);
+    renderBullets(pos);
+    renderResouces();
+    renderObstacles();
 
-    let modelBullets = gamemodel.data.engineControlData.bullet;
-        // console.log(gamemodel.data.engineControlData.bullet);
-    for (let i = 0 ;i < modelBullets.length; i ++) {
-        let bullet = new Sprite(id["Bullet-Harmless.png"]);
+    stage.addChild(obstacleView);
+    stage.addChild(resourceView);
+    stage.addChild(bulletView);
+    stage.addChild(enemyView);
+    stage.addChild(selfView);
+    stage.addChild(uiView);
+}
+
+// Render the UI
+function renderUI() {
+
+}
+
+// Render things about selfairplane
+// Such as name, hp, damage, speed
+function renderSelfAirplane() {
+    AirplaneSelf = new Sprite(id["Airplane-Self.png"]);
+    let information = gamemodel.data.engineControlData.airPlane;
+    let x = information.locationCurrent.x,
+        y = information.locationCurrent.y,
+        r = information.attackDir;
+    // AirplaneSelf.x = x;
+    // AirplaneSelf.y = y;
+    AirplaneSelf.x = localW / 2;
+    AirplaneSelf.y = localH / 2;
+    AirplaneSelf.anchor.set(0.5, 0.5);
+    AirplaneSelf.rotation = r;
+    selfView.addChild(AirplaneSelf);
+    return [x , y];
+}
+
+// Render enemies
+function renderEnemyAirplanes(pos) {
+    enemies = gamemodel.data.backendControlData.airPlane;
+    for (let i = 0; i < enemies.length; i ++) {
+        let AirplaneEnemy = new Sprite(id["Airplane-Enemy.png"]);
+        let x = enemies[i].locationCurrent.x,
+            y = enemies[i].locationCurrent.y,
+            r = enemies[i].attackDir;
+        x = x - pos[0] + localW / 2;
+        y = y - pos[1] + localH / 2;
+        AirplaneEnemy.x = x;
+        AirplaneEnemy.y = y;
+        AirplaneEnemy.anchor.set(0.5, 0.5);
+        AirplaneEnemy.rotation = r;
+        enemyView.addChild(AirplaneEnemy);
+    }
+}
+
+// Render the bullets
+function renderBullets(pos) {
+    // Enemy bullets
+    EnemyBullets = gamemodel.data.backendControlData.bullet;
+    for (let i = 0; i < EnemyBullets.length; i ++) {
+        let bullet = new Sprite(id["Bullet-Harmful.png"]);
+        let x = EnemyBullets[i].locationCurrent.x,
+            y = EnemyBullets[i].locationCurrent.y;
+        bullet.x = x;
+        bullet.y = y;
         bullet.anchor.set(0.5, 0.5);
         bullet.rotation = 0;
-        bullet.x = modelBullets[i].locationCurrent.x;
-        bullet.y = modelBullets[i].locationCurrent.y;
-        stage.addChild(bullet);
+        bulletView.addChild(bullet);
     }
-    
+
+    // Self bullets
+    SelfBullets = gamemodel.data.engineControlData.bullet;
+    for (let i = 0; i < SelfBullets.length; i ++) {
+        let bullet = new Sprite(id["Bullet-Harmless.png"]);
+        let x = SelfBullets[i].locationCurrent.x,
+            y = SelfBullets[i].locationCurrent.y;
+        x = x - pos[0] + localW / 2;
+        y = y - pos[1] + localH / 2;
+        bullet.x = x;
+        bullet.y = y;
+        bullet.anchor.set(0.5, 0.5);
+        bullet.rotation = 0;
+        bulletView.addChild(bullet);
+    }
+
 }
 
-function setPositon(sprite, x, y) {
+// Render resources
+function renderResouces() {
 
 }
 
-/*view.js ends here*/
+// Render obstacles
+function renderObstacles() {
+
+} 
+
+// Calculate the locall x and y of balls depending on selfairplane
+// v 1.0, just +-

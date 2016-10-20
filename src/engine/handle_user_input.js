@@ -9,7 +9,7 @@ import gamemodel from "../model/gamemodel"
 import Airplane from "../model/airplane"
 import Bullet from "../model/bullet"
 import engine from "../engine/engine"
-import {initScenes} from "../view/view"
+import {playGame} from "../view/view"
 import transmitted from "../socket/transmitted.js"
 import screenfull from "../engine/screenfull.js"
 // Global Alias
@@ -110,7 +110,7 @@ function uselessBulletsCollect(){
 function startGame() {
     let tm = new transmitted();
     document.getElementById('gameWrapper').style.opacity = 0;
-    initScenes();
+    playGame();
     gamemodel.data.engineControlData.airPlane = airPlane;
     //init socket
     tm.login(airPlane);
