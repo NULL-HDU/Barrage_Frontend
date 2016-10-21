@@ -4,6 +4,8 @@
 * email:luchenjiemail@gmail.com
 */
 
+import gamemodel from "../model/gamemodel"
+
 // let message={
 // 			length : "",
 // 			timestamp : "",
@@ -50,21 +52,20 @@ function fillConnectForDv(dv,body){
 	let roomNumber = body.roomNumber;
 	// let troop = body.troop.toString(2);
 	let troop = 0;
-	let nameEnd = 175+lengthOfName*8;
-	setUint64(dv,13,userId);
-	dv.setUint8(21,lengthOfName);
-	for(i in name){
-		dv.setUint8( (22+i),name[i] );
+	dv.setUint32(13,userId);
+	dv.setUint8(17,lengthOfName);
+	for(let i in name){
+		dv.setUint8( (18+i),name[i] );
 	}
-	dv.setUint32( (22+lengthOfName),roomNumber );
-	dv.setUint8( (26+lengthOfName),troop );
+	dv.setUint32( (18+lengthOfName),roomNumber );
+	dv.setUint8( (22+lengthOfName),troop );
 }
 
-functino setUint64(dv,byteOffset,content){
-	dv.setUint32(byteOffset,content>>32);
-	dv.setUint32(byteOffset+4,content&0XFFFFFFFF);
-	return dv;
-}
+// function setUint64(dv,byteOffset,content){
+// 	dv.setUint32(byteOffset,content>>32);
+// 	dv.setUint32(byteOffset+4,content&0XFFFFFFFF);
+// 	return dv;
+// }
 
 //fill information to dataview
 function fillDv(message){
@@ -76,7 +77,7 @@ function fillDv(message){
 	let type = message.type;
 	// console.log("type : "+type);
 	dv.setUint32(0,length);
-	dv.setUint64(4,dv,timestamp);
+	dv.setFloat64(4,timestamp);
 	dv.setUint8(12,type);
 	switch( type ){
 		case 9 :
@@ -115,7 +116,7 @@ export function loginAnalyis(airplane){
 		//63
 		type : 9,
 		//8
-		body : messag10000eBody
+		body : messageBody
 	}
 	if(debug)
 		console.log(message);
@@ -129,26 +130,47 @@ export function loginAnalyis(airplane){
 
 
 
-//change connecting information to decimal
+
+
+
+//fill userid information to message;
 function userIdToMes(dv){
-	return { userId : getUint64(dv,13)};
+	gamemodel.data.engineControlData.airPlane.userId = dv.getUint32(13);
+	return { userId : dv.getUint32(13)};
 }
 
-function getUint64(dv,byteOffset){
-	let first32 = dv.getUint32(byteOffset);
-	let last32 = dv.getUint32(byteOffset+4);
-	return (first32<<32+last32);
+function connectToMes( dv ){
+	let userId = dv.getUint32(13);
+	let lengthOfName = dv.getUint8(17);
+	let name = "";
+	for(let i=0;i<lengthOfName;i++){
+		name+=dv.getUint8(18+i);
+	}
+	let roomNumber = dv.getUint32(18+lengthOfName);
+	let troop = dv.getUint8(22+lengthOfName);	
+	return {
+		userId : userId,
+		nickname : {
+			lengthOfName : lengthOfName,
+			name : name
+		},
+		roomNumber : roomNumber,
+		troop : troop
+	};
 }
 
 //analyis receiving massage
 export function receiveMessage(message){
-	let dv = new DataView(message);
+	let dv = new DataView(message.data)
 	let length = dv.getUint32(0);
-	let timestamp = getUint64(dv,4);
+	let timestamp = dv.getFloat64(4);
 	let type = dv.getUint8(12);
 	switch( type ){
 		case 212 :
 			var body = userIdToMes( dv );
+			break;
+		case 9:
+			var body = connectToMes( dv );
 			break;
 	}
 
@@ -158,5 +180,7 @@ export function receiveMessage(message){
 		type : type,
 		body : body
 	}
+	if(debug)
+		console.log(returnMessage);
 	return returnMessage;
 }
