@@ -1,6 +1,6 @@
 import PIXI from "../view/pixi.js";
 import gamemodel from "../model/gamemodel.js";
-import ProtoPics from "../view/images/Prototype.png";
+import ProtoPics from "../view/images/PrototypeIII.png";
 
 // Alias for PIXI
 let autoDetectRenderer = PIXI.autoDetectRenderer,
@@ -31,7 +31,7 @@ let renderer = autoDetectRenderer(localW, localH);
 export function playGame() {
     document.body.appendChild(renderer.view);
     loader
-        .add("src/view/images/Prototype.json")
+        .add("src/view/images/PrototypeIII.json")
         .on("progress", loadProgressHandler)
         .load(renderGame);
 }
@@ -52,7 +52,7 @@ function renderGame() {
     resourceView = new Container();
     obstacleView = new Container();
 
-    id = resources["src/view/images/Prototype.json"].textures;
+    id = resources["src/view/images/PrototypeIII.json"].textures;
 
     state = play;
 
@@ -87,8 +87,8 @@ function play() {
 
     stage.addChild(obstacleView);
     stage.addChild(enemyView);
-    stage.addChild(bulletView);
     stage.addChild(selfView);
+    stage.addChild(bulletView);
     stage.addChild(resourceView);
     stage.addChild(uiView);
 }
@@ -101,18 +101,24 @@ function renderUI() {
 // Render things about selfairplane
 // Such as name, hp, damage, speed
 function renderSelfAirplane() {
-    AirplaneSelf = new Sprite(id["Airplane-Self.png"]);
+    AirplaneSelf = {};
+    AirplaneSelf.body = new Sprite(id["Selfbody.png"]);
+    AirplaneSelf.arrow = new Sprite(id["SelfArrow.png"]);
     let information = gamemodel.data.engineControlData.airPlane;
     let x = information.locationCurrent.x,
         y = information.locationCurrent.y,
         r = information.attackDir;
     // AirplaneSelf.x = x;
     // AirplaneSelf.y = y;
-    AirplaneSelf.x = CenterW;
-    AirplaneSelf.y = CenterH;
-    AirplaneSelf.anchor.set(0.5, 0.5);
-    AirplaneSelf.rotation = r;
-    selfView.addChild(AirplaneSelf);
+    AirplaneSelf.body.x = CenterW;
+    AirplaneSelf.body.y = CenterH;
+    AirplaneSelf.body.anchor.set(0.5, 0.5);
+    AirplaneSelf.arrow.x = CenterW;
+    AirplaneSelf.arrow.y = CenterH;
+    AirplaneSelf.arrow.anchor.set(0.5, 0.5);
+    AirplaneSelf.arrow.rotation = r;
+    selfView.addChild(AirplaneSelf.arrow);
+    selfView.addChild(AirplaneSelf.body);
     return [x , y];
 }
 
@@ -120,17 +126,23 @@ function renderSelfAirplane() {
 function renderEnemyAirplanes(pos) {
     enemies = gamemodel.data.backendControlData.airPlane;
     for (let i = 0; i < enemies.length; i ++) {
-        let AirplaneEnemy = new Sprite(id["Airplane-Enemy.png"]);
+        let AirplaneEnemy = {};
+        AirplaneEnemy.body = new Sprite(id["EnemyBody.png"]);
+        AirplaneEnemy.arrow = new Sprite(id["EnemyArrow.png"]);
         let x = enemies[i].locationCurrent.x,
             y = enemies[i].locationCurrent.y,
             r = enemies[i].attackDir;
         x = centerSelfAirplane(x, pos[0], CenterW);
         y = centerSelfAirplane(y, pos[1], CenterH);
-        AirplaneEnemy.x = x;
-        AirplaneEnemy.y = y;
-        AirplaneEnemy.anchor.set(0.5, 0.5);
-        AirplaneEnemy.rotation = r;
-        enemyView.addChild(AirplaneEnemy);
+        AirplaneEnemy.body.x = x;
+        AirplaneEnemy.body.y = y;
+        AirplaneEnemy.body.anchor.set(0.5, 0.5);
+        AirplaneEnemy.arrow.x = x;
+        AirplaneEnemy.arrow.y = y;
+        AirplaneEnemy.arrow.anchor.set(0.5, 0.5);
+        AirplaneEnemy.arrow.rotation = r;
+        enemyView.addChild(AirplaneEnemy.arrow);
+        enemyView.addChild(AirplaneEnemy.body);
     }
 }
 
@@ -139,7 +151,7 @@ function renderBullets(pos) {
     // Enemy bullets
     EnemyBullets = gamemodel.data.backendControlData.bullet;
     for (let i = 0; i < EnemyBullets.length; i ++) {
-        let bullet = new Sprite(id["Bullet-Harmful.png"]);
+        let bullet = new Sprite(id["RedBullet.png"]);
         let x = EnemyBullets[i].locationCurrent.x,
             y = EnemyBullets[i].locationCurrent.y;
         x = centerSelfAirplane(x, pos[0], CenterW);
@@ -154,7 +166,7 @@ function renderBullets(pos) {
     // Self bullets
     SelfBullets = gamemodel.data.engineControlData.bullet;
     for (let i = 0; i < SelfBullets.length; i ++) {
-        let bullet = new Sprite(id["Bullet-Harmless.png"]);
+        let bullet = new Sprite(id["GreenBullet.png"]);
         let x = SelfBullets[i].locationCurrent.x,
             y = SelfBullets[i].locationCurrent.y;
         x = centerSelfAirplane(x, pos[0], CenterW);
