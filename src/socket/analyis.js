@@ -4,6 +4,8 @@
 * email:luchenjiemail@gmail.com
 */
 
+import gamemodel from "../model/gamemodel"
+
 // let message={
 // 			length : "",
 // 			timestamp : "",
@@ -14,18 +16,18 @@
 //if debug
 let debug = 1;
 
-function consoleDw(dw){
-    var str = ""
-    for(var i=0;i<dw.byteLength;i++){
-    	var char = dw.getUint8(i);
-    	if(char.length<2){
-    		char = "0"+char;
-    	}
-    	str=str+char+" ";
-    }
-    console.log(str.replace(/\s/g, ""));
-	return str;
-}
+// function consoleDv(dv){
+//     var str = ""
+//     for(var i=0;i<dv.byteLength;i++){
+//     	var char = dv.getUint8(i);
+//     	if(char.length<2){
+//     		char = "0"+char;
+//     	}
+//     	str=str+char+" ";
+//     }
+//     console.log(str.replace(/\s/g, ""));
+// 	return str;
+// }
 
 //reverse a string
 function reverseString(str){
@@ -33,63 +35,58 @@ function reverseString(str){
 	return str.split("").reverse().join("");
 }
 
-//fill information to DataView
-function fillDw(dw,content,end){
-	// content = reverseString(content);
-	let length = content.length;
-	while(length--){
-		dw.setUint8(end--,content[length]);
-	}
-}
-
 function analyisUnnumber(obj){
 	//get a array for name coding by Unicode
-	let getObj = obj.split("").map( (e)=>e.codePointAt(0) ).map( (e)=>e.toString(2) );
+	let getObj = obj.split("").map( (e)=>e.codePointAt(0) );
 	//you can get name by getObj.map( (e)=>fromCodePoint(e) )
-	let returnObj = getObj.map( (e)=>"0".repeat(8-e.length)+e).join('');
 	// if(debug)
 	// 	console.log(returnObj);
-	return returnObj;
+	return getObj;
 }
 
 //fill connection message body to DataView
-function fillConnectForDw(dw,body){
-	let userId = body.userId.toString(2);
-	let lengthOfName = body.nickname.lengthOfName.toString(2);
-	console.log("lengthOfName : "+lengthOfName);
+function fillConnectForDv(dv,body){
+	let userId = body.userId;
+	let lengthOfName = body.nickname.lengthOfName;
 	let name=analyisUnnumber(body.nickname.name);
-	let roomNumber = body.roomNumber.toString(2);
+	let roomNumber = body.roomNumber;
 	// let troop = body.troop.toString(2);
-	let troop = "0";
-	let nameEnd = 175+body.nickname.lengthOfName*8;
-	fillDw(dw,userId,167);
-	fillDw(dw,lengthOfName,175);
-	fillDw(dw,name,nameEnd);
-	fillDw(dw,roomNumber,nameEnd+32);
-	fillDw(dw,troop,nameEnd+40);
+	let troop = 0;
+	dv.setUint32(13,userId);
+	dv.setUint8(17,lengthOfName);
+	for(let i in name){
+		dv.setUint8( (18+i),name[i] );
+	}
+	dv.setUint32( (18+lengthOfName),roomNumber );
+	dv.setUint8( (22+lengthOfName),troop );
 }
 
-//transfrom message to binary
-function toBinary(message){
+// function setUint64(dv,byteOffset,content){
+// 	dv.setUint32(byteOffset,content>>32);
+// 	dv.setUint32(byteOffset+4,content&0XFFFFFFFF);
+// 	return dv;
+// }
+
+//fill information to dataview
+function fillDv(message){
 	let buffer = new ArrayBuffer(message.length);
-	let dw = new DataView(buffer);
-	let length = message.length.toString(2);
-	// console.log("length : "+length)
-	let timestamp = message.timestamp.toString(2);
+	let dv = new DataView(buffer);
+	let length = message.length;
+	let timestamp = message.timestamp;
 	// console.log("timestamp : "+timestamp);
-	let type = message.type.toString(2);
+	let type = message.type;
 	// console.log("type : "+type);
-	fillDw(dw,length,31);
-	fillDw(dw,timestamp,95);
-	fillDw(dw,type,103);
+	dv.setUint32(0,length);
+	dv.setFloat64(4,timestamp);
+	dv.setUint8(12,type);
 	switch( type ){
-		case "1001" :
-			fillConnectForDw(dw,message.body);
+		case 9 :
+			fillConnectForDv(dv,message.body);
 			break;
 	}
 	// if(debug)
-		// consoleDw(dw);
-	return dw;
+		// consoledv(dv);
+	return dv;
 }
 
 //analyis the information of login
@@ -123,7 +120,7 @@ export function loginAnalyis(airplane){
 	}
 	if(debug)
 		console.log(message);
-	return toBinary(message);
+	return fillDv(message);
 }
 
 
@@ -133,31 +130,47 @@ export function loginAnalyis(airplane){
 
 
 
-//change connecting information to decimal
-function connectToDec(message){
-	let body = {};
-	body.userId = toDecimal( message.slice(0,64) );
-	body.nickname = {};
-	body.nickname.lengthOfName = toDecimal( message.slice(64,72) );
-	let nameEnd = 72+body.nickname.lengthOfName*8;
-	body.nickname.name = toDecimal( message.slice(72,nameEnd) );
-	body.roomNumber = toDecimal( message.slice(nameEnd,nameEnd+32) );
-	body.troop = toDecimal( message.slice(nameEnd+32,nameEnd+40) );
-	return body;
+
+
+
+//fill userid information to message;
+function userIdToMes(dv){
+	gamemodel.data.engineControlData.airPlane.userId = dv.getUint32(13);
+	return { userId : dv.getUint32(13)};
 }
 
-function toDecimal(message){
-	return Number.parseInt(message,2);
+function connectToMes( dv ){
+	let userId = dv.getUint32(13);
+	let lengthOfName = dv.getUint8(17);
+	let name = "";
+	for(let i=0;i<lengthOfName;i++){
+		name+=dv.getUint8(18+i);
+	}
+	let roomNumber = dv.getUint32(18+lengthOfName);
+	let troop = dv.getUint8(22+lengthOfName);	
+	return {
+		userId : userId,
+		nickname : {
+			lengthOfName : lengthOfName,
+			name : name
+		},
+		roomNumber : roomNumber,
+		troop : troop
+	};
 }
 
 //analyis receiving massage
 export function receiveMessage(message){
-	let length = toDecimal( message.slice(0,32) );
-	let timestamp = toDecimal( message.slice(32,96) );
-	let type = toDecimal( message.slice(96,104) );
+	let dv = new DataView(message.data)
+	let length = dv.getUint32(0);
+	let timestamp = dv.getFloat64(4);
+	let type = dv.getUint8(12);
 	switch( type ){
-		case 9 :
-			var body = connectToDec( message.slice(104,message.length) );
+		case 212 :
+			var body = userIdToMes( dv );
+			break;
+		case 9:
+			var body = connectToMes( dv );
 			break;
 	}
 
@@ -167,5 +180,7 @@ export function receiveMessage(message){
 		type : type,
 		body : body
 	}
+	if(debug)
+		console.log(returnMessage);
 	return returnMessage;
 }

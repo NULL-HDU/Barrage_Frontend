@@ -120,7 +120,7 @@ function startGame() {
     gamemodel.data.engineControlData.airPlane = airPlane;
     //init socket
     tm.login(airPlane);
-    tm.communitate(airPlane);
+    // tm.communitate(airPlane);
     changeKeyEventBindings();
     startGameLoop();
     enableBulletsCollectingEngine();
