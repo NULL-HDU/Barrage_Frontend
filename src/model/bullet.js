@@ -10,7 +10,8 @@ export default class Bullet extends Ball{
             x:0,
             y:0,
         };
-    };
+        this.radius = 5;
+    }
 
     pathCalculate() {
 
@@ -28,6 +29,8 @@ export default class Bullet extends Ball{
                 this.alive = false;
                 this.isKilled = false;
             }
+
+//        console.log("x: " + this.locationCurrent.x + "y: " + this.locationCurrent.y);
     }
 
 }

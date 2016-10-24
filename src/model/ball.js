@@ -12,13 +12,15 @@ export default class Ball {
         this.hp = 10000;
         this.damage = 100;
         this.name = 'Arthury';
-        this.camp = null;
+        this.camp = undefined;
+        this.userId = undefined;
         this.roleId = 0;
-        this.special = null;
+        this.special = undefined;
         this.speed = 100;
         this.attackDir = 0;
         this.alive = true;
         this.isKilled = false;
+        this.hasJudge = false;
         this.locationCurrent = {
             x:global.LOCAL_WIDTH/2,
             y:global.LOCAL_HEIGHT/2,
