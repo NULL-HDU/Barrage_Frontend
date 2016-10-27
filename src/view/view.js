@@ -102,45 +102,56 @@ function renderUI() {
 // Such as name, hp, damage, speed
 function renderSelfAirplane() {
     AirplaneSelf = {};
-    AirplaneSelf.body = new Sprite(id["Selfbody.png"]);
+    AirplaneSelf.body = new Sprite(id["SelfBody.png"]);
     AirplaneSelf.arrow = new Sprite(id["SelfArrow.png"]);
+
     let information = gamemodel.data.engineControlData.airPlane;
     let x = information.locationCurrent.x,
         y = information.locationCurrent.y,
         r = information.attackDir;
+    
     // AirplaneSelf.x = x;
     // AirplaneSelf.y = y;
     AirplaneSelf.body.x = CenterW;
     AirplaneSelf.body.y = CenterH;
     AirplaneSelf.body.anchor.set(0.5, 0.5);
+    
     AirplaneSelf.arrow.x = CenterW;
     AirplaneSelf.arrow.y = CenterH;
     AirplaneSelf.arrow.anchor.set(0.5, 0.5);
     AirplaneSelf.arrow.rotation = r;
+    
     selfView.addChild(AirplaneSelf.arrow);
     selfView.addChild(AirplaneSelf.body);
+    
     return [x , y];
 }
 
 // Render enemies
 function renderEnemyAirplanes(pos) {
     enemies = gamemodel.data.backendControlData.airPlane;
+
     for (let i = 0; i < enemies.length; i ++) {
         let AirplaneEnemy = {};
         AirplaneEnemy.body = new Sprite(id["EnemyBody.png"]);
         AirplaneEnemy.arrow = new Sprite(id["EnemyArrow.png"]);
+       
         let x = enemies[i].locationCurrent.x,
             y = enemies[i].locationCurrent.y,
             r = enemies[i].attackDir;
+       
         x = centerSelfAirplane(x, pos[0], CenterW);
         y = centerSelfAirplane(y, pos[1], CenterH);
+       
         AirplaneEnemy.body.x = x;
         AirplaneEnemy.body.y = y;
         AirplaneEnemy.body.anchor.set(0.5, 0.5);
+       
         AirplaneEnemy.arrow.x = x;
         AirplaneEnemy.arrow.y = y;
         AirplaneEnemy.arrow.anchor.set(0.5, 0.5);
         AirplaneEnemy.arrow.rotation = r;
+       
         enemyView.addChild(AirplaneEnemy.arrow);
         enemyView.addChild(AirplaneEnemy.body);
     }
@@ -150,31 +161,41 @@ function renderEnemyAirplanes(pos) {
 function renderBullets(pos) {
     // Enemy bullets
     EnemyBullets = gamemodel.data.backendControlData.bullet;
+    
     for (let i = 0; i < EnemyBullets.length; i ++) {
         let bullet = new Sprite(id["RedBullet.png"]);
         let x = EnemyBullets[i].locationCurrent.x,
-            y = EnemyBullets[i].locationCurrent.y;
+            y = EnemyBullets[i].locationCurrent.y,
+            r = EnemyBullets[i].attackDir;
+        
         x = centerSelfAirplane(x, pos[0], CenterW);
         y = centerSelfAirplane(y, pos[1], CenterH);
+        
         bullet.x = x;
         bullet.y = y;
         bullet.anchor.set(0.5, 0.5);
-        bullet.rotation = 0;
+        bullet.rotation = r;
+        
         bulletView.addChild(bullet);
     }
 
     // Self bullets
     SelfBullets = gamemodel.data.engineControlData.bullet;
+    
     for (let i = 0; i < SelfBullets.length; i ++) {
         let bullet = new Sprite(id["GreenBullet.png"]);
         let x = SelfBullets[i].locationCurrent.x,
-            y = SelfBullets[i].locationCurrent.y;
+            y = SelfBullets[i].locationCurrent.y,
+            r = SelfBullets[i].attackDir;
+       
         x = centerSelfAirplane(x, pos[0], CenterW);
         y = centerSelfAirplane(y, pos[1], CenterH);
+       
         bullet.x = x;
         bullet.y = y;
         bullet.anchor.set(0.5, 0.5);
-        bullet.rotation = 0;
+        bullet.rotation = r;
+       
         bulletView.addChild(bullet);
     }
 

@@ -45,7 +45,7 @@
 	"sourceSize": {"w":110,"h":110},
 	"pivot": {"x":0.5,"y":0.5}
 },
-"Selfbody.png":
+"SelfBody.png":
 {
 	"frame": {"x":0,"y":295,"w":75,"h":75},
 	"rotated": false,
@@ -61,6 +61,6 @@
 	"format": "RGBA8888",
 	"size": {"w":110,"h":370},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:6d497106fc829bac43654e06bda3f8b5:bb7ca27b2f292af5945efc8e13f6c897:2ea6b7b160e9cbfab2c3030051131662$"
+	"smartupdate": "$TexturePacker:SmartUpdate:8b334c45bc172b8d6ee1bb532aed79fb:301d0019dc007b04a3af0297b18d5b6a:2ea6b7b160e9cbfab2c3030051131662$"
 }
 }
