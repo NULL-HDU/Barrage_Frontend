@@ -29,6 +29,7 @@ let state;
 // Export for engine/handle_user_input.js
 let renderer = autoDetectRenderer(localW, localH);
 export function playGame() {
+    renderer.view.id = "canvas";
     document.body.appendChild(renderer.view);
     loader
         .add("src/view/images/PrototypeIII.json")
