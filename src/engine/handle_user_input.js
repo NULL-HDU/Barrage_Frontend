@@ -48,11 +48,12 @@ function configTestEnemyPlanes() {
 function enemyBulletMakerLoop() {
     setTimeout(function () {
         let bullet = new Bullet();
+        let angel = gamemodel.data.backendControlData.airPlane[0].attackDir % (2 * Math.PI);
         bullet.camp = 1;
-        bullet.locationCurrent.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x;
-        bullet.locationCurrent.y = gamemodel.data.backendControlData.airPlane[0].locationCurrent.y;
-        bullet.startPoint.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x;
-        bullet.startPoint.y = gamemodel.data.backendControlData.airPlane[0].locationCurrent.y;
+        bullet.locationCurrent.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 50;
+        bullet.locationCurrent.y = gamemodel.data.backendControlData.airPlane[0].locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 50;
+        bullet.startPoint.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * bullet.radius;
+        bullet.startPoint.y = gamemodel.data.backendControlData.airPlane[0].locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * bullet.radius;
         bullet.attackDir = gamemodel.data.backendControlData.airPlane[0].attackDir;
         gamemodel.data.backendControlData.bullet.push(bullet);
         enemyBulletMakerLoop();
@@ -62,11 +63,12 @@ function enemyBulletMakerLoop() {
 function bulletMakerLoop() {
     setTimeout(function () {
         let bullet = new Bullet();
+        let angel = airPlane.attackDir;
         bullet.camp = 0;
-        bullet.locationCurrent.x = airPlane.locationCurrent.x;
-        bullet.locationCurrent.y = airPlane.locationCurrent.y;
-        bullet.startPoint.x = airPlane.locationCurrent.x;
-        bullet.startPoint.y = airPlane.locationCurrent.y;
+        bullet.locationCurrent.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 50;
+        bullet.locationCurrent.y = airPlane.locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 50;
+        bullet.startPoint.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 50;
+        bullet.startPoint.y = airPlane.locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 50;
         bullet.attackDir = airPlane.attackDir;
         gamemodel.data.engineControlData.bullet.push(bullet);
         if (bulletMakerStartFlag === 0) {
@@ -75,9 +77,45 @@ function bulletMakerLoop() {
     }, global.BULLET_MAKER_LOOP_INTERVAL);
 }
 
+function sBulletMakerLoop() {
+    setTimeout(function () {
+        let l_bullet = new Bullet();
+        let m_bullet = new Bullet();
+        let r_bullet = new Bullet();
+        l_bullet.camp = 0;
+        m_bullet.camp = 0;
+        r_bullet.camp = 0;
+        l_bullet.locationCurrent.x = airPlane.locationCurrent.x;
+        l_bullet.locationCurrent.y = airPlane.locationCurrent.y;
+        l_bullet.startPoint.x = airPlane.locationCurrent.x;
+        l_bullet.startPoint.y = airPlane.locationCurrent.y;
+        l_bullet.attackDir = airPlane.attackDir-1;
+        gamemodel.data.engineControlData.bullet.push(l_bullet);
+
+        m_bullet.locationCurrent.x = airPlane.locationCurrent.x;
+        m_bullet.locationCurrent.y = airPlane.locationCurrent.y;
+        m_bullet.startPoint.x = airPlane.locationCurrent.x;
+        m_bullet.startPoint.y = airPlane.locationCurrent.y;
+        m_bullet.attackDir = airPlane.attackDir;
+        gamemodel.data.engineControlData.bullet.push(m_bullet);
+
+        r_bullet.locationCurrent.x = airPlane.locationCurrent.x;
+        r_bullet.locationCurrent.y = airPlane.locationCurrent.y;
+        r_bullet.startPoint.x = airPlane.locationCurrent.x;
+        r_bullet.startPoint.y = airPlane.locationCurrent.y;
+        r_bullet.attackDir = airPlane.attackDir+1;
+        gamemodel.data.engineControlData.bullet.push(r_bullet);
+
+        if (bulletMakerStartFlag === 0) {
+            sBulletMakerLoop();
+        }
+    },global.BULLET_MAKER_LOOP_INTERVAL);
+}
+
 
 function enableBulletEnigne(){
     bulletMakerStartFlag = 0;
+    //sBulletMakerLoop();
     bulletMakerLoop();
 }
   
@@ -113,10 +151,48 @@ function uselessBulletsCollect(){
 
 }
 
+function configCanvasEventListen(){
+    //屏蔽右键菜单
+    document.addEventListener("contextmenu", function(e){
+        e.preventDefault();
+    }, false);
+
+    let canvas = document.getElementById("canvas");
+    canvas.addEventListener("mousedown",mousePress);
+    canvas.addEventListener("mouseup",mouseRelease);
+    canvas.addEventListener("mousemove",mouseMove);
+}
+
+function mouseMove(e){
+    let oppositeSide = e.screenX - global.LOCAL_WIDTH/2;
+    let limb = e.screenY - global.LOCAL_HEIGHT/2;
+    let A = Math.atan2(limb,oppositeSide) + Math.PI / 2;
+    airPlane.attackDir = A;
+}
+
+function mouseRelease(e){
+    if(e.which === 3){
+        console.log("right click");
+    }else if(e.which === 1){
+//        console.log("left click");
+        disableBulletEngine();
+    }
+}
+
+function mousePress(e){
+    if(e.which === 3){
+        console.log("right click");
+    }else if(e.which === 1){
+  //      console.log("left click");
+        enableBulletEnigne();
+    }
+}
+
 function startGame() {
     let tm = new transmitted();
-    document.getElementById('gameWrapper').style.opacity = 0;
+    document.getElementById('gameWrapper').style.display = "none";
     playGame();
+    configCanvasEventListen();
     gamemodel.data.engineControlData.airPlane = airPlane;
     //init socket
     tm.login(airPlane);
@@ -182,7 +258,7 @@ function enableBulletsCollectingEngine() {
 
 function startGameLoop() {
     looper(() => {
-        gamemodel.data.backendControlData.airPlane[0].attackDir += 0.05;
+        //gamemodel.data.backendControlData.airPlane[0].attackDir += 0.05;
         airPlane.move(vx,vy,vangle);
         //airPlane.attackDir += 0.05;
         //自主机子弹
@@ -204,7 +280,7 @@ function startGameLoop() {
 function reductAngle(angle) {
     let a = angle % (2 * Math.PI);
     //斜边速度
-    let bevelEdge = 5;
+    let bevelEdge = global.AIRPLANE_SPEED;
     vx = Math.cos(a + (3/2)*Math.PI) * bevelEdge;
     vy = Math.sin(a + (3/2)*Math.PI) * bevelEdge;
 }
@@ -216,10 +292,10 @@ function changeKeyEventBindings() {
 
     playerNameInput.removeEventListener('keyup',bindNameInputEvent);
 
-    let left = keyboard(global.KEY_LEFT),
-        up = keyboard(global.KEY_UP),
-        right = keyboard(global.KEY_RIGHT),
-        down = keyboard(global.KEY_DOWN),
+    let left = keyboard(global.KEY_A),
+        up = keyboard(global.KEY_W),
+        right = keyboard(global.KEY_D),
+        down = keyboard(global.KEY_S),
         space = keyboard(global.KEY_SPACE);
 
     space.press = function() {
@@ -237,7 +313,8 @@ function changeKeyEventBindings() {
     up.press = function() {
         if( test==1 )
             console.log('up press');
-        reductAngle(airPlane.attackDir);
+        //  reductAngle(airPlane.attackDir);
+        vy = -1;
     };
 
     up.release = function() {
@@ -254,9 +331,10 @@ function changeKeyEventBindings() {
     down.press = function() {
         if( test==1 )
             console.log('down press');
-        reductAngle(airPlane.attackDir);
-        vx = -vx;
-        vy = -vy;
+        // reductAngle(airPlane.attackDir);
+        // vx = -vx;
+        // vy = -vy;
+        vy = 1;
     };
 
     down.release = function() {
@@ -274,7 +352,8 @@ function changeKeyEventBindings() {
     left.press = function() {
         if (test==1)
             console.log('left press');
-        vangle = -Math.PI / 180 * 3;
+        //vangle = -Math.PI / 180 * 3;
+        vx = -1;
     };
 
 
@@ -282,7 +361,9 @@ function changeKeyEventBindings() {
         if( test==1 )
             console.log('left release');
         if(right.isUp){
-            vangle = 0;
+            //vangle = 0;
+            vx = 0;
+            vy = 0;
         }else{
             right.press();
         };
@@ -291,14 +372,17 @@ function changeKeyEventBindings() {
     right.press = function() {
         if( test==1 )
             console.log('right press');
-        vangle = Math.PI / 180 * 3;
+        //vangle = Math.PI / 180 * 3;
+        vx = 1;
     };
 
     right.release = function() {
         if( test==1 )
             console.log('right release');
         if(left.isUp){
-            vangle = 0;
+            //vangle = 0;
+            vx = 0;
+            vy = 0;
         }else{
             left.press();
         };
