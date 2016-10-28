@@ -314,7 +314,7 @@ function changeKeyEventBindings() {
         if( test==1 )
             console.log('up press');
         //  reductAngle(airPlane.attackDir);
-        vy = -1;
+        vy = -global.AIRPLANE_SPEED;
     };
 
     up.release = function() {
@@ -334,7 +334,7 @@ function changeKeyEventBindings() {
         // reductAngle(airPlane.attackDir);
         // vx = -vx;
         // vy = -vy;
-        vy = 1;
+        vy = global.AIRPLANE_SPEED;
     };
 
     down.release = function() {
@@ -353,7 +353,7 @@ function changeKeyEventBindings() {
         if (test==1)
             console.log('left press');
         //vangle = -Math.PI / 180 * 3;
-        vx = -1;
+        vx = -global.AIRPLANE_SPEED;
     };
 
 
@@ -373,7 +373,7 @@ function changeKeyEventBindings() {
         if( test==1 )
             console.log('right press');
         //vangle = Math.PI / 180 * 3;
-        vx = 1;
+        vx = global.AIRPLANE_SPEED;
     };
 
     right.release = function() {

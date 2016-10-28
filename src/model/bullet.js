@@ -15,7 +15,7 @@ export default class Bullet extends Ball{
 
     pathCalculate() {
 
-            let speed = 3;
+            let speed = global.BULLET_SPEED;
             let angel = this.attackDir % (2 * Math.PI);
             this.locationCurrent.x += Math.cos(angel + (3/2)*Math.PI) * speed;
             this.locationCurrent.y += Math.sin(angel + (3/2)*Math.PI) * speed;
