@@ -1,6 +1,9 @@
 import PIXI from "../view/pixi.js";
 import gamemodel from "../model/gamemodel.js";
-import ProtoPics from "../view/images/PrototypeIII.png";
+// import ProtoPics from "../view/images/PrototypeIII.png";
+
+let ProtoJ = "/static/view/images/PrototypeIII.json";
+// src
 
 // Alias for PIXI
 let autoDetectRenderer = PIXI.autoDetectRenderer,
@@ -31,8 +34,9 @@ let renderer = autoDetectRenderer(localW, localH);
 export function playGame() {
     renderer.view.id = "canvas";
     document.body.appendChild(renderer.view);
+    console.log(ProtoJ)
     loader
-        .add("src/view/images/PrototypeIII.json")
+        .add(ProtoJ)
         .on("progress", loadProgressHandler)
         .load(renderGame);
 }
@@ -53,7 +57,7 @@ function renderGame() {
     resourceView = new Container();
     obstacleView = new Container();
 
-    id = resources["src/view/images/PrototypeIII.json"].textures;
+    id = resources[ProtoJ].textures;
 
     state = play;
 
