@@ -17,7 +17,10 @@ export default {
             food:[],
         },
     },
-    messageCache:[],
+    socketCache:{
+        damageInformation:[],
+        newBallInformation:[],
+    },
     deadCache:[],
     disappearCache:[],
     collisionCache:[],
