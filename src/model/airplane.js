@@ -10,6 +10,8 @@ import global from "../engine/global"
 export default class Airplane extends Ball {
     constructor() {
         super();
+        this.ballType = "Airplane";
+        this.radius = 5;
     };
 
     move(vx,vy,vangle) {

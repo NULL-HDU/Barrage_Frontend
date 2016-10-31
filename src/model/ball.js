@@ -7,7 +7,7 @@ import global from "../engine/global"
 
 export default class Ball {
     constructor() {
-        this.ballType = null;
+        this.ballType = undefined;
         this.id = 0;
         this.hp = 10000;
         this.damage = 100;
