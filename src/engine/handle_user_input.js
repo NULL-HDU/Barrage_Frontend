@@ -304,7 +304,43 @@ function changeKeyEventBindings() {
         up = keyboard(global.KEY_W),
         right = keyboard(global.KEY_D),
         down = keyboard(global.KEY_S),
+        shift = shiftLikeEvent("shift"),
         space = keyboard(global.KEY_SPACE);
+
+
+    shift.press = function() {
+        if( test==1 )
+            console.log("shift press");
+        if(up.isDown){
+            vy = -global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
+        }
+        if(down.isDown){
+            vy = global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
+        }
+        if(left.isDown){
+            vx = -global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
+        }
+        if(right.isDown){
+            vx = global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
+        }
+    };
+
+    shift.release = function() {
+        if( test==1 )
+            console.log("shift release");
+        if(up.isDown){
+            vy = -global.AIRPLANE_SPEED;
+        }
+        if(down.isDown){
+            vy = global.AIRPLANE_SPEED;
+        }
+        if(left.isDown){
+            vx = -global.AIRPLANE_SPEED;
+        }
+        if(right.isDown){
+            vx = global.AIRPLANE_SPEED;
+        }
+    };
 
     space.press = function() {
         if( test==1 )
@@ -321,7 +357,12 @@ function changeKeyEventBindings() {
     up.press = function() {
         if( test==1 )
             console.log('up press');
-        vy = -global.AIRPLANE_SPEED;
+        if(shift.isDown){
+            vy = -global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
+        }else{
+            vy = -global.AIRPLANE_SPEED;
+        }
+        
     };
 
     up.release = function() {
@@ -337,7 +378,12 @@ function changeKeyEventBindings() {
     down.press = function() {
         if( test==1 )
             console.log('down press');
-        vy = global.AIRPLANE_SPEED;
+        if(shift.isDown){
+            vy = global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
+        }else{
+            vy = global.AIRPLANE_SPEED;
+        }
+        
     };
 
     down.release = function() {
@@ -354,7 +400,12 @@ function changeKeyEventBindings() {
     left.press = function() {
         if (test==1)
             console.log('left press');
-        vx = -global.AIRPLANE_SPEED;
+        if(shift.isDown){
+            vx = -global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
+        }else{
+            vx = -global.AIRPLANE_SPEED;
+        }
+        
     };
 
 
@@ -371,7 +422,12 @@ function changeKeyEventBindings() {
     right.press = function() {
         if( test==1 )
             console.log('right press');
-        vx = global.AIRPLANE_SPEED;
+        if(shift.isDown){
+            vx = global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
+        }else{
+            vx = global.AIRPLANE_SPEED;
+        }
+        
     };
 
     right.release = function() {
@@ -428,6 +484,44 @@ function mouse(){
     mouse.upHandler = function(event) {
         event.preventDefault();
     }
+}
+
+//shift like event detect
+function shiftLikeEvent(desc) {
+    var key = {};
+    key.desc = desc;
+    key.isDown = false;
+    key.isUp = true;
+    key.press = undefined;
+    key.release = undefined;
+
+    if(key.desc === "shift"){
+        key.downHandler = function(event) {
+            if(event.shiftKey){
+                //console.log("down detect");
+                if(key.isUp && key.press) key.press();
+                key.isDown = true;
+                key.isUp = false;
+            }
+            event.preventDefault();
+        };
+
+        key.upHandler = function(event) {
+            if(!event.shiftKey){
+                //console.log("up detect");
+                if(key.isDown && key.release) key.release();
+                key.isDown = false;
+                key.isUp = true;
+            }
+            event.preventDefault();
+        };
+    }
+
+    window.addEventListener("keydown",key.downHandler.bind(key),false);
+    window.addEventListener("keyup",key.upHandler.bind(key),false);
+
+    return key;
+
 }
 
 //keyboard
