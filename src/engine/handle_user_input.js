@@ -197,7 +197,6 @@ function startGame() {
     document.getElementById('gameWrapper').style.display = "none";
     playGame();
     configCanvasEventListen();
-    gamemodel.data.engineControlData.airPlane = airPlane;
     //init socket
     tm.login(airPlane);
     // tm.communitate(airPlane);
@@ -468,6 +467,7 @@ function bindNameInputEvent(e){
 }
 
 window.onload = function() {
+    gamemodel.data.engineControlData.airPlane = airPlane;
     playerNameInput.addEventListener('keyup', bindNameInputEvent);
 };
 
