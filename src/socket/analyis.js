@@ -143,7 +143,7 @@ function fillDv(message){
 	let buffer = new ArrayBuffer(message.length);
 	let dv = new DataView(buffer);
 	let length = message.length;
-	let timestamp = message.timestamp;
+	let timestamp = message.timestamp*1000000
 	// console.log("timestamp : "+timestamp);
 	let type = message.type;
 	// console.log("type : "+type);
@@ -165,9 +165,8 @@ function fillDv(message){
 
 //analyis the information of login
 export function loginAnalyis(airplane){
-	
 	let messageBody = {
-		userId : airplane.id,
+		userId : airplane.userId,
 		//64
 		nickname : {
 			lengthOfName : airplane.name.length,
@@ -337,6 +336,7 @@ function fillCollToColls(dv,length){
 function fillBallToMes(dv,start=13){
 	let ball={};
 	ball.camp = dv.getUint32(start);
+	ball.ballId={};
 	ball.ballId.userId = dv.getUint32(start+4);
 	ball.ballId.id = dv.getUint16(start+8);
 	ball.nickname.lengthOfName = dv.getUint8(start+10);
@@ -396,6 +396,16 @@ function groundToMes(dv){
 	};
 }
 
+function specialToMes(dv){
+	let length = dv.getUint8(13);
+	let body = "";
+	for(let i=0;i<length;i++){
+		let letter = String.fromCodePoint(dv.getUint8(14+i));
+		body=body+letter;
+	}
+	return body;
+}
+
 function overToMes(dv){
 	return dv.getUint8(13);
 }
@@ -418,6 +428,9 @@ export function receiveMessage(message){
 			break;
 		case 9:
 			var body = connectToMes( dv );
+			break;
+		case 10:
+			var body = specialToMes(dv);
 			break;
 		case 11:
 			var body = overToMes(dv);

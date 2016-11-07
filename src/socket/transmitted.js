@@ -20,10 +20,10 @@ export default class transmitted{
 		let message = analyis.loginAnalyis(airplane);
 		if( this.ws.sendMessage(message) ){
 			return true;
-			console.log("send succeed!");
+			console.log("load send succeed!");
 		}else{
 			return false;
-			console.log("send failed...");
+			console.log("load send failed...");
 		}
 	}
 
@@ -33,10 +33,10 @@ export default class transmitted{
 		let message = analyis.playgroundInfoAnalyis();
 		if( this.ws.sendMessage(message) ){
 			return true;
-			console.log("send succeed!");
+			console.log("playgronud send succeed!");
 		}else{
 			return false;
-			console.log("send failed...");
+			console.log("playgronud send failed...");
 		}
 	}
 
