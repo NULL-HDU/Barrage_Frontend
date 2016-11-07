@@ -22,7 +22,8 @@ let socketStatusSwitcher = function(){
 //action for websocket
 export default class socket {
 	
-	constructor(wsUrl="ws://myfickle.cn:1234/ws",rollingTime=11){
+	// constructor(wsUrl="ws://myfickle.cn:1234/ws",rollingTime=11){
+	constructor(wsUrl="ws://myfickle.cn:1234/flow",rollingTime=11){
 		this.wsUrl = wsUrl;
 		this.rollingTime=rollingTime;
 		this.ws = null;
@@ -49,8 +50,6 @@ export default class socket {
 
 	    ws.onmessage = function(e) {
 	    	let message = analyis.receiveMessage( e );
-	    	console.log("receive : ");
-	    	console.log(message);
 	    };
 	    
 	    ws.onerror = function(e) {

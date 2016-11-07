@@ -25,6 +25,7 @@ var test = 1;        //0 for view,1 for engine,2 for socket
 var bulletMakerStartFlag = 0; //0 for enable,1 for disable;
 
 var bulletMaker = undefined;
+var tm = new transmitted();
 
 var debug = function(args) {
     if (console && console.log) {
@@ -176,7 +177,7 @@ function mouseMove(e){
 
 function mouseRelease(e){
     if(e.which === 3){
-        console.log("right click");
+        // console.log("right click");
     }else if(e.which === 1){
 //        console.log("left click");
         disableBulletEngine();
@@ -185,7 +186,7 @@ function mouseRelease(e){
 
 function mousePress(e){
     if(e.which === 3){
-        console.log("right click");
+        // console.log("right click");
     }else if(e.which === 1){
   //      console.log("left click");
         enableBulletEnigne();
@@ -193,14 +194,13 @@ function mousePress(e){
 }
 
 function startGame() {
-    let tm = new transmitted();
     document.getElementById('gameWrapper').style.display = "none";
     playGame();
     configCanvasEventListen();
     gamemodel.data.engineControlData.airPlane = airPlane;
     //init socket
     tm.login(airPlane);
-    // tm.communitate(airPlane);
+    window.setTimeout(tm.playgroundInfo(),1000);
     changeKeyEventBindings();
     startGameLoop();
     enableBulletsCollectingEngine();
