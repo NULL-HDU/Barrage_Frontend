@@ -28,11 +28,16 @@ export default class transmitted{
 	}
 
 	//analyis receiving message
-	communitate(airplane){
-		
-		// if(message!=null)
-		console.log("message : ")
-		// console.log(message);
+	playgroundInfo(){
+		console.log("playgronud send!");
+		let message = analyis.playgroundInfoAnalyis();
+		if( this.ws.sendMessage(message) ){
+			return true;
+			console.log("send succeed!");
+		}else{
+			return false;
+			console.log("send failed...");
+		}
 	}
 
 }
