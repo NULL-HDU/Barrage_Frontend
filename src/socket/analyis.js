@@ -339,6 +339,7 @@ function fillBallToMes(dv,start=13){
 	ball.ballId={};
 	ball.ballId.userId = dv.getUint32(start+4);
 	ball.ballId.id = dv.getUint16(start+8);
+	ball.nickname={};
 	ball.nickname.lengthOfName = dv.getUint8(start+10);
 	for(let i=0;i<ball.nickname.lengthOfName;i++){
 		ball.nickname.name+=dv.getUint8(start+11+i).toString();
