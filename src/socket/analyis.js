@@ -154,7 +154,7 @@ function fillDv(message){
 		case 9 :
 			fillConnectForDv(dv,message.body);
 			break;
-		case 7 :
+		case 12 :
 			fillgroundForDv(dv,message.body);
 			break;
 	}
@@ -216,7 +216,7 @@ export function playgroundInfoAnalyis(){
 		//32
 		timestamp : new Date().getTime(),
 		//63
-		type : 7,
+		type : 12,
 		//8
 		body : messageBody
 	}
