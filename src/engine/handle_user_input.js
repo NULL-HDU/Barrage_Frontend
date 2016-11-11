@@ -54,8 +54,8 @@ function enemyBulletMakerLoop() {
         bullet.ballType = "Bullet";
         let angel = gamemodel.data.backendControlData.airPlane[0].attackDir % (2 * Math.PI);
         bullet.camp = 1;
-        bullet.locationCurrent.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 50;
-        bullet.locationCurrent.y = gamemodel.data.backendControlData.airPlane[0].locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 50;
+        bullet.locationCurrent.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 100;
+        bullet.locationCurrent.y = gamemodel.data.backendControlData.airPlane[0].locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 100;
         bullet.startPoint.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * bullet.radius;
         bullet.startPoint.y = gamemodel.data.backendControlData.airPlane[0].locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * bullet.radius;
         bullet.attackDir = gamemodel.data.backendControlData.airPlane[0].attackDir;
@@ -70,8 +70,8 @@ function bulletMakerLoop() {
         bullet.ballType = "Bullet";
         let angel = airPlane.attackDir;
         bullet.camp = 0;
-        bullet.locationCurrent.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 50;
-        bullet.locationCurrent.y = airPlane.locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 50;
+        bullet.locationCurrent.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 100;
+        bullet.locationCurrent.y = airPlane.locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 100;
         bullet.startPoint.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 50;
         bullet.startPoint.y = airPlane.locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 50;
         bullet.attackDir = airPlane.attackDir;
@@ -120,10 +120,9 @@ function sBulletMakerLoop() {
 
 function enableBulletEnigne(){
     bulletMakerStartFlag = 0;
-    //sBulletMakerLoop();
     bulletMakerLoop();
 }
-  
+
 function disableBulletEngine(){
     bulletMakerStartFlag = 1;
 }
@@ -153,7 +152,6 @@ function uselessBulletsCollect(){
             gamemodel.data.backendControlData.bullet.splice(j,1);
         }
     }
-
 }
 
 function configCanvasEventListen(){
@@ -203,7 +201,6 @@ function startGame() {
     changeKeyEventBindings();
     startGameLoop();
     enableBulletsCollectingEngine();
-//    enableCollisionDetectionEngine();
 
     //测试
     configTestEnemyPlanes();
@@ -236,15 +233,30 @@ function enableCollisionDetectionEngine(){
                 let b = new PVector(collidors[j].locationCurrent.x,collidors[j].locationCurrent.y);
                 let distance = PVector.dist(a,b);
                 if(distance <= collidors[j].radius + selfBullets[i].radius && collidors[j].camp !== selfBullets[i].camp){
+
                     //碰撞处理和伤害计算
                     if(collidors[j].ballType === "Bullet"){
                         collidors[j].alive = false;
                         collidors[j].isKilled = true;
                     }
+
                     if(selfBullets[i].ballType === "Bullet"){
                         selfBullets[i].alive = false;
                         selfBullets[i].isKilled = true;
                     }
+
+                    //不管碰撞的是子弹和子弹，还是子弹和飞机都需要加入碰撞信息中
+                    //暂未处理飞机撞击飞机的情况
+                    let damageInformation = {
+                        collision1:collidors[j].id,
+                        collision2:selfBullets[i].id,
+                        damageValue:[collidors[j].damageValue,selfBullets[i].damageValue],
+                        isAlive:[collidors[j].alive,selfBullets[i].alive],
+                        willDisappear:[!collidors[j].alive,!selfBullets[i].alive],
+                    };
+                    gamemodel.socketCache.damageInformation.push(damageInformation);
+
+                    //只判断两个相撞
                     break;
                 }
             }
@@ -265,7 +277,7 @@ function enableBulletsCollectingEngine() {
 
 function startGameLoop() {
     looper(() => {
-        //gamemodel.data.backendControlData.airPlane[0].attackDir += 0.05;
+        gamemodel.data.backendControlData.airPlane[0].attackDir += 0.05;
         airPlane.move(vx,vy,vangle);
         //airPlane.attackDir += 0.05;
         //自主机子弹
@@ -280,6 +292,7 @@ function startGameLoop() {
         });
 
         enableCollisionDetectionEngine();
+
     },global.GAME_LOOP_INTERVAL);
 }
 
