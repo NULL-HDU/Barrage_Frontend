@@ -1,9 +1,8 @@
 import PIXI from "../view/pixi.js";
 import gamemodel from "../model/gamemodel.js";
-// import ProtoPics from "../view/images/PrototypeIII.png";
 
-let ProtoJ = "/static/view/images/PrototypeIII.json";
-// src
+// Imags
+let ProtoJ = "/static/view/pics/ufo.json";
 
 // Alias for PIXI
 let autoDetectRenderer = PIXI.autoDetectRenderer,
@@ -25,16 +24,18 @@ let id;
 let stage;
 let uiView,selfView, enemyView, bulletView, resourceView, obstacleView;
 let AirplaneSelf, enemies, SelfBullets, EnemyBullets, GameResources, obstacles; 
+let timeC, timeR;
 
 // Game state
 let state;
 
 // Export for engine/handle_user_input.js
 let renderer = autoDetectRenderer(localW, localH);
+renderer.backgroundColor = 0xf5f5f5;
+renderer.view.id = "canvas";
+
 export function playGame() {
-    renderer.view.id = "canvas";
     document.body.appendChild(renderer.view);
-    console.log(ProtoJ)
     loader
         .add(ProtoJ)
         .on("progress", loadProgressHandler)
@@ -61,12 +62,21 @@ function renderGame() {
 
     state = play;
 
+    timeC = 0;
+
     // Loop rendering
     loopRendering();
 }
 
 // Loop render the scenes
 function loopRendering() {
+    timeC += 1 / 4;
+    if (timeC > 60) {
+        timeC -= 60;
+    }
+
+    timeR = 2 * 3.1415926 * timeC / 60;
+
     requestAnimationFrame(loopRendering);
     state();
     renderer.render(stage);
@@ -107,8 +117,10 @@ function renderUI() {
 // Such as name, hp, damage, speed
 function renderSelfAirplane() {
     AirplaneSelf = {};
-    AirplaneSelf.body = new Sprite(id["SelfBody.png"]);
-    AirplaneSelf.arrow = new Sprite(id["SelfArrow.png"]);
+    AirplaneSelf.body = new Sprite(id["ufo_blue_body.png"]);
+    AirplaneSelf.gun = new Sprite(id["ufo_blue_gun.png"]);
+    AirplaneSelf.man = new Sprite(id["ufo_blue_man.png"]);
+    AirplaneSelf.co = new Sprite(id["ufo_blue_co.png"]);
 
     let information = gamemodel.data.engineControlData.airPlane;
     let x = information.locationCurrent.x,
@@ -119,15 +131,31 @@ function renderSelfAirplane() {
     // AirplaneSelf.y = y;
     AirplaneSelf.body.x = CenterW;
     AirplaneSelf.body.y = CenterH;
+    AirplaneSelf.body.scale.set(0.5,0.5);
     AirplaneSelf.body.anchor.set(0.5, 0.5);
+    AirplaneSelf.body.rotation = timeR;
     
-    AirplaneSelf.arrow.x = CenterW;
-    AirplaneSelf.arrow.y = CenterH;
-    AirplaneSelf.arrow.anchor.set(0.5, 0.5);
-    AirplaneSelf.arrow.rotation = r;
+    AirplaneSelf.co.x = CenterW;
+    AirplaneSelf.co.y = CenterH;
+    AirplaneSelf.co.scale.set(0.5,0.5);
+    AirplaneSelf.co.anchor.set(0.5, 0.5);
     
-    selfView.addChild(AirplaneSelf.arrow);
+    AirplaneSelf.gun.x = CenterW;
+    AirplaneSelf.gun.y = CenterH;
+    AirplaneSelf.gun.scale.set(0.5,0.5);
+    AirplaneSelf.gun.anchor.set(0.5, 0.5);
+    AirplaneSelf.gun.rotation = r;
+    
+    AirplaneSelf.man.x = CenterW;
+    AirplaneSelf.man.y = CenterH;
+    AirplaneSelf.man.scale.set(0.5,0.5);
+    AirplaneSelf.man.anchor.set(0.5, 0.5);
+    AirplaneSelf.man.rotation = r;
+
+    selfView.addChild(AirplaneSelf.gun);
     selfView.addChild(AirplaneSelf.body);
+    selfView.addChild(AirplaneSelf.man);
+    selfView.addChild(AirplaneSelf.co);
     
     return [x , y];
 }
@@ -138,8 +166,10 @@ function renderEnemyAirplanes(pos) {
 
     for (let i = 0; i < enemies.length; i ++) {
         let AirplaneEnemy = {};
-        AirplaneEnemy.body = new Sprite(id["EnemyBody.png"]);
-        AirplaneEnemy.arrow = new Sprite(id["EnemyArrow.png"]);
+        AirplaneEnemy.body = new Sprite(id["ufo_red_body.png"]);
+        AirplaneEnemy.co = new Sprite(id["ufo_red_co.png"]);
+        AirplaneEnemy.gun = new Sprite(id["ufo_red_gun.png"]);
+        AirplaneEnemy.man = new Sprite(id["ufo_red_man.png"]);
        
         let x = enemies[i].locationCurrent.x,
             y = enemies[i].locationCurrent.y,
@@ -150,15 +180,31 @@ function renderEnemyAirplanes(pos) {
        
         AirplaneEnemy.body.x = x;
         AirplaneEnemy.body.y = y;
+        AirplaneEnemy.body.scale.set(0.5,0.5);
         AirplaneEnemy.body.anchor.set(0.5, 0.5);
+        AirplaneEnemy.body.rotation = timeR;
        
-        AirplaneEnemy.arrow.x = x;
-        AirplaneEnemy.arrow.y = y;
-        AirplaneEnemy.arrow.anchor.set(0.5, 0.5);
-        AirplaneEnemy.arrow.rotation = r;
+        AirplaneEnemy.co.x = x;
+        AirplaneEnemy.co.y = y;
+        AirplaneEnemy.co.scale.set(0.5,0.5);
+        AirplaneEnemy.co.anchor.set(0.5, 0.5);
        
-        enemyView.addChild(AirplaneEnemy.arrow);
+        AirplaneEnemy.man.x = x;
+        AirplaneEnemy.man.y = y;
+        AirplaneEnemy.man.scale.set(0.5,0.5);
+        AirplaneEnemy.man.anchor.set(0.5, 0.5);
+        AirplaneEnemy.man.rotation = r;
+       
+        AirplaneEnemy.gun.x = x;
+        AirplaneEnemy.gun.y = y;
+        AirplaneEnemy.gun.scale.set(0.5,0.5);
+        AirplaneEnemy.gun.anchor.set(0.5, 0.5);
+        AirplaneEnemy.gun.rotation = r;
+       
+        enemyView.addChild(AirplaneEnemy.gun);
         enemyView.addChild(AirplaneEnemy.body);
+        enemyView.addChild(AirplaneEnemy.man);
+        enemyView.addChild(AirplaneEnemy.co);
     }
 }
 
@@ -168,7 +214,7 @@ function renderBullets(pos) {
     EnemyBullets = gamemodel.data.backendControlData.bullet;
     
     for (let i = 0; i < EnemyBullets.length; i ++) {
-        let bullet = new Sprite(id["RedBullet.png"]);
+        let bullet = new Sprite(id["b_red.png"]);
         let x = EnemyBullets[i].locationCurrent.x,
             y = EnemyBullets[i].locationCurrent.y,
             r = EnemyBullets[i].attackDir;
@@ -178,6 +224,7 @@ function renderBullets(pos) {
         
         bullet.x = x;
         bullet.y = y;
+        bullet.scale.set(0.5, 0.5);
         bullet.anchor.set(0.5, 0.5);
         bullet.rotation = r;
         
@@ -188,7 +235,7 @@ function renderBullets(pos) {
     SelfBullets = gamemodel.data.engineControlData.bullet;
     
     for (let i = 0; i < SelfBullets.length; i ++) {
-        let bullet = new Sprite(id["GreenBullet.png"]);
+        let bullet = new Sprite(id["b_blue.png"]);
         let x = SelfBullets[i].locationCurrent.x,
             y = SelfBullets[i].locationCurrent.y,
             r = SelfBullets[i].attackDir;
@@ -198,6 +245,7 @@ function renderBullets(pos) {
        
         bullet.x = x;
         bullet.y = y;
+        bullet.scale.set(0.5, 0.5);
         bullet.anchor.set(0.5, 0.5);
         bullet.rotation = r;
        
