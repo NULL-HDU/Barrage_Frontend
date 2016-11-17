@@ -8,6 +8,9 @@ import WebSocket from "./websocket.js";
 import gamemodel from "../model/gamemodel.js" 
 import * as analyis from "./analyis.js"
 
+let debug = false;
+let rollingTime = 1000/60;
+
 export default class transmitted{
 
 	constructor(){
@@ -19,25 +22,29 @@ export default class transmitted{
 	login(airplane){
 		let message = analyis.loginAnalyis(airplane);
 		if( this.ws.sendMessage(message) ){
+			if(debug)
+				console.log("load send succeed!");
 			return true;
-			console.log("load send succeed!");
 		}else{
-			return false;
 			console.log("load send failed...");
+			return false;
 		}
 	}
 
 	//analyis receiving message
 	playgroundInfo(){
-		console.log("playgronud send!");
+		if(debug)
+			console.log("playgronud send!");
 		let message = analyis.playgroundInfoAnalyis();
 		if( this.ws.sendMessage(message) ){
+			if(debug)
+				console.log("playgronud send succeed!");
 			return true;
-			console.log("playgronud send succeed!");
 		}else{
-			return false;
 			console.log("playgronud send failed...");
+			return false;
 		}
+		setTimeout( playgroundInfo(),rollingTime );
 	}
 
 }

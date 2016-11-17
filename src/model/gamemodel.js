@@ -20,7 +20,7 @@ export default {
     socketCache:{
         damageInformation:[],
         newBallInformation:[],
-        disappearBulletInformation:[],
+        disapperBulletInformation:[],
     },
     deadCache:[],
     disappearCache:[],
