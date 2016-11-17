@@ -14,6 +14,7 @@ import transmitted from "../socket/transmitted.js"
 import screenfull from "../engine/screenfull.js"
 import Quadtree from "../engine/quadtree"
 import PVector from "../engine/Point"
+//import {} from "../engine/engine"
 // Global Alias
 
 var playerNameInput = document.getElementById('playerNameInput');
@@ -173,6 +174,7 @@ function mouseMove(e){
     airPlane.attackDir = A;
 }
 
+
 function mouseRelease(e){
     if(e.which === 3){
         // console.log("right click");
@@ -213,7 +215,6 @@ function enableCollisionDetectionEngine(){
       2.对每个球体进行碰撞检测，检测到的就进行标记
       3.碰撞效果和伤害检测处理之后清空四叉树，进行下一轮碰撞检测
     */
-//    looper(() => {
     let selfBullets = gamemodel.data.engineControlData.bullet.concat(airPlane);
     let enemyBullets = gamemodel.data.backendControlData.bullet.concat(gamemodel.data.backendControlData.airPlane);
         let bulletsBank = selfBullets.concat(enemyBullets);
@@ -264,8 +265,6 @@ function enableCollisionDetectionEngine(){
             selfBullets[i].hasJudge = true;
             i++;
         }
-
-//    },global.BULLET_COLLISION_DETECTION_INTERVAL);
     
 }
 
