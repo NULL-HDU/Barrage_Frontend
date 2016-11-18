@@ -6,7 +6,7 @@
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
 
-let debug = true;
+let debug = false;
 
 function analyisUnnumber(obj){
 	//get a array for name coding by Unicode
@@ -45,10 +45,9 @@ function analyisUnnumber(obj){
 */
 //calculcate length of balls
 function calculcateBallsLength(balls){
-	balls = balls.filter( (e)=>typeof(e)!="undefined" )
+	balls = balls.filter( (e)=>typeof(e)!="undefined" );
 	let length = balls.length;
 	let totalLength = 0;
-	console.log(balls[0]);
 	for(let i=0;i<length;i++){
 		let nameLength = balls[i].name.length;
 		totalLength = totalLength+208+totalLength*8;
@@ -75,7 +74,7 @@ function fillDv(message){
 			fillConnectForDv(dv,message.body);
 			break;
 		case 12 :
-			fillgroundForDv(dv,message.body);
+			fillGroundForDv(dv,message.body);
 			break;
 	}
 	// if(debug)
@@ -106,6 +105,9 @@ function fillConnectForDv(dv,body){
 	}
 	dv.push32( roomNumber );
 	dv.push8( troop );
+	if(debug){
+		console.log("login success!");
+	}
 }
 
 //fill balls message to DataView 
@@ -153,20 +155,25 @@ function fillCollisionArrayToDv(dv,content){
 }
 
 //fill background message body to DataView
-function fillgroundForDv(dv,body){
-	console.log(body.collisionSocketInfos);
+function fillGroundForDv(dv,body){
 	let length = body.newBallsInfos.length;
-	let content = body.newBallsInfos.content;
+	let content = body.newBallsInfos.content.filter( (e)=>typeof(e)!="undefined" );
 	dv.push32(length);
 	fillBallArrayToDv(dv,content);
 	length = body.displacementInfos.length;
-	content = body.displacementInfos.content;
+	content = body.displacementInfos.content.filter( (e)=>typeof(e)!="undefined" );
 	dv.push32(length);
 	fillBallArrayToDv(dv,content);
 	length = body.collisionSocketInfos.length;
-	content = body.collisionSocketInfos.content;
+	content = body.collisionSocketInfos.content.filter( (e)=>typeof(e)!="undefined" );
 	dv.push32(length);
 	fillCollisionArrayToDv(dv,content);
+	length = body.disappperInfos.length;
+	content = body.disappperInfos.content.filter( (e)=>typeof(e)!="undefined" );
+	dv.push32(length);
+	for(let i=0;i<length;i++){
+		dv.push16(content[i]);
+	}
 }
 
 
@@ -194,28 +201,30 @@ export function disconnectAnalyis(){
 export function loginAnalyis(airplane){
 	let messageBody = {
 		userId : airplane.userId,
-		//64
+		//32  4
 		nickname : {
 			lengthOfName : airplane.name.length,
-			//8
+			//8  1
 			name : airplane.name
-			//length*8
+			//length*8  length
 		},
 		roomNumber : 1,
-		//32
+		//32   4
 		troop : airplane.camp
-		//8
+		//8  1
 	}
-	let messageLength = (32+64+8+64+8+messageBody.nickname.lengthOfName*8+32+8)/8;
+	let messageLength = (32+64+8+32+8+messageBody.nickname.lengthOfName*8+32+8)/8;
+
+	console.log("login length : "+messageLength);
 
 	let message = {
 		length : messageLength,
-		//32
+		//32    4
 		timestamp : new Date().getTime(),
 		// timestamp : 1476691109753,
-		//64
+		//64    8
 		type : 9,
-		//8
+		//8    1
 		body : messageBody
 	}
 	if(debug){
@@ -261,11 +270,13 @@ export function playgroundInfoAnalyis(){
 	let disappearInfoArray = socketCache.disapperBulletInformation;
 	let lengthOfDisappearInfos = displacementInfoArray.length;
 
-	console.log(newBallsInfoArray)
-
 	let length = 32+32+32+calculcateBallsLength(newBallsInfoArray)
 	+calculcateBallsLength(displacementInfoArray)+lengthOfCollisionSocketInfos*144
 	+lengthOfDisappearInfos*16;
+
+	if(debug){
+		console.log("groundLength : "+length);
+	}
 
 	let messageLength = (32+64+8+length)/8;
 	// length unfinished!!
@@ -284,7 +295,7 @@ export function playgroundInfoAnalyis(){
 		},
 		disappperInfos : {
 			length : lengthOfDisappearInfos,
-			displacementInfoArray
+			content : displacementInfoArray
 		}
 	}
 		let message = {

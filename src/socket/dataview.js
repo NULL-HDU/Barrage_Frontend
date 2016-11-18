@@ -98,13 +98,15 @@ export default class dataview{
 	isLegal(needLength,content){
 		if( this.dvLength-this.dvHas<needLength ){
 			console.log("DataView isn't long enough to push!!!")
+			console.log("your want to push "+ content);
 			return false;
 		}
-		if( typeof(content)!="number" && typeof(content)!="undifined"){
+		if( typeof(content)!="number" && typeof(content)!="undefined"){
 			console.log("type of content isn't legal!!");
 			console.log("your type is "+typeof(content));
 			return false;	
 		}
+		// console.log("daHas : "+this.dvHas);
 		this.dvHas +=needLength;
 	}
 
