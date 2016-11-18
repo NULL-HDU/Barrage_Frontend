@@ -9,6 +9,8 @@ import dataview from "./dataview.js"
 let debug = false;
 
 function writeTobackendControlData(message){
+	console.log("write message : ");
+	console.log(message);
 	let airPlane = [];
 	let bullet = [];
 	let block = [];
@@ -50,7 +52,6 @@ export function receiveMessage(message){
 			gamemodel.data.engineControlData.airPlane = body;
 			break;
 		case 7 :
-			//fill info is unfinished
 			var body = groundToMes(dv);
 			let socketCache = gamemodel.socketCache;
 			socketCache.newBallInformation = body.newBallsInfos;

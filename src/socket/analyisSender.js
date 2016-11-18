@@ -6,7 +6,7 @@
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
 
-let debug = false;
+let debug = true;
 
 function analyisUnnumber(obj){
 	//get a array for name coding by Unicode
@@ -157,19 +157,19 @@ function fillCollisionArrayToDv(dv,content){
 //fill background message body to DataView
 function fillGroundForDv(dv,body){
 	let length = body.newBallsInfos.length;
-	let content = body.newBallsInfos.content.filter( (e)=>typeof(e)!="undefined" );
+	let content = body.newBallsInfos.content;
 	dv.push32(length);
 	fillBallArrayToDv(dv,content);
 	length = body.displacementInfos.length;
-	content = body.displacementInfos.content.filter( (e)=>typeof(e)!="undefined" );
+	content = body.displacementInfos.content;
 	dv.push32(length);
 	fillBallArrayToDv(dv,content);
 	length = body.collisionSocketInfos.length;
-	content = body.collisionSocketInfos.content.filter( (e)=>typeof(e)!="undefined" );
+	content = body.collisionSocketInfos.content;
 	dv.push32(length);
 	fillCollisionArrayToDv(dv,content);
 	length = body.disappperInfos.length;
-	content = body.disappperInfos.content.filter( (e)=>typeof(e)!="undefined" );
+	content = body.disappperInfos.content;
 	dv.push32(length);
 	for(let i=0;i<length;i++){
 		dv.push16(content[i]);
@@ -214,8 +214,9 @@ export function loginAnalyis(airplane){
 		//8  1
 	}
 	let messageLength = (32+64+8+32+8+messageBody.nickname.lengthOfName*8+32+8)/8;
-
-	console.log("login length : "+messageLength);
+	if(debug){
+	console.log("login length : "+messageLength);		
+	}
 
 	let message = {
 		length : messageLength,
@@ -254,32 +255,34 @@ total:144
 export function playgroundInfoAnalyis(){
 	let socketCache = gamemodel.socketCache;
 
-	let newBallsInfoArray = socketCache.newBallInformation;
+	let newBallsInfoArray = socketCache.newBallInformation.filter( (e)=>typeof(e)!="undefined" );
 	let lengthOfNewBallsInfos = newBallsInfoArray.length;
 
 	let balls = gamemodel.data.engineControlData;
 	let displacementInfoArray = balls.bullet;
 	displacementInfoArray.push(balls.airplane);
+	displacementInfoArray = displacementInfoArray.filter( (e)=>typeof(e)!="undefined" );
 	let lengthOfDisplacementInfos = displacementInfoArray.length;
 
 
-	let collisionSocketInfoArray = socketCache.damageInformation;
+	let collisionSocketInfoArray = socketCache.damageInformation.filter( (e)=>typeof(e)!="undefined" );
 	socketCache.damageInformation = [];
+	//clear socket
 	let lengthOfCollisionSocketInfos = collisionSocketInfoArray.length;
 
-	let disappearInfoArray = socketCache.disapperBulletInformation;
+	let disappearInfoArray = socketCache.disapperBulletInformation.filter( (e)=>typeof(e)!="undefined" );
 	let lengthOfDisappearInfos = displacementInfoArray.length;
 
-	let length = 32+32+32+calculcateBallsLength(newBallsInfoArray)
+	let length = 32+32+32+32+calculcateBallsLength(newBallsInfoArray)
 	+calculcateBallsLength(displacementInfoArray)+lengthOfCollisionSocketInfos*144
 	+lengthOfDisappearInfos*16;
 
+	let messageLength = (32+64+8+length)/8;
+
 	if(debug){
-		console.log("groundLength : "+length);
+		console.log("groundLength : "+ messageLength);
 	}
 
-	let messageLength = (32+64+8+length)/8;
-	// length unfinished!!
 	let messageBody = {
 		newBallsInfos : {
 			length : lengthOfNewBallsInfos,

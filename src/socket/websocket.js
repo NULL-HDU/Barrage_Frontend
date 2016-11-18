@@ -24,7 +24,7 @@ let socketStatusSwitcher = function(){
 //action for websocket
 export default class socket {
 	
-	constructor(wsUrl="ws://139.199.174.225:2333/ws",rollingTime=11){
+	constructor(wsUrl="ws://139.199.174.225:1234/echo",rollingTime=11){
 		this.wsUrl = wsUrl;
 		this.rollingTime=rollingTime;
 		this.ws = null;

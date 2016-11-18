@@ -129,5 +129,4 @@ export default class dataview{
 		this.isLegal(8,content);
 		this.dv.setFloat64( this.dvHas-8,content );
 	}
-
 }
