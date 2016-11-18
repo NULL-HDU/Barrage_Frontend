@@ -197,7 +197,7 @@ function startGame() {
     configCanvasEventListen();
     //init socket
     tm.login(airPlane);
-    window.setTimeout(tm.playgroundInfo(),1000);
+    tm.playgroundInfo();
     changeKeyEventBindings();
     startGameLoop();
     enableBulletsCollectingEngine();

@@ -122,7 +122,8 @@ function fillBallArrayToDv(dv,content){
 		let name = analyisUnnumber( content[i].name );
 		for(let i in name){
 			dv.push8( name[i] );
-		}	
+		}
+		content[i].ballType = convertType(content[i].ballType);
 		dv.push8( content[i].ballType );
 		dv.push8( content[i].hp );
 		dv.push8( content[i].damage );
@@ -132,13 +133,14 @@ function fillBallArrayToDv(dv,content){
 		dv.push16( content[i].attackDir );
 		dv.push8( content[i].alive );
 		dv.push8( content[i].isKilled );
-		dv.push8( content[i].localtionCurrent.x );
-		dv.push8( content[i].localtionCurrent.y );
+		dv.push8( content[i].locationCurrent.x );
+		dv.push8( content[i].locationCurrent.y );
 	}
 }
 
 //fill collision messages to dv
 function fillCollisionArrayToDv(dv,content){
+
 	let length = content.length;
 	for( let i=0;i<length;i++ ){
 		dv.push32( content[i].collision1[0] );
@@ -259,8 +261,9 @@ export function playgroundInfoAnalyis(){
 	let lengthOfNewBallsInfos = newBallsInfoArray.length;
 
 	let balls = gamemodel.data.engineControlData;
-	let displacementInfoArray = balls.bullet;
-	displacementInfoArray.push(balls.airplane);
+	let displacementInfoArray = [];
+	Array.prototype.push.apply(displacementInfoArray, balls.bullet);
+	displacementInfoArray.push(balls.airPlane);
 	displacementInfoArray = displacementInfoArray.filter( (e)=>typeof(e)!="undefined" );
 	let lengthOfDisplacementInfos = displacementInfoArray.length;
 

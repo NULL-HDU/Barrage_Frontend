@@ -127,11 +127,12 @@ function fillBallToMes(dv){
 	ball.userId = dv.pop32();
 	ball.id = dv.pop16();
 	let lengthOfName = dv.pop8();
+	ball.name = "";
 	for(let i=0;i<lengthOfName;i++){
 		// ball.nickname.name+=dv.pop8().toString();
 		ball.name += String.fromCodePoint(dv.pop8());
 	}
-	ball.ballType = String.fromCodePoint(dv.pop8());
+	ball.ballType = dv.pop8();
 	ball.hp = dv.pop8();
 	ball.damage = dv.pop8();
 	ball.roleId = dv.pop8();
@@ -140,8 +141,9 @@ function fillBallToMes(dv){
 	ball.attackDir = dv.pop16();
 	ball.alive = dv.pop8();
 	ball.isKilled = dv.pop8();
-	ball.localtionCurrent.x = dv.pop16();
-	ball.localtionCurrent.y = dv.pop16();
+	ball.locationCurrent = {};
+	ball.locationCurrent.x = dv.pop16();
+	ball.locationCurrent.y = dv.pop16();
 	return ball;
 }
 
@@ -230,7 +232,7 @@ function connectToMes( dv ){
 	let lengthOfName = dv.pop8();
 	let name = "";
 	for(let i=0;i<lengthOfName;i++){
-		name+=dv.pop8().toString();
+		name+=String.fromCodePoint(dv.pop8());
 	}
 	let roomNumber = dv.pop32();
 	let troop = dv.pop8();	

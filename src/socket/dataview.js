@@ -98,12 +98,14 @@ export default class dataview{
 	isLegal(needLength,content){
 		if( this.dvLength-this.dvHas<needLength ){
 			console.log("DataView isn't long enough to push!!!")
-			console.log("your want to push "+ content);
+			console.log("your want to push ");
+			console.log(content);
 			return false;
 		}
-		if( typeof(content)!="number" && typeof(content)!="undefined"){
+		if( typeof(content)!="number" && typeof(content)!="undefined" &&typeof(content)!="boolean" ){
 			console.log("type of content isn't legal!!");
 			console.log("your type is "+typeof(content));
+			console.log(content);
 			return false;	
 		}
 		// console.log("daHas : "+this.dvHas);
@@ -122,7 +124,7 @@ export default class dataview{
 
 	push32(content){
 		this.isLegal(4,content);
-		this.dv.setUint8( this.dvHas-4,content );
+		this.dv.setUint32( this.dvHas-4,content );
 	}
 
 	pushFloat64(content){
