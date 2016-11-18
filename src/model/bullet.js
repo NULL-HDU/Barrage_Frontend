@@ -1,11 +1,13 @@
 import Ball from "../model/ball"
 import PVector from "../engine/Point"
 import global from "../engine/global"
+import constant from "../engine/CommonConstant"
 
 
 export default class Bullet extends Ball{
     constructor() {
         super();
+        this.ballType = constant.BULLET;
         this.startPoint = {
             x:0,
             y:0,
