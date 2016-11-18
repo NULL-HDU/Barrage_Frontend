@@ -4,7 +4,9 @@
 *	email:luchenjiemail@gmail.com
 */
 
-import * as analyis from "./analyis.js"
+import * as receiver from "./analyisReceiver.js"
+
+let debug = true;
 
 //switch the status of is updating socket
 let socketStatusSwitcher = function(){
@@ -22,8 +24,7 @@ let socketStatusSwitcher = function(){
 //action for websocket
 export default class socket {
 	
-	// constructor(wsUrl="ws://myfickle.cn:1234/ws",rollingTime=11){
-	constructor(wsUrl="ws://myfickle.cn:1234/flow",rollingTime=11){
+	constructor(wsUrl="ws://139.199.174.225:2333/ws",rollingTime=11){
 		this.wsUrl = wsUrl;
 		this.rollingTime=rollingTime;
 		this.ws = null;
@@ -49,7 +50,11 @@ export default class socket {
 	    };
 
 	    ws.onmessage = function(e) {
-	    	let message = analyis.receiveMessage( e );
+	    	let message = receiver.receiveMessage( e );
+	    	if(debug){
+	    		console.log("recevie message : ");
+	    		console.log(message);
+	    	}
 	    };
 	    
 	    ws.onerror = function(e) {

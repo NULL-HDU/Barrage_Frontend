@@ -6,7 +6,7 @@
 
 import WebSocket from "./websocket.js";
 import gamemodel from "../model/gamemodel.js" 
-import * as analyis from "./analyis.js"
+import * as sender from "./analyisSender.js"
 
 let debug = false;
 let rollingTime = 1000/60;
@@ -20,7 +20,7 @@ export default class transmitted{
 
 	//send login message
 	login(airplane){
-		let message = analyis.loginAnalyis(airplane);
+		let message = sender.loginAnalyis(airplane);
 		if( this.ws.sendMessage(message) ){
 			if(debug)
 				console.log("load send succeed!");
@@ -35,7 +35,7 @@ export default class transmitted{
 	playgroundInfo(){
 		if(debug)
 			console.log("playgronud send!");
-		let message = analyis.playgroundInfoAnalyis();
+		let message = sender.playgroundInfoAnalyis();
 		if( this.ws.sendMessage(message) ){
 			if(debug)
 				console.log("playgronud send succeed!");

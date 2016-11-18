@@ -87,9 +87,9 @@ export function receiveMessage(message){
 //fill userid information to message;
 //tempaoraryly cmap equal to userId!!
 function userIdToMes(dv){
-	gamemodel.data.engineControlData.airPlane.userId = dv.pop32();
-	gamemodel.data.engineControlData.airPlane.camp = dv.pop32();
-	return { userId : gamemodel.data.engineControlData.airPlane.userId};
+	let airplane = gamemodel.data.engineControlData.airPlane;
+	airplane.userId = airplane.camp = dv.pop32();
+	return { userId : airplane.userId};
 }
 
 
@@ -209,8 +209,8 @@ function groundToMes(dv){
 	let displacementInfoArray = getBallsInfoArray(dv,lengthOfDisplacementInfos);
 	let lengthOfCollisionSocketInfos = dv.pop32();
 	let collisionSocketInfoArray = getCollisionInfoToArray(dv,lengthOfCollisionSocketInfos);
-	let lengthOfDisplacementInfos = dv.pop32();
-	let displacementInfoArray = getDisplacementinfoToArray(dv,lengthOfDisplacementInfos);
+	let lengthOfDisappearInfos = dv.pop32();
+	let disappearInfoArray = getDisplacementinfoToArray(dv,lengthOfDisplacementInfos);
 	return {
 		lengthOfNewBallsInfos : lengthOfNewBallsInfos,
 		newBallsInfoArray : newBallsInfoArray,
@@ -218,8 +218,8 @@ function groundToMes(dv){
 		displacementInfoArray : displacementInfoArray,
 		lengthOfCollisionSocketInfos : lengthOfCollisionSocketInfos,
 		collisionSocketInfoArray,
-		lengthOfDisplacementInfos : lengthOfDisplacementInfos,
-		displacementInfoArray : displacementInfoArray
+		lengthOfDisappearInfos : lengthOfDisplacementInfos,
+		disappearInfoArray : displacementInfoArray
 	}
 }
 

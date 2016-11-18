@@ -6,6 +6,8 @@
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
 
+let debug = true;
+
 function analyisUnnumber(obj){
 	//get a array for name coding by Unicode
 	let getObj = obj.split("").map( (e)=>e.codePointAt(0) );
@@ -43,8 +45,10 @@ function analyisUnnumber(obj){
 */
 //calculcate length of balls
 function calculcateBallsLength(balls){
+	balls = balls.filter( (e)=>typeof(e)!="undefined" )
 	let length = balls.length;
 	let totalLength = 0;
+	console.log(balls[0]);
 	for(let i=0;i<length;i++){
 		let nameLength = balls[i].name.length;
 		totalLength = totalLength+208+totalLength*8;
@@ -106,6 +110,7 @@ function fillConnectForDv(dv,body){
 
 //fill balls message to DataView 
 function fillBallArrayToDv(dv,content){
+	content = content.filter( (e)=>typeof(e)!="undefined" )
 	let length = content.length;
 	for( let i=0;i<length;i++ ){
 		dv.push32(content[i].camp);
@@ -149,6 +154,7 @@ function fillCollisionArrayToDv(dv,content){
 
 //fill background message body to DataView
 function fillgroundForDv(dv,body){
+	console.log(body.collisionSocketInfos);
 	let length = body.newBallsInfos.length;
 	let content = body.newBallsInfos.content;
 	dv.push32(length);
@@ -195,7 +201,7 @@ export function loginAnalyis(airplane){
 			name : airplane.name
 			//length*8
 		},
-		roomNumber : 0,
+		roomNumber : 1,
 		//32
 		troop : airplane.camp
 		//8
@@ -237,21 +243,25 @@ total:144
 */
 
 export function playgroundInfoAnalyis(){
-	let newBallsInfoArray = gamemodel.socketCache.newBallInformation;
+	let socketCache = gamemodel.socketCache;
+
+	let newBallsInfoArray = socketCache.newBallInformation;
 	let lengthOfNewBallsInfos = newBallsInfoArray.length;
 
 	let balls = gamemodel.data.engineControlData;
-	let displacementInfoArray = engineControlData.bullet;
+	let displacementInfoArray = balls.bullet;
 	displacementInfoArray.push(balls.airplane);
 	let lengthOfDisplacementInfos = displacementInfoArray.length;
 
-	let socketCache = gamemodel.socketCache;
+
 	let collisionSocketInfoArray = socketCache.damageInformation;
 	socketCache.damageInformation = [];
 	let lengthOfCollisionSocketInfos = collisionSocketInfoArray.length;
 
-	let displacementInfoArray = socketCache.disapperBulletInformation;
+	let disappearInfoArray = socketCache.disapperBulletInformation;
 	let lengthOfDisappearInfos = displacementInfoArray.length;
+
+	console.log(newBallsInfoArray)
 
 	let length = 32+32+32+calculcateBallsLength(newBallsInfoArray)
 	+calculcateBallsLength(displacementInfoArray)+lengthOfCollisionSocketInfos*144
@@ -268,7 +278,7 @@ export function playgroundInfoAnalyis(){
 			length : lengthOfDisplacementInfos,
 			content : displacementInfoArray
 		},
-		lengthOfCollisionSocketInfos : {
+		collisionSocketInfos : {
 			length : lengthOfCollisionSocketInfos,
 			content : collisionSocketInfoArray
 		},
