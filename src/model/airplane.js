@@ -6,11 +6,12 @@
 
 import Ball from "../model/ball"
 import global from "../engine/global"
+import constant from "../engine/CommonConstant.js"
 
 export default class Airplane extends Ball {
     constructor() {
         super();
-        this.ballType = "Airplane";
+        this.ballType = constant.AIRPLANE;
         this.radius = 5;
     };
 

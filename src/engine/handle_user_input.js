@@ -5,6 +5,7 @@
  */
 
 import global from "../engine/global"
+import constant from "../engine/CommonConstant"
 import gamemodel from "../model/gamemodel"
 import Airplane from "../model/airplane"
 import Bullet from "../model/bullet"
@@ -14,11 +15,12 @@ import transmitted from "../socket/transmitted.js"
 import screenfull from "../engine/screenfull.js"
 import Quadtree from "../engine/quadtree"
 import PVector from "../engine/Point"
+//import {} from "../engine/engine"
 // Global Alias
 
 var playerNameInput = document.getElementById('playerNameInput');
 var airPlane = new Airplane();
-airPlane.ballType = "Airplane";
+//airPlane.ballType = constant.AIRPLANE;
 var vx = 0, vy = 0, vangle = 0;
 var quad = new Quadtree({x:0,y:0,width:global.LOCAL_WIDTH,height:global.LOCAL_HEIGHT});
 var test = 1;        //0 for view,1 for engine,2 for socket
@@ -41,7 +43,7 @@ var validNick = function() {
 //配置测试敌机
 function configTestEnemyPlanes() {
     var enemyPlane0 = new Airplane();
-    enemyPlane0.ballType = "Airplane";
+    //enemyPlane0.ballType = constant.AIRPLANE;
     gamemodel.data.backendControlData.airPlane.push(enemyPlane0);
     enemyPlane0.locationCurrent.x = 100;
     enemyPlane0.locationCurrent.y = 100;
@@ -51,7 +53,7 @@ function configTestEnemyPlanes() {
 function enemyBulletMakerLoop() {
     setTimeout(function () {
         let bullet = new Bullet();
-        bullet.ballType = "Bullet";
+        //bullet.ballType = "Bullet";
         let angel = gamemodel.data.backendControlData.airPlane[0].attackDir % (2 * Math.PI);
         bullet.camp = 1;
         bullet.locationCurrent.x = gamemodel.data.backendControlData.airPlane[0].locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 100;
@@ -67,7 +69,7 @@ function enemyBulletMakerLoop() {
 function bulletMakerLoop() {
     setTimeout(function () {
         let bullet = new Bullet();
-        bullet.ballType = "Bullet";
+        //bullet.ballType = "Bullet";
         let angel = airPlane.attackDir;
         bullet.camp = 0;
         bullet.locationCurrent.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 100;
@@ -75,6 +77,7 @@ function bulletMakerLoop() {
         bullet.startPoint.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 50;
         bullet.startPoint.y = airPlane.locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 50;
         bullet.attackDir = airPlane.attackDir;
+        //console.log(gamemodel.data.engineControlData.bullet);
         gamemodel.data.engineControlData.bullet.push(bullet);
         if (bulletMakerStartFlag === 0) {
             bulletMakerLoop();
@@ -173,6 +176,7 @@ function mouseMove(e){
     airPlane.attackDir = A;
 }
 
+
 function mouseRelease(e){
     if(e.which === 3){
         // console.log("right click");
@@ -190,6 +194,7 @@ function mousePress(e){
         enableBulletEnigne();
     }
 }
+
 
 function startGame() {
     document.getElementById('gameWrapper').style.display = "none";
@@ -213,7 +218,6 @@ function enableCollisionDetectionEngine(){
       2.对每个球体进行碰撞检测，检测到的就进行标记
       3.碰撞效果和伤害检测处理之后清空四叉树，进行下一轮碰撞检测
     */
-//    looper(() => {
     let selfBullets = gamemodel.data.engineControlData.bullet.concat(airPlane);
     let enemyBullets = gamemodel.data.backendControlData.bullet.concat(gamemodel.data.backendControlData.airPlane);
         let bulletsBank = selfBullets.concat(enemyBullets);
@@ -235,12 +239,12 @@ function enableCollisionDetectionEngine(){
                 if(distance <= collidors[j].radius + selfBullets[i].radius && collidors[j].camp !== selfBullets[i].camp){
 
                     //碰撞处理和伤害计算
-                    if(collidors[j].ballType === "Bullet"){
+                    if(collidors[j].ballType === constant.BULLET){
                         collidors[j].alive = false;
                         collidors[j].isKilled = true;
                     }
 
-                    if(selfBullets[i].ballType === "Bullet"){
+                    if(selfBullets[i].ballType === constant.BULLET){
                         selfBullets[i].alive = false;
                         selfBullets[i].isKilled = true;
                     }
@@ -264,8 +268,6 @@ function enableCollisionDetectionEngine(){
             selfBullets[i].hasJudge = true;
             i++;
         }
-
-//    },global.BULLET_COLLISION_DETECTION_INTERVAL);
     
 }
 
@@ -281,6 +283,7 @@ function startGameLoop() {
         airPlane.move(vx,vy,vangle);
         //airPlane.attackDir += 0.05;
         //自主机子弹
+        console.log(gamemodel.data.engineControlData.bullet);
         gamemodel.data.engineControlData.bullet.map(function(bullet){
             bullet.pathCalculate();
             return bullet;
@@ -291,8 +294,10 @@ function startGameLoop() {
             return bullet;
         });
 
-        enableCollisionDetectionEngine();
-
+//        if(gamemodel.data.engineControlData.bullet.length !== 0){
+            enableCollisionDetectionEngine();
+//        }
+        
     },global.GAME_LOOP_INTERVAL);
 }
 
