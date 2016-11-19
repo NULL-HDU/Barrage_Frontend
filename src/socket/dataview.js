@@ -3,7 +3,7 @@
 ** author:yummyLcj
 */
 
-let debug = false;
+let debug = true;
 export default class dataview{
 	constructor( para=0 ){
 		let type = typeof(para);
@@ -43,10 +43,10 @@ export default class dataview{
 			this.dvLength -=needLength;
 		}
 		if(debug){
-			console.log("need length : ");
-			console.log(needLength);
-			console.log("dvLength : ");
-			console.log(this.dvLength);
+			// console.log("need length : ");
+			// console.log(needLength);
+			// console.log("dvLength : ");
+			// console.log(this.dvLength);
 		}
 		
 	}

@@ -16,7 +16,7 @@ function writeTobackendControlData(message){
 	let block = [];
 	for(let i in message){
 		if( message[i].ballType=="airPlane" ){
-			airplane.push(message[i]);
+			airPlane.push(message[i]);
 			continue;
 		}
 		if( message[i].ballType=="bullet" ){
@@ -31,8 +31,8 @@ function writeTobackendControlData(message){
 			console.log("undefined type!!");
 		}
 	}
-	backendControlData = gamemodel.data.backendControlData;
-	backendControlData.airplane = airplane;
+	let backendControlData = gamemodel.data.backendControlData;
+	backendControlData.airPlane = airPlane;
 	backendControlData.bullet = bullet;
 	backendControlData.block = block;
 }
@@ -56,7 +56,7 @@ export function receiveMessage(message){
 			let socketCache = gamemodel.socketCache;
 			socketCache.newBallInformation = body.newBallsInfos;
 			socketCache.damageInformation = body.collisionSocketInfos;
-			gamemodel.disappearCache = disappearInfos;
+			gamemodel.disappearCache = body.disappearInfos;
 			writeTobackendControlData(body.displacementInfos);
 			break;
 		case 9:
@@ -167,10 +167,12 @@ function getCollisionInfoToArray(dv,length){
 	let collisionInfos = [];
 	while(length--){
 		let collisionInfo = {};
-		collisionInfo.collision1[0] = dv.pop32();
-		collisionInfo.collision1[1] = dv.pop16();
-		collisionInfo.collision2[0] = dv.pop32();
-		collisionInfo.collision2[1] = dv.pop16();
+		AUserId = dv.pop32();
+		AId = dv. pop16();
+		BUserId = dv.pop32();
+		BId = dv.pop16(); 
+		collisionInfo.collision1 = [AUserId , AId];
+		collisionInfo.collision2 = [BUserId, BId];
 		damageToA = dv.pop8();
 		damageToB = dv.pop8();
 		collisionInfo.damage = [damageToA,damageToB];
@@ -213,7 +215,7 @@ function groundToMes(dv){
 	let lengthOfCollisionSocketInfos = dv.pop32();
 	let collisionSocketInfoArray = getCollisionInfoToArray(dv,lengthOfCollisionSocketInfos);
 	let lengthOfDisappearInfos = dv.pop32();
-	let disappearInfoArray = getDisplacementinfoToArray(dv,lengthOfDisplacementInfos);
+	let disappearInfoArray = getDisplacementinfoToArray(dv,lengthOfDisappearInfos);
 	return {
 		lengthOfNewBallsInfos : lengthOfNewBallsInfos,
 		newBallsInfoArray : newBallsInfoArray,
@@ -235,7 +237,7 @@ function connectToMes( dv ){
 		name+=String.fromCodePoint(dv.pop8());
 	}
 	let roomNumber = dv.pop32();
-	let troop = dv.pop8();	
+	let troop = dv.pop8();
 	return {
 		userId : userId,
 		nickname : {

@@ -283,7 +283,7 @@ function startGameLoop() {
         airPlane.move(vx,vy,vangle);
         //airPlane.attackDir += 0.05;
         //自主机子弹
-        console.log(gamemodel.data.engineControlData.bullet);
+        // console.log(gamemodel.data.engineControlData.bullet);
         gamemodel.data.engineControlData.bullet.map(function(bullet){
             bullet.pathCalculate();
             return bullet;

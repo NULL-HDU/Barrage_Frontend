@@ -41,7 +41,7 @@ function analyisUnnumber(obj){
 		y : 16
 	}
 }
-208+lengthOfName*8
+216+lengthOfName*8
 */
 //calculcate length of balls
 function calculcateBallsLength(balls){
@@ -50,7 +50,7 @@ function calculcateBallsLength(balls){
 	let totalLength = 0;
 	for(let i=0;i<length;i++){
 		let nameLength = balls[i].name.length;
-		totalLength = totalLength+208+totalLength*8;
+		totalLength = totalLength+216+nameLength*8;
 	}
 	return totalLength;
 }
@@ -123,7 +123,6 @@ function fillBallArrayToDv(dv,content){
 		for(let i in name){
 			dv.push8( name[i] );
 		}
-		content[i].ballType = convertType(content[i].ballType);
 		dv.push8( content[i].ballType );
 		dv.push8( content[i].hp );
 		dv.push8( content[i].damage );
@@ -274,7 +273,12 @@ export function playgroundInfoAnalyis(){
 	let lengthOfCollisionSocketInfos = collisionSocketInfoArray.length;
 
 	let disappearInfoArray = socketCache.disapperBulletInformation.filter( (e)=>typeof(e)!="undefined" );
-	let lengthOfDisappearInfos = displacementInfoArray.length;
+	let lengthOfDisappearInfos = disappearInfoArray.length;
+
+	// if(debug){
+	// 	console.log("balls length : "+calculcateBallsLength(newBallsInfoArray)+"  "
+	// +calculcateBallsLength(displacementInfoArray));
+	// }
 
 	let length = 32+32+32+32+calculcateBallsLength(newBallsInfoArray)
 	+calculcateBallsLength(displacementInfoArray)+lengthOfCollisionSocketInfos*144
@@ -282,9 +286,9 @@ export function playgroundInfoAnalyis(){
 
 	let messageLength = (32+64+8+length)/8;
 
-	if(debug){
-		console.log("groundLength : "+ messageLength);
-	}
+	// if(debug){
+	// 	console.log("groundLength : "+ messageLength);
+	// }
 
 	let messageBody = {
 		newBallsInfos : {
@@ -301,7 +305,7 @@ export function playgroundInfoAnalyis(){
 		},
 		disappperInfos : {
 			length : lengthOfDisappearInfos,
-			content : displacementInfoArray
+			content : disappearInfoArray
 		}
 	}
 		let message = {
