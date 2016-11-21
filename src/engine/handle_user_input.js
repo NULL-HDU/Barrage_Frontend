@@ -77,11 +77,12 @@ function bulletMakerLoop() {
         bullet.startPoint.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 50;
         bullet.startPoint.y = airPlane.locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 50;
         bullet.attackDir = airPlane.attackDir;
-        //console.log(gamemodel.data.engineControlData.bullet);
         gamemodel.data.engineControlData.bullet.push(bullet);
         if (bulletMakerStartFlag === 0) {
+            console.log("loop continue");
             bulletMakerLoop();
         }
+        console.log(gamemodel.data.engineControlData.bullet);
     }, global.BULLET_MAKER_LOOP_INTERVAL);
 }
 
