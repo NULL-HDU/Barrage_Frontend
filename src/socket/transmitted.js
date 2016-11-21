@@ -8,8 +8,8 @@ import WebSocket from "./websocket.js";
 import gamemodel from "../model/gamemodel.js" 
 import * as sender from "./analyisSender.js"
 
-let debug = true;
-let rollingTime = 1000/60;
+let debug = false;
+let rollingTime = 1000;
 
 export default class transmitted{
 
@@ -39,10 +39,10 @@ export default class transmitted{
 		if( this.ws.sendMessage(message.getDv()) ){
 			if(debug)
 				console.log("playgronud send succeed!");
-			// setTimeout( this.playgroundInfo(),rollingTime );
+			setTimeout( this.playgroundInfo(),rollingTime );
 		}else{
 			console.log("playgronud send failed...");
-			// setTimeout( this.playgroundInfo(),rollingTime );
+			setTimeout( this.playgroundInfo(),rollingTime );
 		}
 	}
 

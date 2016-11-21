@@ -25,7 +25,7 @@ function writeTobackendControlData(message){
 		}
 		if( message[i].ballType=="block" ){
 			block.push(message[i])
-			continue
+			continue;
 		}
 		else{
 			console.log("undefined type!!");

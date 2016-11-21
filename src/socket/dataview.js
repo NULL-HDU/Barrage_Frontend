@@ -3,7 +3,7 @@
 ** author:yummyLcj
 */
 
-let debug = true;
+let debug = false;
 export default class dataview{
 	constructor( para=0 ){
 		let type = typeof(para);
