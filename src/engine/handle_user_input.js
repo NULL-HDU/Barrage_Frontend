@@ -31,7 +31,7 @@ var tm = new transmitted();
 
 var debug = function(args) {
     if (console && console.log) {
-        console.log(args);
+        //console.log(args);
     }
 };
 
@@ -280,7 +280,7 @@ function enableBulletsCollectingEngine() {
 
 function startGameLoop() {
     looper(() => {
-        gamemodel.data.backendControlData.airPlane[0].attackDir += 0.05;
+        //gamemodel.data.backendControlData.airPlane[0].attackDir += 0.05;
         airPlane.move(vx,vy,vangle);
         //airPlane.attackDir += 0.05;
         //自主机子弹

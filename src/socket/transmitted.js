@@ -40,8 +40,9 @@ export default class transmitted{
 			if(debug)
 				console.log("playgronud send succeed!");
 		}else{
-			console.log("playgronud send failed...");
+			  console.log("playgronud send failed...");
+
 		}
+      // setTimeout( this.playgroundInfo(),rollingTime );
 	}
-		// setTimeout( this.playgroundInfo(),rollingTime );
 }
