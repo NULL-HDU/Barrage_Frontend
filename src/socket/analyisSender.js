@@ -159,18 +159,34 @@ function fillCollisionArrayToDv(dv,content){
 function fillGroundForDv(dv,body){
 	let length = body.newBallsInfos.length;
 	let content = body.newBallsInfos.content;
+	if(debug){
+		console.log("content : ")
+		console.log(content);
+	}
 	dv.push32(length);
 	fillBallArrayToDv(dv,content);
 	length = body.displacementInfos.length;
 	content = body.displacementInfos.content;
+	if(debug){
+		console.log("content : ")
+		console.log(content);
+	}
 	dv.push32(length);
 	fillBallArrayToDv(dv,content);
 	length = body.collisionSocketInfos.length;
 	content = body.collisionSocketInfos.content;
+	if(debug){
+		console.log("content : ")
+		console.log(content);
+	}
 	dv.push32(length);
 	fillCollisionArrayToDv(dv,content);
 	length = body.disappperInfos.length;
 	content = body.disappperInfos.content;
+	if(debug){
+		console.log("content : ")
+		console.log(content);
+	}
 	dv.push32(length);
 	for(let i=0;i<length;i++){
 		dv.push16(content[i]);

@@ -42,6 +42,7 @@ export default class transmitted{
 		}else{
 			console.log("playgronud send failed...");
 		}
+		// setTimeout(this.playgroundInfo(),rollingTime );
 	}
-		// setTimeout( this.playgroundInfo(),rollingTime );
+		
 }

@@ -34,9 +34,9 @@ function writeTobackendControlData(message){
 		}
 	}
 	let backendControlData = gamemodel.data.backendControlData;
-	backendControlData.airPlane = airPlane;
-	backendControlData.bullet = bullet;
-	backendControlData.block = block;
+	// backendControlData.airPlane.push(airPlane);
+	// backendControlData.bullet.push(bullet);
+	// backendControlData.block.push(block);
 }
 
 //analyis receiving massage
@@ -50,16 +50,16 @@ export function receiveMessage(message){
 			var body = userIdToMes(dv);
 			break;
 		case 6 :
-			var body =  fillBallToMes(dv);
-			gamemodel.data.engineControlData.airPlane = body;
+			// var body =  fillBallToMes(dv);
+			// gamemodel.data.engineControlData.airPlane = body;
 			break;
 		case 7 :
 			var body = groundToMes(dv);
 			let socketCache = gamemodel.socketCache;
-			socketCache.newBallInformation = body.newBallsInfos;
-			socketCache.damageInformation = body.collisionSocketInfos;
-			gamemodel.disappearCache = body.disappearInfos;
-			writeTobackendControlData(body.displacementInfos);
+			socketCache.newBallInformation = body.newBallsInfoArray;
+			socketCache.damageInformation = body.collisionSocketInfosArray;
+			gamemodel.disappearCache = body.disappearInfoArray;
+			writeTobackendControlData(body.displacementInfoArray);
 			break;
 		case 9:
 			var body = connectToMes(dv);
@@ -221,12 +221,15 @@ function groundToMes(dv){
 	return {
 		lengthOfNewBallsInfos : lengthOfNewBallsInfos,
 		newBallsInfoArray : newBallsInfoArray,
+
 		lengthOfDisplacementInfos : lengthOfDisplacementInfos,
 		displacementInfoArray : displacementInfoArray,
+
 		lengthOfCollisionSocketInfos : lengthOfCollisionSocketInfos,
-		collisionSocketInfoArray,
+		collisionSocketInfos : collisionSocketInfoArray,
+
 		lengthOfDisappearInfos : lengthOfDisplacementInfos,
-		disappearInfoArray : displacementInfoArray
+		disappearInfoArray : disappearInfoArray
 	}
 }
 
