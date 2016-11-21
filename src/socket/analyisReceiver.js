@@ -6,11 +6,13 @@
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
 
-let debug = false;
+let debug = true;
 
 function writeTobackendControlData(message){
-	console.log("write message : ");
-	console.log(message);
+	if(debug){
+		console.log("write message : ");
+		console.log(message);	
+	}
 	let airPlane = [];
 	let bullet = [];
 	let block = [];
