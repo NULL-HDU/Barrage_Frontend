@@ -31,7 +31,7 @@ var tm = new transmitted();
 
 var debug = function(args) {
     if (console && console.log) {
-        console.log(args);
+        //console.log(args);
     }
 };
 
@@ -77,11 +77,12 @@ function bulletMakerLoop() {
         bullet.startPoint.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 50;
         bullet.startPoint.y = airPlane.locationCurrent.y + Math.sin(angel + (3/2)*Math.PI) * 50;
         bullet.attackDir = airPlane.attackDir;
-        //console.log(gamemodel.data.engineControlData.bullet);
         gamemodel.data.engineControlData.bullet.push(bullet);
         if (bulletMakerStartFlag === 0) {
+            console.log("loop continue");
             bulletMakerLoop();
         }
+        console.log(gamemodel.data.engineControlData.bullet);
     }, global.BULLET_MAKER_LOOP_INTERVAL);
 }
 
@@ -279,7 +280,7 @@ function enableBulletsCollectingEngine() {
 
 function startGameLoop() {
     looper(() => {
-        gamemodel.data.backendControlData.airPlane[0].attackDir += 0.05;
+        //gamemodel.data.backendControlData.airPlane[0].attackDir += 0.05;
         airPlane.move(vx,vy,vangle);
         //airPlane.attackDir += 0.05;
         //自主机子弹
