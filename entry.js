@@ -11,7 +11,7 @@ module.exports = {
   //name: path
   //regist which file should be compile
   //test: [join(entry_dir, "./test/webpack_test.js")],
-    handle_user_input: [join(entry_dir, "./engine/handle_user_input.js")],
+    handle_user_input: [join(entry_dir, "./init.js")],
 }
 
 /* entry.js ends here */

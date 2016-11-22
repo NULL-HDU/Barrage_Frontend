@@ -17,6 +17,10 @@ export default {
     KEY_S: 83,
     KEY_D: 68,
 
+    NORMAL_SKILL: 0,
+    NORMAL_SKILL_CD: 500,
+    SKILL_CHECk_LOOP_INTERVAL: 50,
+
     QUAD_BALL_AMOUNT: 4,
     QUAD_TREE_DEPTH: 30,
 
