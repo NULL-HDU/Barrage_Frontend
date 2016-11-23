@@ -4,21 +4,23 @@
  * Email: arthury.me@gmail.com
  */
 
-import Ball from "../model/ball"
-import global from "../engine/global"
-import constant from "../engine/CommonConstant.js"
+import Ball from "../model/ball";
+import constant from "./constant.js";
 
 export default class Airplane extends Ball {
     constructor() {
         super();
         this.ballType = constant.AIRPLANE;
         this.radius = 5;
+        this.vx = 0;
+        this.vy = 0;
+        this.vangle = 0;
     };
 
-    move(vx,vy,vangle) {
-        this.locationCurrent.x += vx;
-        this.locationCurrent.y += vy;
-        this.attackDir += vangle;
+    move() {
+        this.locationCurrent.x += this.vx;
+        this.locationCurrent.y += this.vy;
+        this.attackDir += this.vangle;
     }
 }
 

@@ -10,11 +10,13 @@ import Airplane from "./model/airplane";
 import {playGame} from "./view/view";
 import screenfull from "./engine/screenfull.js";
 import {
-  configCanvasEventListen,
-  changeKeyEventBindings,
   startGameLoop,
   enableBulletsCollectingEngine
 } from "./engine/engine.js";
+import {
+  configCanvasEventListen,
+  changeKeyEventBindings
+} from "./engine/keybinding.js";
 
 let startGame = ()=> {
   playGame();

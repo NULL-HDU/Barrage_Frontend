@@ -1,7 +1,7 @@
-import Ball from "../model/ball"
-import PVector from "../engine/Point"
-import global from "../engine/global"
-import constant from "../engine/CommonConstant"
+import Ball from "./ball";
+import PVector from "./Point";
+import global from "./global";
+import constant from "./constant";
 
 
 export default class Bullet extends Ball{

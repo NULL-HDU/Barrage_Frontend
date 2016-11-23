@@ -3,7 +3,7 @@
  * Maintainer: Arthury (ArthurYV)
  * Email: arthury.me@gmail.com
  */
-import global from "../engine/global"
+import global from "./global";
 
 export default class Ball {
     constructor() {
