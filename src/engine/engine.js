@@ -4,8 +4,8 @@
  * Email: arthury.me@gmail.com
  */
 
-import global from "../model/global";
-import constant from "../model/constant.js";
+import global from "../global";
+import constant from "../constant.js";
 import gamemodel from "../model/gamemodel";
 import Quadtree from "./quadtree";
 import PVector from "../model/Point";

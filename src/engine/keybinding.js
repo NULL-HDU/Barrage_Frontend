@@ -1,4 +1,4 @@
-import global from "../model/global";
+import global from "../global";
 import gamemodel from "../model/gamemodel";
 import {
   disableSkillEngine,
@@ -20,7 +20,7 @@ let mouseRelease=(e)=>{
     // console.log("right click");
   }else if(e.which === 1){
     //        console.log("left click");
-    disableSkillEngine();
+    disableSkillEngine(global.NORMAL_SKILL);
   }
 };
 
@@ -29,7 +29,7 @@ let mousePress=(e)=>{
     // console.log("right click");
   }else if(e.which === 1){
     // console.log("left click");
-    enableSkillEngine(0);
+    enableSkillEngine(global.NORMAL_SKILL);
   }
 };
 

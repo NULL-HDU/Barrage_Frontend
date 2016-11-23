@@ -5,7 +5,7 @@
  */
 
 import Ball from "../model/ball";
-import constant from "./constant.js";
+import constant from "../constant.js";
 
 export default class Airplane extends Ball {
     constructor() {

@@ -3,7 +3,7 @@
  * Maintainer: Arthury (ArthurYV)
  * Email: arthury.me@gmail.com
  */
-import global from "./global";
+import global from "../global";
 
 export default class Ball {
     constructor() {
@@ -11,7 +11,7 @@ export default class Ball {
         this.id = 0;
         this.hp = 10000;
         this.damage = 100;
-        this.name = 'Arthury';
+        this.name = "Arthury";
         this.camp = undefined;
         this.userId = undefined;
         this.roleId = 0;
@@ -25,9 +25,6 @@ export default class Ball {
             x:global.LOCAL_WIDTH/2,
             y:global.LOCAL_HEIGHT/2,
         };
-    }
-
-    pathCalculate(){
     }
 
 }
