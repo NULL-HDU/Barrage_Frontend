@@ -199,6 +199,7 @@ function mousePress(e){
 
 function startGame() {
     document.getElementById('gameWrapper').style.display = "none";
+    airPlane.name = playerNameInput.value;
     playGame();
     configCanvasEventListen();
     //init socket
