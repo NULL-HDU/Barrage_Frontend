@@ -127,8 +127,16 @@ function fillBallArrayToDv(dv,content){
 		dv.push16( content[i].special );
 		dv.push8( content[i].speed );
 		dv.push16( content[i].attackDir );
-		dv.push8( content[i].alive );
-		dv.push8( content[i].isKilled );
+		//temporaryly use this until ball.js is changed!
+		let status = content[i].status;
+		let alive = 0;
+		if(status==0){
+			var alive = 1;
+		}
+		dv.push8( alive );
+		dv.push8( !alive );
+		//use this when ball.js is changed
+		// dv.push8(content[i].status);
 		dv.push16( content[i].locationCurrent.x );
 		dv.push16( content[i].locationCurrent.y );
 	}

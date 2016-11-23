@@ -142,8 +142,12 @@ function fillBallToMes(dv){
 	ball.special = dv.pop16();
 	ball.speed = dv.pop8();
 	ball.attackDir = dv.pop16();
-	ball.alive = dv.pop8();
-	ball.isKilled = dv.pop8();
+	//tmporaryly use this when ball.js isn't changed
+	let status = dv.pop8();
+	ball.alive = (status==0);
+	ball.isKilled = !ball.alive;
+	//use this when ball.js is changed
+	// ball.status = dv.pop8();
 	ball.locationCurrent = {};
 	ball.locationCurrent.x = dv.pop16();
 	ball.locationCurrent.y = dv.pop16();
