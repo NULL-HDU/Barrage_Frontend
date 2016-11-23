@@ -2,6 +2,7 @@ import global from "../global";
 import {STRAIGHT_LINE_BULLET} from "../bullet_role.js";
 import gamemodel from "../model/gamemodel";
 import Bullet from "../model/bullet";
+import PVector from "../model/Point.js";
 
 let data = gamemodel.data.engineControlData;
 
@@ -20,15 +21,15 @@ let normalSkillFunc = () => {
 
     normalSkillCDFlag = 1;
     let airPlane = data.airPlane;
-    let bullet = new Bullet(airPlane.userId, STRAIGHT_LINE_BULLET);
+    let angle = airPlane.attackDir;
+    let bullet = new Bullet(airPlane.userId, STRAIGHT_LINE_BULLET, angle);
     //bullet.ballType = "Bullet";
-    let angel = airPlane.attackDir;
-    bullet.camp = 0;
-    bullet.locationCurrent.x = airPlane.locationCurrent.x + Math.cos(angel + (3 / 2) * Math.PI) * 100;
-    bullet.locationCurrent.y = airPlane.locationCurrent.y + Math.sin(angel + (3 / 2) * Math.PI) * 100;
-    bullet.startPoint.x = airPlane.locationCurrent.x + Math.cos(angel + (3 / 2) * Math.PI) * 50;
-    bullet.startPoint.y = airPlane.locationCurrent.y + Math.sin(angel + (3 / 2) * Math.PI) * 50;
-    bullet.attackDir = airPlane.attackDir;
+    let dirVector = new PVector(
+        Math.cos(angle + (3 / 2) * Math.PI),
+        Math.sin(angle + (3 / 2) * Math.PI)
+    );
+    bullet.locationCurrent = PVector.add(airPlane.locationCurrent, PVector.mult(dirVector, 100));
+    bullet.startPoint = PVector.add(airPlane.locationCurrent, PVector.mult(dirVector, 50));
     data.bullet.push(bullet);
 
     setTimeout(() => {

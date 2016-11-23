@@ -6,7 +6,7 @@ import gamemodel from "./gamemodel.js";
 let bulletResource = gamemodel.resourceRecord.bulletTable;
 
 export default class Bullet extends Ball {
-  constructor(userId, roleId) {
+  constructor(userId, roleId, angle) {
         if(bulletResource[roleId] === undefined) {
           throw "Invalid roleId!";
         }
@@ -15,15 +15,14 @@ export default class Bullet extends Ball {
         this.roleId = roleId;
         this.userId = userId;
         this.camp = userId;
-        this.startPoint = {
-            x: 0,
-            y: 0,
-        };
+        this.attackDir = angle;
+        this.startPoint = new PVector(0, 0);
         Object.assign(this, bulletResource[roleId]);
+        this.run = this.pathFunc(this);
     }
 
     pathCalculate() {
-        this.pathFunc(this);
+        this.run();
 
         //如果遇到边界或者超出射程就消失
         let a = new PVector(this.startPoint.x, this.startPoint.y);

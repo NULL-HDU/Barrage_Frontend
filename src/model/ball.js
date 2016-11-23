@@ -4,6 +4,7 @@
  * Email: arthury.me@gmail.com
  */
 import global from "../global";
+import PVector from "./Point.js";
 
 export default class Ball {
     constructor() {
@@ -21,10 +22,7 @@ export default class Ball {
         this.alive = true;
         this.isKilled = false;
         this.hasJudge = false;
-        this.locationCurrent = {
-            x:global.LOCAL_WIDTH/2,
-            y:global.LOCAL_HEIGHT/2,
-        };
+        this.locationCurrent = new PVector(global.LOCAL_WIDTH/2, global.LOCAL_HEIGHT/2);
     }
 
 }
