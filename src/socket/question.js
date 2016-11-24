@@ -15,3 +15,4 @@ analyisReceive.js
 		case 7 body to where?
 
 ball.js need to be changed
+damageInformation need to be changed

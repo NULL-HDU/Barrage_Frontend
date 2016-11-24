@@ -9,7 +9,7 @@ import gamemodel from "../model/gamemodel.js"
 import * as sender from "./analyisSender.js"
 
 let debug = false;
-let rollingTime = 10000;
+let rollingTime = 1000/90;
 
 export default class transmitted{
 
@@ -43,6 +43,6 @@ export default class transmitted{
 			  // console.log("playgronud send failed...");
 
 		}
-		let play = setTimeout(()=>this.playgroundInfo(),1000 );
+		let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 	}
 }

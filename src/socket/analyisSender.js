@@ -15,7 +15,7 @@ function analyisUnnumber(obj){
 	// if(debug)
 	// 	console.log(returnObj);
 	return getObj;
-}
+} 	
 
 // /*ball={
 // 	camp(userId) : 32,
@@ -33,15 +33,14 @@ function analyisUnnumber(obj){
 // 	role : 8,
 // 	special : 16,
 // 	speed : 8,
-// 	attackDir : 16,
-// 	alive : 8,
-// 	isKilled : 8,
+// 	attackDir : 32,
+// 	state : 8
 // 	localtionCurrent : {
 // 		x : 16,
 // 		y : 16
 // 	}
 // }
-// 208+lengthOfName*8
+// 216+lengthOfName*8
 // */
 // //calculcate length of balls
 function calculcateBallsLength(balls){
@@ -50,7 +49,7 @@ function calculcateBallsLength(balls){
 	let totalLength = 0;
 	for(let i=0;i<length;i++){
 		let nameLength = balls[i].name.length;
-		totalLength = totalLength+208+nameLength*8;
+		totalLength = totalLength+216+nameLength*8;
 	}
 	return totalLength;
 }
@@ -126,15 +125,12 @@ function fillBallArrayToDv(dv,content){
 		dv.push8( content[i].roleId );
 		dv.push16( content[i].special );
 		dv.push8( content[i].speed );
-		dv.push16( content[i].attackDir );
+		// dv.pushFloat32( content[i].attackDir );
+		dv.pushFloat32( 0 );
 		//temporaryly use this until ball.js is changed!
-		let status = content[i].status;
-		let alive = 0;
-		if(status==0){
-			var alive = 1;
-		}
-		dv.push8( alive );
-		dv.push8( !alive );
+		let alive = content[i].alive;
+		let status = !content[i].alive;
+		dv.push8( 0 );
 		//use this when ball.js is changed
 		// dv.push8(content[i].status);
 		dv.push16( content[i].locationCurrent.x );
@@ -153,10 +149,12 @@ function fillCollisionArrayToDv(dv,content){
 		dv.push16( content[i].collision2[1] );
 		dv.push8( content[i].damageValue[0] );
 		dv.push8(content[i].damageValue[1] );
+		//temporary use this before damageInfo isn't changed
 		dv.push8( content[i].isAlive[0] );
 		dv.push8( content[i].isAlive[1] );
-		dv.push8( content[i].willDisappear[0]);
-		dv.push8( content[i].willDisappear[1]);
+		//use this when damageInfo is changed
+		//dv.push8(cotnent[i].state[0]);
+		//dv.push8(cotnent[i].state[1]);
 	}
 }
 
@@ -268,10 +266,9 @@ export function loginAnalyis(airplane){
 // 		id : 16
 // 	}
 // 	damage : [damageToA,damageToB],(8,8)
-// 	isAlive : [AIsAlive,BIsAlive],(8,8)
-// 	willDisappear(AWillDisappear,BWillDisappear) (8,8)
+// 	state : [Astate,Bstate] (8,8)
 // }
-// total:144
+// total:128
 // */
 
 export function playgroundInfoAnalyis(){
@@ -302,13 +299,14 @@ export function playgroundInfoAnalyis(){
 	// }
 
 	let length = 32+32+32+32+calculcateBallsLength(newBallsInfoArray)
-	+calculcateBallsLength(displacementInfoArray)+lengthOfCollisionSocketInfos*144
+	+calculcateBallsLength(displacementInfoArray)+lengthOfCollisionSocketInfos*128
 	+lengthOfDisappearInfos*16;
 
 	let messageLength = (32+64+8+length)/8;
 
 	if(debug){
 		console.log("groundLength : "+ messageLength);
+		console.log(calculcateBallsLength(displacementInfoArray))
 	}
 
 	let messageBody = {

@@ -29,6 +29,19 @@ export default class dataview{
 		}
 	}
 
+	getDetail(){
+		var str = ""
+    	for(var i=0;i<this.dv.byteLength;i++){
+	    	var char = this.dv.getUint8(i).toString(16);
+	    	if(char.length<2){
+	    		char = "0"+char;
+	    	}
+	    	str=str+char+" ";
+	    	// str+=char;
+	    }
+		return str;
+	}
+
 	getDv(){
 		return this.dv;
 	}
@@ -84,6 +97,17 @@ export default class dataview{
 		return returnElement;
 	}
 
+	popFloat32(){
+		this.isEnough(4);
+		let temDv = new DataView( new ArrayBuffer(this.dvLength) );
+		for(let i=0;i<this.dvLength;i++){
+			temDv.setUint8( i, this.dv.getUint8(i+4) );
+		}
+		let returnElement = this.dv.getFloat32(0);
+		this.dv = temDv;
+		return returnElement;
+	}
+
 	popFloat64(){
 		this.isEnough(8);
 		let temDv = new DataView( new ArrayBuffer(this.dvLength) );
@@ -125,6 +149,11 @@ export default class dataview{
 	push32(content){
 		this.isLegal(4,content);
 		this.dv.setUint32( this.dvHas-4,content );
+	}
+
+	pushFloat32(content){
+		this.isLegal(4,content);
+		this.dv.setFloat32( this.dvHas-4,content );
 	}
 
 	pushFloat64(content){

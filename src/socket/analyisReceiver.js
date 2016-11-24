@@ -5,39 +5,47 @@
 
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
+import CommonConstant from "../engine/CommonConstant.js"
 
 let debug = false;
 
-// function writeTobackendControlData(message){
-// 	if(debug){
-// 		console.log("write message : ");
-// 		console.log(message);	
-// 	}
-// 	let airPlane = [];
-// 	let bullet = [];
-// 	let block = [];
-// 	for(let i in message){
-// 		if( message[i].ballType=="airPlane" ){
-// 			airPlane.push(message[i]);
-// 			continue;
-// 		}
-// 		if( message[i].ballType=="bullet" ){
-// 			bullet.push(message[i]);
-// 			continue;
-// 		}
-// 		if( message[i].ballType=="block" ){
-// 			block.push(message[i])
-// 			continue;
-// 		}
-// 		else{
-// 			console.log("undefined type!!");
-// 		}
-// 	}
-// 	let backendControlData = gamemodel.data.backendControlData;
-// 	// backendControlData.airPlane.push(airPlane);
-// 	// backendControlData.bullet.push(bullet);
-// 	// backendControlData.block.push(block);
-// }
+//update airplane
+function updateAirplane(airplane,obj){
+	for(let i in obj){
+		airplane[i] = obj[i]
+	}
+}
+
+function writeTobackendControlData(message){
+	if(debug){
+		console.log("write message : ");
+		console.log(message);	
+	}
+	let airPlane = [];
+	let bullet = [];
+	let block = [];
+	for(let i in message){
+		if( message[i].ballType==CommonConstant.AIRPLANE ){
+			airPlane.push(message[i]);
+			continue;
+		}
+		if( message[i].ballType==CommonConstant.BULLET ){
+			bullet.push(message[i]);
+			continue;
+		}
+		if( message[i].ballType==CommonConstant.BLOCK ){
+			block.push(message[i])
+			continue;
+		}
+		else{
+			console.log("undefined type!!");
+		}
+	}
+	let backendControlData = gamemodel.data.backendControlData;
+	backendControlData.airPlane.push(airPlane);
+	backendControlData.bullet.push(bullet);
+	backendControlData.block.push(block);
+}
 
 //analyis receiving massage
 export function receiveMessage(message){
@@ -52,15 +60,17 @@ export function receiveMessage(message){
 			break;
 		case 6 :
 			body =  fillBallToMes(dv);
-			// gamemodel.data.engineControlData.airPlane = body;
+			updateAirplane(gamemodel.data.engineControlData.airPlane,body)
 			break;
 		case 7 :
+		// case 12 :
+			let mes = dv.getDetail();
 			body = groundToMes(dv);
-			// let socketCache = gamemodel.socketCache;
-			// socketCache.newBallInformation = body.newBallsInfoArray;
-			// socketCache.damageInformation = body.collisionSocketInfosArray;
-			// gamemodel.disappearCache = body.disappearInfoArray;
-			// writeTobackendControlData(body.displacementInfoArray);
+			let socketCache = gamemodel.socketCache;
+			socketCache.newBallInformation = body.newBallsInfoArray;
+			socketCache.damageInformation = body.collisionSocketInfosArray;
+			gamemodel.disappearCache = body.disappearInfoArray;
+			writeTobackendControlData(body.displacementInfoArray);
 			break;
 		case 9:
 			body = connectToMes(dv);
@@ -141,7 +151,7 @@ function fillBallToMes(dv){
 	ball.roleId = dv.pop8();
 	ball.special = dv.pop16();
 	ball.speed = dv.pop8();
-	ball.attackDir = dv.pop16();
+	ball.attackDir = dv.popFloat32();
 	//tmporaryly use this when ball.js isn't changed
 	let status = dv.pop8();
 	ball.alive = (status==0);
@@ -183,12 +193,17 @@ function getCollisionInfoToArray(dv,length){
 		let damageToA = dv.pop8();
 		let damageToB = dv.pop8();
 		collisionInfo.damage = [damageToA,damageToB];
-		let AIsAlive = dv.pop8();
-		let BIsAlive = dv.pop8();
+		//temporary use this before damageInfo isn't changed
+		let Astate = dv.pop8();
+		let Bstate =  dv.pop8();
+		let AIsAlive = (Astate==0);
+		let BIsAlive = (Bstate==0);
 		collisionInfo.isAlive = [AIsAlive,BIsAlive];
-		let AWillDisappear = dv.pop8();
-		let BWillDisappear = dv.pop8();
+		let AWillDisappear = !AIsAlive;
+		let BWillDisappear = !BIsAlive;
 		collisionInfo.willDisappear = [AWillDisappear,BWillDisappear];
+		//use this when damageInfo is changed
+		//collisionInfo.state=[Astate,Bstate];
 		collisionInfos.push(collisionInfo);
 	}
 	return collisionInfos;
