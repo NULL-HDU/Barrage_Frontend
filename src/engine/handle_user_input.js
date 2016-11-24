@@ -82,7 +82,7 @@ var Count = (function () {
 
 
 function bulletMakerLoop() {
-    
+   
     setTimeout(function () {
         let bullet = new Bullet();
         var count = new Count();
@@ -228,8 +228,8 @@ function startGame() {
     enableBulletsCollectingEngine();
 
     //测试
-    configTestEnemyPlanes();
-    enemyBulletMakerLoop();
+    //configTestEnemyPlanes();
+    //enemyBulletMakerLoop();
 }
 
 function enableCollisionDetectionEngine(){
