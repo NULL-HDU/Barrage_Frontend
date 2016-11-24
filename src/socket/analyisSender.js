@@ -274,23 +274,23 @@ export function loginAnalyis(airplane){
 export function playgroundInfoAnalyis(){
 	let socketCache = gamemodel.socketCache;
 
-	let newBallsInfoArray = socketCache.newBallInformation.filter( (e)=>typeof(e)!="undefined" );
+	let newBallsInfoArray = socketCache.newBallInformation;
 	let lengthOfNewBallsInfos = newBallsInfoArray.length;
 
 	let balls = gamemodel.data.engineControlData;
 	let displacementInfoArray = [];
 	Array.prototype.push.apply(displacementInfoArray, balls.bullet);
 	displacementInfoArray.push(balls.airPlane);
-	displacementInfoArray = displacementInfoArray.filter( (e)=>typeof(e)!="undefined" );
+	displacementInfoArray = displacementInfoArray;
 	let lengthOfDisplacementInfos = displacementInfoArray.length;
 	if( typeof(socketCache.damageInformation)=="undefined")
 		socketCache.damageInformation==[];
-	let collisionSocketInfoArray = socketCache.damageInformation.filter( (e)=>typeof(e)!="undefined" );
+	let collisionSocketInfoArray = socketCache.damageInformation;
 	socketCache.damageInformation = [];
 	//clear socket
 	let lengthOfCollisionSocketInfos = collisionSocketInfoArray.length;
 
-	let disappearInfoArray = socketCache.disapperBulletInformation.filter( (e)=>typeof(e)!="undefined" );
+	let disappearInfoArray = socketCache.disapperBulletInformation;
 	let lengthOfDisappearInfos = disappearInfoArray.length;
 
 	// if(debug){
@@ -340,5 +340,6 @@ export function playgroundInfoAnalyis(){
 		console.log("playground message : ")
 		console.log(message);
 	}
+	console.log("playground")
 	return fillDv(message);
 }

@@ -8,7 +8,7 @@ import WebSocket from "./websocket.js";
 import gamemodel from "../model/gamemodel.js" 
 import * as sender from "./analyisSender.js"
 
-let debug = falses;
+let debug = false;
 let rollingTime = 1000/90;
 
 export default class transmitted{
