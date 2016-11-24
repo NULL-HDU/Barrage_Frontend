@@ -16,6 +16,33 @@ function updateAirplane(airplane,obj){
 	}
 }
 
+// /*collisionSocketInfo={
+// 	ballA : {
+// 		userId : 32,
+// 		id : 16
+// 	},
+// 	ballB : {
+// 		userId : 32,
+// 		id : 16
+// 	}
+// 	damage : [damageToA,damageToB],(8,8)
+// 	isAlive : [AIsAlive,BIsAlive],(8,8)
+// 	willDisappear(AWillDisappear,BWillDisappear) (8,8)
+// }
+// total:144
+// */
+function updateCollision(collision){
+	for(let i in collision){
+		let AuserId = collision[i].ballA.userId;
+		let AId = collision[i].ballA.id;
+		let BuserId = collision[i].ballB.userId;
+		let BId = collision[i].ballB.id;
+		if(AId == 0){
+			
+		}
+	}
+}
+
 function writeTobackendControlData(message){
 	if(debug){
 		console.log("write message : ");
@@ -42,9 +69,9 @@ function writeTobackendControlData(message){
 		}
 	}
 	let backendControlData = gamemodel.data.backendControlData;
-	backendControlData.airPlane.push(airPlane);
-	backendControlData.bullet.push(bullet);
-	backendControlData.block.push(block);
+	backendControlData.airPlane = airPlane;
+	backendControlData.bullet = bullet;
+	backendControlData.block = block;
 }
 
 //analyis receiving massage
@@ -67,9 +94,9 @@ export function receiveMessage(message){
 			let mes = dv.getDetail();
 			body = groundToMes(dv);
 			let socketCache = gamemodel.socketCache;
-			socketCache.newBallInformation = body.newBallsInfoArray;
+			// socketCache.newBallInformation = body.newBallsInfoArray;
 			socketCache.damageInformation = body.collisionSocketInfosArray;
-			gamemodel.disappearCache = body.disappearInfoArray;
+			// gamemodel.disappearCache = body.disappearInfoArray;
 			writeTobackendControlData(body.displacementInfoArray);
 			break;
 		case 9:
