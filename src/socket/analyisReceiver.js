@@ -62,8 +62,8 @@ export function receiveMessage(message){
 			body =  fillBallToMes(dv);
 			updateAirplane(gamemodel.data.engineControlData.airPlane,body)
 			break;
-		case 7 :
-		// case 12 :
+		// case 7 :
+		case 12 :
 			let mes = dv.getDetail();
 			body = groundToMes(dv);
 			let socketCache = gamemodel.socketCache;

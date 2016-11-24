@@ -6,7 +6,7 @@
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
 
-let debug = false;
+let debug = true;
 
 function analyisUnnumber(obj){
 	//get a array for name coding by Unicode
@@ -73,6 +73,7 @@ function fillDv(message){
 			fillConnectForDv(dv,message.body);
 			break;
 		case 12 :
+			// console.log(dv.getDetail());
 			fillGroundForDv(dv,message.body);
 			break;
 	}
@@ -125,12 +126,11 @@ function fillBallArrayToDv(dv,content){
 		dv.push8( content[i].roleId );
 		dv.push16( content[i].special );
 		dv.push8( content[i].speed );
-		// dv.pushFloat32( content[i].attackDir );
-		dv.pushFloat32( 0 );
+		dv.pushFloat32( content[i].attackDir );
 		//temporaryly use this until ball.js is changed!
 		let alive = content[i].alive;
 		let status = !content[i].alive;
-		dv.push8( 0 );
+		dv.push8( status );
 		//use this when ball.js is changed
 		// dv.push8(content[i].status);
 		dv.push16( content[i].locationCurrent.x );
