@@ -66,10 +66,28 @@ function enemyBulletMakerLoop() {
     }, global.BULLET_MAKER_DEMO_LOOP_INTERVAL);
 }
 
+var Count = (function () {
+    var counter = 0,    //私有静态属性
+        NewCount;
+
+    NewCount = function () {    //新构造函数
+        counter += 1;
+    }
+    NewCount.prototype.getLastCount = function () {
+        return counter;
+    }
+
+    return NewCount;    //覆盖构造函数
+}());
+
+
 function bulletMakerLoop() {
+    
     setTimeout(function () {
         let bullet = new Bullet();
-        //bullet.ballType = "Bullet";
+        var count = new Count();
+        bullet.id = count.getLastCount();
+        gamemodel.socketCache.newBallInformation.push(bullet);
         let angel = airPlane.attackDir;
         bullet.camp = 0;
         bullet.locationCurrent.x = airPlane.locationCurrent.x + Math.cos(angel + (3/2)*Math.PI) * 100;
