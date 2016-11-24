@@ -284,7 +284,12 @@ export function playgroundInfoAnalyis(){
 	displacementInfoArray = displacementInfoArray.filter( (e)=>typeof(e)!="undefined" );
 	let lengthOfDisplacementInfos = displacementInfoArray.length;
 
+	console.log("own");
+	console.log(displacementInfoArray);
 
+	console.log(socketCache.damageInformation)
+	if( typeof(socketCache.damageInformation)=="undefined")
+		socketCache.damageInformation==[];
 	let collisionSocketInfoArray = socketCache.damageInformation.filter( (e)=>typeof(e)!="undefined" );
 	socketCache.damageInformation = [];
 	//clear socket
@@ -294,7 +299,7 @@ export function playgroundInfoAnalyis(){
 	let lengthOfDisappearInfos = disappearInfoArray.length;
 
 	// if(debug){
-	// 	console.log("balls length : "+calculcateBallsLength(newBallsInfoArray)+"  "
+	// 	console.logbackendControlData("balls length : "+calculcateBallsLength(newBallsInfoArray)+"  "
 	// +calculcateBallsLength(displacementInfoArray));
 	// }
 

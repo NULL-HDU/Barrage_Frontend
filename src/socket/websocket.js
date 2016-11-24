@@ -6,7 +6,7 @@
 
 import * as receiver from "./analyisReceiver.js"
 
-let debug = false;
+let debug = true;
 
 //switch the status of is updating socket
 let socketStatusSwitcher = function(){
