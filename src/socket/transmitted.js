@@ -8,7 +8,7 @@ import WebSocket from "./websocket.js";
 import gamemodel from "../model/gamemodel.js" 
 import * as sender from "./analyisSender.js"
 
-let debug = false;
+let debug = falses;
 let rollingTime = 1000/90;
 
 export default class transmitted{
@@ -42,6 +42,7 @@ export default class transmitted{
 		}else{
 			  // console.log("playgronud send failed...");
 
+		console.log("asd")
 		}
 		let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 	}

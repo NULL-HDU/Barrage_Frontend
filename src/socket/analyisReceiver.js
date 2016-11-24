@@ -43,8 +43,8 @@ function writeTobackendControlData(message){
 	}
 	let backendControlData = gamemodel.data.backendControlData;
 	backendControlData.airPlane = airPlane;
-	backendControlData.bullet = bullet;
-	backendControlData.block = block;
+	// backendControlData.bullet = bullet;
+	// backendControlData.block = block;
 }
 
 //analyis receiving massage

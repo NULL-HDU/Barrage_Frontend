@@ -283,11 +283,6 @@ export function playgroundInfoAnalyis(){
 	displacementInfoArray.push(balls.airPlane);
 	displacementInfoArray = displacementInfoArray.filter( (e)=>typeof(e)!="undefined" );
 	let lengthOfDisplacementInfos = displacementInfoArray.length;
-
-	console.log("own");
-	console.log(displacementInfoArray);
-
-	console.log(socketCache.damageInformation)
 	if( typeof(socketCache.damageInformation)=="undefined")
 		socketCache.damageInformation==[];
 	let collisionSocketInfoArray = socketCache.damageInformation.filter( (e)=>typeof(e)!="undefined" );
