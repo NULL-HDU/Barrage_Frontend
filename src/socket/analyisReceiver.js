@@ -6,38 +6,38 @@
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
 
-let debug = true;
+let debug = false;
 
-function writeTobackendControlData(message){
-	if(debug){
-		console.log("write message : ");
-		console.log(message);	
-	}
-	let airPlane = [];
-	let bullet = [];
-	let block = [];
-	for(let i in message){
-		if( message[i].ballType=="airPlane" ){
-			airPlane.push(message[i]);
-			continue;
-		}
-		if( message[i].ballType=="bullet" ){
-			bullet.push(message[i]);
-			continue;
-		}
-		if( message[i].ballType=="block" ){
-			block.push(message[i])
-			continue;
-		}
-		else{
-			console.log("undefined type!!");
-		}
-	}
-	let backendControlData = gamemodel.data.backendControlData;
-	// backendControlData.airPlane.push(airPlane);
-	// backendControlData.bullet.push(bullet);
-	// backendControlData.block.push(block);
-}
+// function writeTobackendControlData(message){
+// 	if(debug){
+// 		console.log("write message : ");
+// 		console.log(message);	
+// 	}
+// 	let airPlane = [];
+// 	let bullet = [];
+// 	let block = [];
+// 	for(let i in message){
+// 		if( message[i].ballType=="airPlane" ){
+// 			airPlane.push(message[i]);
+// 			continue;
+// 		}
+// 		if( message[i].ballType=="bullet" ){
+// 			bullet.push(message[i]);
+// 			continue;
+// 		}
+// 		if( message[i].ballType=="block" ){
+// 			block.push(message[i])
+// 			continue;
+// 		}
+// 		else{
+// 			console.log("undefined type!!");
+// 		}
+// 	}
+// 	let backendControlData = gamemodel.data.backendControlData;
+// 	// backendControlData.airPlane.push(airPlane);
+// 	// backendControlData.bullet.push(bullet);
+// 	// backendControlData.block.push(block);
+// }
 
 //analyis receiving massage
 export function receiveMessage(message){
@@ -45,30 +45,31 @@ export function receiveMessage(message){
 	let length = dv.pop32();
 	let timestamp = dv.popFloat64();
 	let type = dv.pop8();
+	let body = "Sorry!!!I can't analyis!!!";
 	switch( type ){
 		case 212 :
-			var body = userIdToMes(dv);
+			 body = userIdToMes(dv);
 			break;
 		case 6 :
-			// var body =  fillBallToMes(dv);
+			body =  fillBallToMes(dv);
 			// gamemodel.data.engineControlData.airPlane = body;
 			break;
 		case 7 :
-			var body = groundToMes(dv);
-			let socketCache = gamemodel.socketCache;
-			socketCache.newBallInformation = body.newBallsInfoArray;
-			socketCache.damageInformation = body.collisionSocketInfosArray;
-			gamemodel.disappearCache = body.disappearInfoArray;
-			writeTobackendControlData(body.displacementInfoArray);
+			body = groundToMes(dv);
+			// let socketCache = gamemodel.socketCache;
+			// socketCache.newBallInformation = body.newBallsInfoArray;
+			// socketCache.damageInformation = body.collisionSocketInfosArray;
+			// gamemodel.disappearCache = body.disappearInfoArray;
+			// writeTobackendControlData(body.displacementInfoArray);
 			break;
 		case 9:
-			var body = connectToMes(dv);
+			body = connectToMes(dv);
 			break;
 		case 10:
-			var body = specialToMes(dv);
+		 body = specialToMes(dv);
 			break;
 		case 11:
-			var body = overToMes(dv);
+		 body = overToMes(dv);
 			break;
 
 	}
@@ -87,8 +88,8 @@ export function receiveMessage(message){
 	return returnMessage;
 }
 
-//fill userid information to message;
-//tempaoraryly cmap equal to userId!!
+// //fill userid information to message;
+// //tempaoraryly cmap equal to userId!!
 function userIdToMes(dv){
 	let airplane = gamemodel.data.engineControlData.airPlane;
 	airplane.userId = airplane.camp = dv.pop32();
@@ -96,33 +97,33 @@ function userIdToMes(dv){
 }
 
 
-/*ball={
-	camp(userId) : 32,
-	ballId : {
-		userId : 32,
-		id : 16
-	},
-	nickname : {
-		lengthOfName : 8,
-		name : lengthOfName*8
-	},
-	ballType : 8,
-	hp : 8,
-	damage : 8,
-	role : 8,
-	special : 16,
-	speed : 8,
-	attackDir : 16,
-	alive : 8,
-	isKilled : 8,
-	localtionCurrent : {
-		x : 16,
-		y : 16
-	}
-}
-208+lengthOfName*8
-*/
-//fill ball information to message
+// /*ball={
+// 	camp(userId) : 32,
+// 	ballId : {
+// 		userId : 32,
+// 		id : 16
+// 	},
+// 	nickname : {
+// 		lengthOfName : 8,
+// 		name : lengthOfName*8
+// 	},
+// 	ballType : 8,
+// 	hp : 8,
+// 	damage : 8,
+// 	role : 8,
+// 	special : 16,
+// 	speed : 8,
+// 	attackDir : 16,
+// 	alive : 8,
+// 	isKilled : 8,
+// 	localtionCurrent : {
+// 		x : 16,
+// 		y : 16
+// 	}
+// }
+// 208+lengthOfName*8
+// */
+// //fill ball information to message
 function fillBallToMes(dv){
 	let ball={};
 	ball.camp = dv.pop32();
@@ -141,55 +142,59 @@ function fillBallToMes(dv){
 	ball.special = dv.pop16();
 	ball.speed = dv.pop8();
 	ball.attackDir = dv.pop16();
-	ball.alive = dv.pop8();
-	ball.isKilled = dv.pop8();
+	//tmporaryly use this when ball.js isn't changed
+	let status = dv.pop8();
+	ball.alive = (status==0);
+	ball.isKilled = !ball.alive;
+	//use this when ball.js is changed
+	// ball.status = dv.pop8();
 	ball.locationCurrent = {};
 	ball.locationCurrent.x = dv.pop16();
 	ball.locationCurrent.y = dv.pop16();
 	return ball;
 }
 
-/*collisionSocketInfo={
-	ballA : {
-		userId : 32,
-		id : 16
-	},
-	ballB : {
-		userId : 32,
-		id : 16
-	}
-	damage : [damageToA,damageToB],(8,8)
-	isAlive : [AIsAlive,BIsAlive],(8,8)
-	willDisappear(AWillDisappear,BWillDisappear) (8,8)
-}
-total:144
-*/
-//make collisionInfo to a array
+// /*collisionSocketInfo={
+// 	ballA : {
+// 		userId : 32,
+// 		id : 16
+// 	},
+// 	ballB : {
+// 		userId : 32,
+// 		id : 16
+// 	}
+// 	damage : [damageToA,damageToB],(8,8)
+// 	isAlive : [AIsAlive,BIsAlive],(8,8)
+// 	willDisappear(AWillDisappear,BWillDisappear) (8,8)
+// }
+// total:144
+// */
+// //make collisionInfo to a array
 function getCollisionInfoToArray(dv,length){
 	let collisionInfos = [];
 	while(length--){
 		let collisionInfo = {};
-		AUserId = dv.pop32();
-		AId = dv. pop16();
-		BUserId = dv.pop32();
-		BId = dv.pop16(); 
+		let AUserId = dv.pop32();
+		let AId = dv. pop16();
+		let BUserId = dv.pop32();
+		let BId = dv.pop16(); 
 		collisionInfo.collision1 = [AUserId , AId];
 		collisionInfo.collision2 = [BUserId, BId];
-		damageToA = dv.pop8();
-		damageToB = dv.pop8();
+		let damageToA = dv.pop8();
+		let damageToB = dv.pop8();
 		collisionInfo.damage = [damageToA,damageToB];
-		AIsAlive = dv.pop8();
-		BIsAlive = dv.pop8();
+		let AIsAlive = dv.pop8();
+		let BIsAlive = dv.pop8();
 		collisionInfo.isAlive = [AIsAlive,BIsAlive];
-		AWillDisappear = dv.pop8();
-		BWillDisappear = dv.pop8();
+		let AWillDisappear = dv.pop8();
+		let BWillDisappear = dv.pop8();
 		collisionInfo.willDisappear = [AWillDisappear,BWillDisappear];
 		collisionInfos.push(collisionInfo);
 	}
 	return collisionInfos;
 }
 
-//make balls information to a array
+// //make balls information to a array
 function getBallsInfoArray(dv,length){
 	let newBallsInfoArray = [];
 	let newBallsInfo = {};
@@ -208,7 +213,7 @@ function getDisplacementinfoToArray(dv,length){
 	return displacementInfoArray;
 }
 
-//fill playground information to message
+// //fill playground information to message
 function groundToMes(dv){
 	let lengthOfNewBallsInfos = dv.pop32();
 	let newBallsInfoArray = getBallsInfoArray(dv,lengthOfNewBallsInfos);
@@ -228,12 +233,12 @@ function groundToMes(dv){
 		lengthOfCollisionSocketInfos : lengthOfCollisionSocketInfos,
 		collisionSocketInfos : collisionSocketInfoArray,
 
-		lengthOfDisappearInfos : lengthOfDisplacementInfos,
+		lengthOfDisappearInfos : lengthOfDisappearInfos,
 		disappearInfoArray : disappearInfoArray
 	}
 }
 
-//fill connection information to message
+// //fill connection information to message
 function connectToMes( dv ){
 	let userId = dv.pop32();
 	let lengthOfName = dv.pop8();
@@ -267,4 +272,3 @@ function specialToMes(dv){
 function overToMes(dv){
 	return dv.pop8();
 }
-

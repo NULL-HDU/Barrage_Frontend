@@ -1,7 +1,7 @@
-/* analyising the send message of websocket
-** date:11/14/2016
-** author:yummyLcj
-*/
+// /* analyising the send message of websocket
+// ** date:11/14/2016
+// ** author:yummyLcj
+// */
 
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
@@ -17,45 +17,45 @@ function analyisUnnumber(obj){
 	return getObj;
 }
 
-/*ball={
-	camp(userId) : 32,
-	ballId : {
-		userId : 32,
-		id : 16
-	},
-	nickname : {
-		lengthOfName : 8,
-		name : lengthOfName*8
-	},
-	ballType : 8,
-	hp : 8,
-	damage : 8,
-	role : 8,
-	special : 16,
-	speed : 8,
-	attackDir : 16,
-	alive : 8,
-	isKilled : 8,
-	localtionCurrent : {
-		x : 16,
-		y : 16
-	}
-}
-216+lengthOfName*8
-*/
-//calculcate length of balls
+// /*ball={
+// 	camp(userId) : 32,
+// 	ballId : {
+// 		userId : 32,
+// 		id : 16
+// 	},
+// 	nickname : {
+// 		lengthOfName : 8,
+// 		name : lengthOfName*8
+// 	},
+// 	ballType : 8,
+// 	hp : 8,
+// 	damage : 8,
+// 	role : 8,
+// 	special : 16,
+// 	speed : 8,
+// 	attackDir : 16,
+// 	alive : 8,
+// 	isKilled : 8,
+// 	localtionCurrent : {
+// 		x : 16,
+// 		y : 16
+// 	}
+// }
+// 208+lengthOfName*8
+// */
+// //calculcate length of balls
 function calculcateBallsLength(balls){
 	balls = balls.filter( (e)=>typeof(e)!="undefined" );
 	let length = balls.length;
 	let totalLength = 0;
 	for(let i=0;i<length;i++){
 		let nameLength = balls[i].name.length;
-		totalLength = totalLength+216+nameLength*8;
+		totalLength = totalLength+208+nameLength*8;
 	}
 	return totalLength;
 }
 
-//fill information to dataview
+// //fill information to dataview
 function fillDv(message){
 	let dv = new dataview(message.length);
 	let length = Number.parseInt(message.length);
@@ -90,7 +90,7 @@ function fillDisconnectForDv(dv,body){
 	dv.push32(roomNumber);
 }
 
-//fill connection message body to DataView
+// //fill connection message body to DataView
 function fillConnectForDv(dv,body){
 	let userId = body.userId;
 	let lengthOfName = body.nickname.lengthOfName;
@@ -105,14 +105,11 @@ function fillConnectForDv(dv,body){
 	}
 	dv.push32( roomNumber );
 	dv.push8( troop );
-	if(debug){
-		console.log("login success!");
-	}
 }
 
-//fill balls message to DataView 
+// //fill balls message to DataView 
 function fillBallArrayToDv(dv,content){
-	content = content.filter( (e)=>typeof(e)!="undefined" )
+	// content = content.filter( (e)=>typeof(e)!="undefined" )
 	let length = content.length;
 	for( let i=0;i<length;i++ ){
 		dv.push32(content[i].camp);
@@ -130,14 +127,22 @@ function fillBallArrayToDv(dv,content){
 		dv.push16( content[i].special );
 		dv.push8( content[i].speed );
 		dv.push16( content[i].attackDir );
-		dv.push8( content[i].alive );
-		dv.push8( content[i].isKilled );
-		dv.push8( content[i].locationCurrent.x );
-		dv.push8( content[i].locationCurrent.y );
+		//temporaryly use this until ball.js is changed!
+		let status = content[i].status;
+		let alive = 0;
+		if(status==0){
+			var alive = 1;
+		}
+		dv.push8( alive );
+		dv.push8( !alive );
+		//use this when ball.js is changed
+		// dv.push8(content[i].status);
+		dv.push16( content[i].locationCurrent.x );
+		dv.push16( content[i].locationCurrent.y );
 	}
 }
 
-//fill collision messages to dv
+// //fill collision messages to dv
 function fillCollisionArrayToDv(dv,content){
 
 	let length = content.length;
@@ -155,37 +160,37 @@ function fillCollisionArrayToDv(dv,content){
 	}
 }
 
-//fill background message body to DataView
+// //fill background message body to DataView
 function fillGroundForDv(dv,body){
 	let length = body.newBallsInfos.length;
 	let content = body.newBallsInfos.content;
 	if(debug){
-		console.log("content : ")
-		console.log(content);
+		// console.log("newball content : "+length)
+		// console.log(content);
 	}
 	dv.push32(length);
 	fillBallArrayToDv(dv,content);
 	length = body.displacementInfos.length;
 	content = body.displacementInfos.content;
 	if(debug){
-		console.log("content : ")
-		console.log(content);
+		// console.log("displace content : "+length)
+		// console.log(content);
 	}
 	dv.push32(length);
 	fillBallArrayToDv(dv,content);
 	length = body.collisionSocketInfos.length;
 	content = body.collisionSocketInfos.content;
 	if(debug){
-		console.log("content : ")
-		console.log(content);
+		// console.log(" collision content : "+length)
+		// console.log(content);
 	}
 	dv.push32(length);
 	fillCollisionArrayToDv(dv,content);
 	length = body.disappperInfos.length;
 	content = body.disappperInfos.content;
 	if(debug){
-		console.log("content : ")
-		console.log(content);
+		// console.log("disappear ontent : "+length)
+		// console.log(content);
 	}
 	dv.push32(length);
 	for(let i=0;i<length;i++){
@@ -195,26 +200,26 @@ function fillGroundForDv(dv,body){
 
 
 
-export function disconnectAnalyis(){
-	let messageBody = {
-		userId : airplane.userId,
-		roomNumber : 1
-	}
-	let messageLength = (32+64+8+64+8+32+32)/8;
-	let message = {
-		length : messageLength,
-		timestamp : new Date().getTime(),
-		type : 8,
-		body : messageBody
-	}
-	if(debug){
-		console.log("disconnect message : ")
-		console.log(message);
-	}
-	return fillDv(message);
-}
+// export function disconnectAnalyis(){
+// 	let messageBody = {
+// 		userId : airplane.userId,
+// 		roomNumber : 1
+// 	}
+// 	let messageLength = (32+64+8+64+8+32+32)/8;
+// 	let message = {
+// 		length : messageLength,
+// 		timestamp : new Date().getTime(),
+// 		type : 8,
+// 		body : messageBody
+// 	}
+// 	if(debug){
+// 		console.log("disconnect message : ")
+// 		console.log(message);
+// 	}
+// 	return fillDv(message);
+// }
 
-//analyis the information of login
+// //analyis the information of login
 export function loginAnalyis(airplane){
 	let messageBody = {
 		userId : airplane.userId,
@@ -253,21 +258,21 @@ export function loginAnalyis(airplane){
 }
 
 
-/*collisionSocketInfo={
-	ballA : {
-		userId : 32,
-		id : 16
-	},
-	ballB : {
-		userId : 32,
-		id : 16
-	}
-	damage : [damageToA,damageToB],(8,8)
-	isAlive : [AIsAlive,BIsAlive],(8,8)
-	willDisappear(AWillDisappear,BWillDisappear) (8,8)
-}
-total:144
-*/
+// /*collisionSocketInfo={
+// 	ballA : {
+// 		userId : 32,
+// 		id : 16
+// 	},
+// 	ballB : {
+// 		userId : 32,
+// 		id : 16
+// 	}
+// 	damage : [damageToA,damageToB],(8,8)
+// 	isAlive : [AIsAlive,BIsAlive],(8,8)
+// 	willDisappear(AWillDisappear,BWillDisappear) (8,8)
+// }
+// total:144
+// */
 
 export function playgroundInfoAnalyis(){
 	let socketCache = gamemodel.socketCache;
@@ -302,9 +307,9 @@ export function playgroundInfoAnalyis(){
 
 	let messageLength = (32+64+8+length)/8;
 
-	// if(debug){
-	// 	console.log("groundLength : "+ messageLength);
-	// }
+	if(debug){
+		console.log("groundLength : "+ messageLength);
+	}
 
 	let messageBody = {
 		newBallsInfos : {
