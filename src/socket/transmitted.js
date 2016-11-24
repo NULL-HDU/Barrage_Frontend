@@ -44,6 +44,6 @@ export default class transmitted{
 
 		console.log("asd")
 		}
-		// let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
+		let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 	}
 }
