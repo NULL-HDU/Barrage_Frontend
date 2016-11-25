@@ -1,4 +1,5 @@
 import Ball from "./ball";
+import global from "../global.js";
 import PVector from "./Point";
 import constant from "../constant";
 import gamemodel from "./gamemodel.js";
@@ -18,6 +19,7 @@ export default class Bullet extends Ball {
         this.attackDir = angle;
         this.startPoint = new PVector(0, 0);
         Object.assign(this, bulletResource[roleId]);
+        this.speed *= global.GAME_LOOP_INTERVAL / 1000;
         this.run = this.pathFunc(this);
     }
 

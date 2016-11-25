@@ -10,6 +10,6 @@ export default {
     pathFunc: testPath,
     hp: 100,
     damage: 50,
-    speed: global.BULLET_SPEED,
+    speed: global.BULLET_SPEED, // px / s
   }
 };

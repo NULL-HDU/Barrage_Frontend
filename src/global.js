@@ -26,7 +26,7 @@ export default {
 
     AIRPLANE_SPEED: 2.5,
     AIRPLANE_SLOW_RATE: 0.3,
-    BULLET_SPEED: 2,
+    BULLET_SPEED: 300,              // px / s
 
     BULLET_MAKER_LOOP_INTERVAL: (1/5)*1000,
     BULLET_MAKER_DEMO_LOOP_INTERVAL: (1/20)*1000,
