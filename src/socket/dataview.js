@@ -8,16 +8,17 @@ export default class dataview{
 	constructor( para=0 ){
 		let type = typeof(para);
 		this.dvLength = 0;
-		this.dvHas = 0;
+		this.head = 0;
 		this.dv = null;
 		switch (type) {
 			case "object" :
-				this.dvLength = this.dvHas = Number.parseInt(para.byteLength);
+				this.dvLength = Number.parseInt(para.byteLength);
+				this.head = 0;
 				this.dv = new DataView( para );
 				break;
 			case "number" :
 				this.dvLength = para;
-				this.dvHas = 0;
+				this.head = 0;
 				this.dv = new DataView( new ArrayBuffer(para) );
 				break;
 			default :
@@ -47,13 +48,12 @@ export default class dataview{
 	}
 
 	isEnough(needLength){
-		if(this.dvHas<needLength){
+		if( (this.dvLength-this.head)<needLength ){
 			console.log("DataView isn't lont enough to pop!!!");
 			return false;
 		}
 		else{
-			this.dvHas -=needLength;
-			this.dvLength -=needLength;
+			this.head +=needLength;
 		}
 		if(debug){
 			// console.log("need length : ");
@@ -66,61 +66,36 @@ export default class dataview{
 
 	pop8(){
 		this.isEnough(1);
-		let temDv = new DataView( new ArrayBuffer(this.dvLength) );
-		for(let i=0;i<this.dvLength;i++){
-			temDv.setUint8( i, this.dv.getUint8(i+1) );
-		}
-		let returnElement = this.dv.getUint8(0);
-		this.dv = temDv;
+		let returnElement = this.dv.getUint8(this.head-1);
 		return returnElement;
 	}
 
 	pop16(){
 		this.isEnough(2);
-		let temDv = new DataView( new ArrayBuffer(this.dvLength) );
-		for(let i=0;i<this.dvLength;i++){
-			temDv.setUint8( i, this.dv.getUint8(i+2) );
-		}
-		let returnElement = this.dv.getUint16(0);
-		this.dv = temDv;
+		let returnElement = this.dv.getUint16(this.head-2);
 		return returnElement;
 	}
 
 	pop32(){
 		this.isEnough(4);
-		let temDv = new DataView( new ArrayBuffer(this.dvLength) );
-		for(let i=0;i<this.dvLength;i++){
-			temDv.setUint8( i, this.dv.getUint8(i+4) );
-		}
-		let returnElement = this.dv.getUint32(0);
-		this.dv = temDv;
+		let returnElement = this.dv.getUint32(this.head-4);
 		return returnElement;
 	}
 
 	popFloat32(){
 		this.isEnough(4);
-		let temDv = new DataView( new ArrayBuffer(this.dvLength) );
-		for(let i=0;i<this.dvLength;i++){
-			temDv.setUint8( i, this.dv.getUint8(i+4) );
-		}
-		let returnElement = this.dv.getFloat32(0);
-		this.dv = temDv;
+		let returnElement = this.dv.getFloat32(this.head-4);
 		return returnElement;
 	}
 
 	popFloat64(){
 		this.isEnough(8);
-		let temDv = new DataView( new ArrayBuffer(this.dvLength) );
-		for(let i=0;i<this.dvLength;i++){
-			temDv.setUint8( i, this.dv.getUint8(i+8) );
-		}
-		let returnElement = this.dv.getFloat64(0);
-		this.dv = temDv;
+		let returnElement = this.dv.getFloat64(this.head-8);
 		return returnElement;
 	}
 
 	isLegal(needLength,content){
-		if( this.dvLength-this.dvHas<needLength ){
+		if( this.dvLength-this.head<needLength ){
 			console.log("DataView isn't long enough to push!!!")
 			console.log("your want to push ");
 			console.log(content);
@@ -132,32 +107,32 @@ export default class dataview{
 			console.log(content);
 			return false;	
 		}
-		// console.log("daHas : "+this.dvHas);
-		this.dvHas +=needLength;
+		// console.log("daHas : "+this.head);
+		this.head +=needLength;
 	}
 
 	push8(content){
 		this.isLegal(1,content);
-		this.dv.setUint8( this.dvHas-1,content );
+		this.dv.setUint8( this.head-1,content );
 	}
 
 	push16(content){
 		this.isLegal(2,content);
-		this.dv.setUint16( this.dvHas-2,content );
+		this.dv.setUint16( this.head-2,content );
 	}
 
 	push32(content){
 		this.isLegal(4,content);
-		this.dv.setUint32( this.dvHas-4,content );
+		this.dv.setUint32( this.head-4,content );
 	}
 
 	pushFloat32(content){
 		this.isLegal(4,content);
-		this.dv.setFloat32( this.dvHas-4,content );
+		this.dv.setFloat32( this.head-4,content );
 	}
 
 	pushFloat64(content){
 		this.isLegal(8,content);
-		this.dv.setFloat64( this.dvHas-8,content );
+		this.dv.setFloat64( this.head-8,content );
 	}
 }

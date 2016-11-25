@@ -71,6 +71,7 @@ function fillDv(message){
 			break;
 		case 9 :
 			fillConnectForDv(dv,message.body);
+			// console.log(dv.getDetail())
 			break;
 		case 12 :
 			// console.log(dv.getDetail());
@@ -93,18 +94,10 @@ function fillDisconnectForDv(dv,body){
 // //fill connection message body to DataView
 function fillConnectForDv(dv,body){
 	let userId = body.userId;
-	let lengthOfName = body.nickname.lengthOfName;
-	let name=analyisUnnumber(body.nickname.name);
 	let roomNumber = body.roomNumber;
-	// let troop = body.troop.toString(2);
-	let troop = 0;
 	dv.push32(userId);
-	dv.push8(lengthOfName);
-	for(let i in name){
-		dv.push8( name[i] );
-	}
 	dv.push32( roomNumber );
-	dv.push8( troop );
+
 }
 
 // //fill balls message to DataView 
@@ -222,18 +215,10 @@ export function loginAnalyis(airplane){
 	let messageBody = {
 		userId : airplane.userId,
 		//32  4
-		nickname : {
-			lengthOfName : airplane.name.length,
-			//8  1
-			name : airplane.name
-			//length*8  length
-		},
-		roomNumber : 1,
+		roomNumber : airplane.roomNumber,
 		//32   4
-		troop : airplane.camp
-		//8  1
 	}
-	let messageLength = (32+64+8+32+8+messageBody.nickname.lengthOfName*8+32+8)/8;
+	let messageLength = (32+64+8+32+32)/8;
 	if(debug){
 	console.log("login length : "+messageLength);		
 	}
@@ -305,8 +290,8 @@ export function playgroundInfoAnalyis(){
 	let messageLength = (32+64+8+length)/8;
 
 	if(debug){
-		console.log("groundLength : "+ messageLength);
-		console.log(calculcateBallsLength(displacementInfoArray))
+		// console.log("groundLength : "+ messageLength);
+		// console.log(calculcateBallsLength(displacementInfoArray))
 	}
 
 	let messageBody = {
@@ -337,9 +322,8 @@ export function playgroundInfoAnalyis(){
 		body : messageBody
 	}
 	if(debug){
-		console.log("playground message : ")
-		console.log(message);
+		// console.log("playground message : ")
+		// console.log(message);
 	}
-	console.log("playground")
 	return fillDv(message);
 }

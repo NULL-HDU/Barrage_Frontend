@@ -2,7 +2,7 @@ import Ball from "../model/ball"
 import PVector from "../engine/Point"
 import global from "../engine/global"
 import constant from "../engine/CommonConstant"
-
+import gamemodel from "../model/gamemodel.js"
 
 export default class Bullet extends Ball{
     constructor() {
@@ -30,6 +30,7 @@ export default class Bullet extends Ball{
             if(distance >= 800){
                 this.alive = false;
                 this.isKilled = false;
+                gamemodel.socketCache.disapperBulletInformation.push(this.id);
             }
 
 //        console.log("x: " + this.locationCurrent.x + "y: " + this.locationCurrent.y);

@@ -20,6 +20,10 @@ export default class Airplane extends Ball {
         this.locationCurrent.y += vy;
         this.attackDir += vangle;
     }
+
+    pathCalculate(){
+        console.log("this is airplane");
+    }
 }
 
 /*airplane.js ends here*/

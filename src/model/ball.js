@@ -21,6 +21,7 @@ export default class Ball {
         this.alive = true;
         this.isKilled = false;
         this.hasJudge = false;
+        this.roomNumber = 1;
         this.locationCurrent = {
             x:global.LOCAL_WIDTH/2,
             y:global.LOCAL_HEIGHT/2,
