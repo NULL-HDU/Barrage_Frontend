@@ -43,7 +43,7 @@ function writeTobackendControlData(message){
 	}
 	let backendControlData = gamemodel.data.backendControlData;
 	backendControlData.airPlane = airPlane;
-	// backendControlData.bullet = bullet;
+	backendControlData.bullet = bullet;
 	// backendControlData.block = block;
 }
 
@@ -59,8 +59,7 @@ export function receiveMessage(message){
 			 body = userIdToMes(dv);
 			break;
 		case 6 :
-			body =  fillBallToMes(dv);
-			updateAirplane(gamemodel.data.engineControlData.airPlane,body)
+			body =  fillConnectToMes(dv);
 			break;
 		case 7 :
 		// case 12 :
@@ -104,6 +103,18 @@ function userIdToMes(dv){
 	let airplane = gamemodel.data.engineControlData.airPlane;
 	airplane.userId = airplane.camp = dv.pop32();
 	return { userId : airplane.userId};
+}
+
+function fillConnectToMes(dv){
+	let airPlane = gamemodel.data.engineControlData.airPlane;
+	let userId = dv.pop32();
+	airPlane.userId = userId;
+	let roomNumber = dv.pop32();
+	airPlane.roomNumber = roomNumber;
+	return {
+		userId : userId,
+		roomNumber : roomNumber
+	}
 }
 
 
