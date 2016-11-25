@@ -305,17 +305,12 @@ function startGameLoop() {
         //自主机子弹
         // console.log(gamemodel.data.engineControlData.bullet);
         gamemodel.data.engineControlData.bullet.map(function(bullet){
-            if(bullet.ballType === constant.BULLET){
-                bullet.pathCalculate();
-            }
+            bullet.pathCalculate();
             return bullet;
         });
         //敌机子弹
         gamemodel.data.backendControlData.bullet.map(function(bullet){
-            if(bullet.pathCalculate !== undefined){
-            // if(bullet.ballType === constant.BULLET){
-                bullet.pathCalculate();
-            }
+            bullet.pathCalculate();
             return bullet;
         });
 

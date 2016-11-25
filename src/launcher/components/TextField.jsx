@@ -25,7 +25,7 @@ let inputStyle = {
   fontWeight: "regular",
   fontSize: "24px",
   lineHeight: "38px",
-  border: "solid 1px #dcdcdc",
+  border: "solid 2px #dcdcdc",
   boxSizing: "border-box",
   padding: "0 0 0 5px",
   margin: "0 0",
@@ -33,17 +33,14 @@ let inputStyle = {
 
 };
 let inputFocusStyle = {
-    border: "solid 1px #CCCCCC"
+    border: "solid 2px #CCCCCC"
+};
+let inputErrorStyle = {
+  border: "solid 2px #EA4335",
+  color: "#EA4335"
 };
 let infoStyle = {
-  fontSize: "10px",
-  fontWeight: "regular",
-  lineHeight: "23px",
-  margin: "0 0 0 5px"
-};
-let errorStyle = {
-  color: "#EA4335",
-  fontSize: "10px",
+  fontSize: "12px",
   fontWeight: "regular",
   lineHeight: "23px",
   margin: "0 0 0 5px"
@@ -113,26 +110,34 @@ export default class PromptInfoTextField extends Component {
 
   render() {
 
-    let iStyle = this.props.errorValue ?  errorStyle :infoStyle;
-    let iValue = this.props.errorValue ? this.props.errorValue : this.props.infoValue;
+    let errStyle =  {};
+    let ierrStyle = {};
+    let iValue =  this.props.infoValue;
+
+    if(this.props.errorValue){
+      errStyle = {color: "#EA4335"};
+      ierrStyle = inputErrorStyle;
+      iValue = this.props.errorValue;
+    }
+
 
     return (
-      <div style={Object.assign({}, defaultStyle, this.props.style)}>
+      <div style={Object.assign({}, defaultStyle, this.props.style, errStyle)}>
         <p style={promptStyle}>
           {this.props.prompt}
         </p>
         <input type="text" tabIndex="0"
                autoFocus
+               style={Object.assign({}, this.inputStyle, ierrStyle)}
                value={this.state.value}
                placeholder={this.props.hint}
                maxLength={this.props.maxlength}
-               style={this.inputStyle}
                onFocus={this.handleInputOnFocus}
                onBlur={this.handleInputOnBlur}
                onChange={this.handleInputChange}
                onKeyPress={this.handleInputEnter}
         />
-        <p style={iStyle}>{iValue}</p>
+        <p style={infoStyle}>{iValue}</p>
       </div>
     );
   }

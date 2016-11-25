@@ -6,44 +6,30 @@
 
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import TextField from "./launcher/components/TextField.jsx";
-import {
-  Router,
-  Route,
-  IndexRoute,
-  Link,
-  hashHistory
-} from "react-router";
+import {Router, Route, IndexRoute, hashHistory} from "react-router";
 
-class ShowString extends Component {
-  constructor(props){
-    super(props);
-  }
+import UsernameInputPage from "./launcher/user_name_input.jsx";
+import ShowErrorPage from "./launcher/error.jsx";
+import GameGroundPage from "./launcher/game_ground.jsx";
 
-  render() {
-    return (
-      <div>
-        <p>{this.props.string}</p>
-        {this.props.children}
-      </div>
-    );
-  }
-}
-ShowString.propTypes = {
-  style: React.PropTypes.object,
-  string: React.PropTypes.string
-};
-ShowString.defaultProps = {
-  style: {},
-  string: "hello world"
-};
-
+import {initSocket} from "./launcher/bridge.js";
+import Data from "./launcher/launcher_data.js";
 
 window.onload = () => {
+  initSocket((err, userId) => {
+    if(err !== null){
+      window.location.hash = `error?error=${err.toString()}`;
+      return;
+    }
+
+    Data.UserId = userId;
+  });
+
   ReactDOM.render(
     <Router history={hashHistory}>
-      <Route path="/"  component={() => (<TextField/>)} />
-      <Route path="/send" component={() => (<Link to={"#/send"} >sendall</Link>)} />
+      <Route path="/"  component={() => (<UsernameInputPage />)} />
+      <Route path="/game" component={() => <GameGroundPage />} />
+      <Route path="/error" component={ShowErrorPage} />
     </Router>,
     document.getElementById("app"));
 };
