@@ -21,8 +21,8 @@ window.onload = () => {
       window.location.hash = `error?error=${err.toString()}`;
       return;
     }
-
     Data.UserId = userId;
+
   });
 
   ReactDOM.render(

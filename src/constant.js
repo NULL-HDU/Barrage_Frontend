@@ -5,4 +5,4 @@ export default {
     BULLET: 2,
     FOOD: 3,
 
-}
+};

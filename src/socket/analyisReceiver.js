@@ -6,7 +6,7 @@
 import Bullet from "../model/bullet.js";
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
-import CommonConstant from "../engine/CommonConstant.js"
+import CommonConstant from "../constant.js"
 
 let debug = false;
 
