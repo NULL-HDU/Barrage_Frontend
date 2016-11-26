@@ -4,7 +4,7 @@
  * Email: arthury.me@gmail.com
  */
 
-import bulletRole from "../bullet_role.js";
+import bulletRole from "../bullet_role.js"
 
 export default {
     background: null,

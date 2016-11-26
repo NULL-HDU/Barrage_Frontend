@@ -19,7 +19,7 @@ export default class Bullet extends Ball{
         this.attackDir = angle;
         this.startPoint = new PVector(0, 0);
         this.speed *= global.GAME_LOOP_INTERVAL / 1000;
-        Object.assign(this.bulletResource[roleId]);
+        Object.assign(this, bulletResource[roleId]);
         this.run = this.pathFunc(this);
     }
 

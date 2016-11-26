@@ -168,13 +168,13 @@ export const changeKeyEventBindings = () => {
     space.press = function() {
         if( test==1 )
             console.log('space press');
-        enableSkillEngine();
+        enableSkillEngine(global.NORMAL_SKILL);
     };
 
    space.release = function() {
         if( test==1 )
             console.log('space release');
-        disableSkillEngine();
+        disableSkillEngine(global.NORMAL_SKILL);
     };
 
     up.press = function() {
