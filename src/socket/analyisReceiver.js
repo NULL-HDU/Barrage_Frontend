@@ -3,7 +3,7 @@
 ** author:yummyLcj
 */
 
-import Bullet from "../model/bullet.js";
+import ball from "../model/ball.js";
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
 import CommonConstant from "../constant.js"
