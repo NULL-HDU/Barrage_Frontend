@@ -3,7 +3,7 @@
 ** author:yummyLcj
 */
 
-import ball from "../model/ball.js";
+import Bullet from "../model/bullet.js";
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
 import CommonConstant from "../constant.js"
@@ -35,7 +35,10 @@ function writeTobackendControlData(message){
 			continue;
 		}
 		if( message[i].ballType==CommonConstant.BULLET ){
-			let newBullet = new ball();
+			let userId = message[i].userId;
+			let roleId = message[i].roleId;
+			let attackDir = message[i].attackDir;
+			let newBullet = new Bullet(userId,roleId,attackDir);
 			for(let j in newBullet){
 				newBullet[j] = message[i][j];
 			}
