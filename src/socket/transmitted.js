@@ -17,9 +17,17 @@ export default class transmitted{
 	constructor(){
 		this.ws = new WebSocket();
 		this.ws.init();
+		this.status = false
+		this.socketStatusSwitcher = this.socketStatusSwitcher.bind(this);
 		this.initSocket = this.initSocket.bind(this);
 		this.connect = this.connect.bind(this);
 		this.playgronud = this.playgroundInfo.bind(this);
+	}
+
+	//switch the status of is updating socket
+	socketStatusSwitcher(){
+		this.status = !this.status;
+		return this.status;
 	}
 
 	initSocket(callback){
@@ -50,17 +58,19 @@ export default class transmitted{
 
 	//analyis receiving message
 	playgroundInfo(){
-		// if(debug)
-			console.log("playgronud send!");
-		let message = sender.playgroundInfoAnalyis();
-		if( this.ws.sendMessage(message.getDv()) ){
-			// if(debug)
-				// console.log("playgronud send succeed!");
+		if(this.status==false){
+			let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 		}else{
-			  // console.log("playgronud send failed...");
-
-		console.log("asd")
+			// if(debug)
+				console.log("playgronud send!");
+			let message = sender.playgroundInfoAnalyis();
+			if( this.ws.sendMessage(message.getDv()) ){
+				// if(debug)
+					// console.log("playgronud send succeed!");
+			}else{
+				  console.log("playgronud send failed...");
+			}
+			let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 		}
-		let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 	}
 }
