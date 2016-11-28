@@ -16,6 +16,7 @@ export default class Bullet extends Ball{
         }
         this.ballType = constant.BULLET;
         this.roleId = roleId;
+        this.radius = 7.5;
         this.userId = userId;
         this.camp = userId;
         this.attackDir = angle;
