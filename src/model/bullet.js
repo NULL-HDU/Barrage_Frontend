@@ -9,6 +9,8 @@ let bulletResource = gamemodel.resourceRecord.bulletTable;
 export default class Bullet extends Ball{
     constructor(userId, roleId, angle) {
         super();
+        //console.log("bullet roleId is ");
+        //console.log(roleId);
         if(bulletResource[roleId] === undefined) {
             throw "Invalid roleId!";
         }

@@ -135,10 +135,10 @@ export const startGameLoop = () => {
             return bullet;
         });
         //敌机子弹
-        gamemodel.data.backendControlData.bullet.map((bullet) => {
-            bullet.pathCalculate();
-            return bullet;
-        });
+//        gamemodel.data.backendControlData.bullet.map((bullet) => {
+//            bullet.pathCalculate();
+//            return bullet;
+//        });
 
         //        if(gamemodel.data.engineControlData.bullet.length !== 0){
         enableCollisionDetectionEngine();
