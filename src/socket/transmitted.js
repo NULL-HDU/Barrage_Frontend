@@ -25,10 +25,9 @@ export default class transmitted{
 		this.ws = new WebSocket();
 		this.ws.init();
 		this.status = false
-		this.socketStatusSwitcher = this.socketStatusSwitcher.bind(this);
 		this.initSocket = this.initSocket.bind(this);
 		this.connect = this.connect.bind(this);
-		this.playgronud = this.playgroundInfo.bind(this);
+		this.playgroundInfo = this.playgroundInfo.bind(this);
 	}
 
 	initSocket(callback){
