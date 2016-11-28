@@ -10,7 +10,6 @@ import global from "./global"
 import Airplane from "./model/airplane";
 import {playGame} from "./view/view";
 import screenfull from "./engine/screenfull";
-import transmitted from "./socket/transmitted.js"
 import {
   startGameLoop,
   enableBulletsCollectingEngine
@@ -20,16 +19,15 @@ import {
   changeKeyEventBindings
 } from "./engine/keybinding.js";
 
-//let tm = new transmitted();
-
 //let playerNameInput = document.getElementById('playerNameInput');
 
 
-export const startGame = ()=> {
+export const startGame = (userId,userName)=> {
 //  document.getElementById('gameWrapper').style.display = "none";
   let airPlane = new Airplane();
   gamemodel.data.engineControlData.airPlane = airPlane;
-  gamemodel.data.engineControlData.airPlane.name = "Arthury";
+  gamemodel.data.engineControlData.airPlane.name = userName;
+  gamemodel.data.engineControlData.airPlane.userId = userId;
   playGame();
   configCanvasEventListen();
 

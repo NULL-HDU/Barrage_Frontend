@@ -14,7 +14,7 @@ export const initView = () => console.log("view inited.");
 export const socketDealGameInfo = tm.playgroundInfo;
 export const initEngine = (userId, name) => {
 	console.log(`engine inited with ${userId} and ${name}`);
-	startGame();
+	startGame(userId,name);
 };
 export const socketConnect = tm.connect;
 
