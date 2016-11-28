@@ -40,7 +40,7 @@ export default class UsernameInputPage extends Component {
     });
 
     Data.Name = v;
-    socketConnect((err) => {
+    socketConnect(Data.RoomId, (err) => {
       // change hash
       if(err !== null){
         window.location.hash = `/error?error=${err.toString()}`;
