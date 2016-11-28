@@ -64,8 +64,11 @@ let enableCollisionDetectionEngine = () => {
     */
     let airPlane = data.airPlane;
     let selfBullets = data.bullet.concat(airPlane);
+    //console.log("selfBullets");
+    //console.log(selfBullets);
     let enemyBullets = gamemodel.data.backendControlData.bullet.concat(gamemodel.data.backendControlData.airPlane);
-
+    //console.log("enemyBullets");
+    //console.log(enemyBullets);
     let bulletsBank = selfBullets.concat(enemyBullets);
     let i, j;
     quad.clear();
@@ -82,18 +85,30 @@ let enableCollisionDetectionEngine = () => {
             let a = new PVector(selfBullets[i].locationCurrent.x, selfBullets[i].locationCurrent.y);
             let b = new PVector(collidors[j].locationCurrent.x, collidors[j].locationCurrent.y);
             let distance = PVector.dist(a, b);
+            console.log("respect distance is ");
+            console.log(collidors[j].radius + selfBullets[i].radius);
+            console.log("distance is ");
+            console.log(distance);
+            console.log("collidors camp is ");
+            console.log(collidors[j].camp);
+            console.log("selfBullets camp");
+            console.log(selfBullets[i].camp);
             if (distance <= collidors[j].radius + selfBullets[i].radius && collidors[j].camp !== selfBullets[i].camp) {
 
                 //碰撞处理和伤害计算
                 if (collidors[j].ballType === constant.BULLET) {
                     collidors[j].alive = false;
                     collidors[j].isKilled = true;
+                    console.log("enemy bullet disappear detect");
                 }
 
                 if (selfBullets[i].ballType === constant.BULLET) {
                     selfBullets[i].alive = false;
                     selfBullets[i].isKilled = true;
+                    console.log("self bullet disappear detect");
                 }
+
+                console.log("damage!!!");
 
                 //不管碰撞的是子弹和子弹，还是子弹和飞机都需要加入碰撞信息中
                 //暂未处理飞机撞击飞机的情况
