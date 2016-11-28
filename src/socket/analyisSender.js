@@ -211,11 +211,11 @@ function fillGroundForDv(dv,body){
 // }
 
 // //analyis the information of login
-export function loginAnalyis(airplane){
+export function loginAnalyis(roomNumber){
 	let messageBody = {
-		userId : airplane.userId,
+		userId : gamemodel.data.engineControlData.airPlane.userId,
 		//32  4
-		roomNumber : airplane.roomNumber,
+		roomNumber : roomNumber,
 		//32   4
 	}
 	let messageLength = (32+64+8+32+32)/8;

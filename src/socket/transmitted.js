@@ -19,19 +19,27 @@ export default class transmitted{
 		this.ws.init();
 	}
 
+	initSocket(callback){
+		let userId = receiver.userId;
+		if(userId==undefined){
+			setTimeout(()=>{this.initSocket(callback)},100);
+		}else{
+			callback(null,userId);
+		}
+	}
+
 	//send login message
-	login(callback,airplane){
-		let message = sender.loginAnalyis(airplane);
+	connect(roomNumber,callback){
+		let message = sender.loginAnalyis(roomNumber);
 		if( this.ws.sendMessage(message.getDv()) ){
 			if(debug)
 				console.log("load send succeed!");
 			if(receiver.state==2){
-				callback();				
+				callback(null,true);				
 			}
-				return true;
 		}else{
-			console.log("load send failed...");
-			return false;
+			console.log("load send failed...reloading...");
+			setTimeout(()=>{this.connect(roomNumber,callback)},100);
 		}
 	}
 
