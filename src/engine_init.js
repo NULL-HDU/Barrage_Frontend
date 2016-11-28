@@ -10,6 +10,7 @@ import global from "./global"
 import Airplane from "./model/airplane";
 import {playGame} from "./view/view";
 import screenfull from "./engine/screenfull";
+import {socketStatusSwitcher} from "./socket/transmitted"
 import {
   startGameLoop,
   enableBulletsCollectingEngine
@@ -25,9 +26,9 @@ export const startGame = (userId,userName)=> {
   gamemodel.data.engineControlData.airPlane.name = userName;
   gamemodel.data.engineControlData.airPlane.userId = userId;
   gamemodel.data.engineControlData.airPlane.id = 0;
+  socketStatusSwitcher();
   playGame();
   configCanvasEventListen();
-
   changeKeyEventBindings();
   startGameLoop();
   enableBulletsCollectingEngine();

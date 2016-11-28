@@ -9,6 +9,7 @@ import constant from "../constant.js";
 import gamemodel from "../model/gamemodel";
 import Quadtree from "./quadtree";
 import PVector from "../model/Point";
+import {socketStatusSwitcher} from "../socket/transmitted"
 
 let data = gamemodel.data.engineControlData;
 let quad = new Quadtree({
@@ -29,9 +30,11 @@ let uselessBulletsCollect = () => {
         if (bullet.alive === false && bullet.isKilled === true) {
             gamemodel.deadCache.push(bullet);
             gamemodel.socketCache.disappearBulletInformation.push(bullet.id);
+            
         } else if (bullet.alive === false && bullet.isKilled === false) {
             gamemodel.disappearCache.push(bullet);
             gamemodel.socketCache.disappearBulletInformation.push(bullet.id);
+            
         }
         return bullet;
     });
@@ -140,6 +143,8 @@ export const startGameLoop = () => {
         //        if(gamemodel.data.engineControlData.bullet.length !== 0){
         enableCollisionDetectionEngine();
         //        }
+
+        socketStatusSwitcher();
     }, global.GAME_LOOP_INTERVAL);
 };
 

@@ -36,6 +36,7 @@ export default class GameGroundPage extends Component {
     initView();
     socketDealGameInfo();
     initEngine(Data.UserId, Data.Name);
+    
   }
 
   render() {
