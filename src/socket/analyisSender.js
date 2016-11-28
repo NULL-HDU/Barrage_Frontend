@@ -7,7 +7,7 @@ import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
 import * as receiver from "./analyisReceiver.js"
 
-let debug = true;
+let debug = false;
 
 function analyisUnnumber(obj){
 	//get a array for name coding by Unicode
