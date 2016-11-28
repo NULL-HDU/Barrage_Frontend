@@ -5,6 +5,7 @@
  */
 
 export default {
+  RoomId: 1,
   UserId: 0,
   Name: ""
 };
