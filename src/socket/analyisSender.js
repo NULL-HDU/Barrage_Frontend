@@ -260,7 +260,6 @@ export function loginAnalyis(roomNumber){
 
 export function playgroundInfoAnalyis(){
 	let socketCache = gamemodel.socketCache;
-
 	let newBallsInfoArray = socketCache.newBallInformation;
 	let lengthOfNewBallsInfos = newBallsInfoArray.length;
 
