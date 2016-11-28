@@ -11,6 +11,13 @@ import * as receiver from "./analyisReceiver.js"
 
 let debug = false;
 let rollingTime = 1000/90;
+let status = false;
+
+ 	//switch the status of is updating socket
+export function socketStatusSwitcher(){
+		status = !status;
+		return status;
+	}
 
 export default class transmitted{
 
@@ -22,12 +29,6 @@ export default class transmitted{
 		this.initSocket = this.initSocket.bind(this);
 		this.connect = this.connect.bind(this);
 		this.playgronud = this.playgroundInfo.bind(this);
-	}
-
-	//switch the status of is updating socket
-	socketStatusSwitcher(){
-		this.status = !this.status;
-		return this.status;
 	}
 
 	initSocket(callback){
@@ -58,7 +59,7 @@ export default class transmitted{
 
 	//analyis receiving message
 	playgroundInfo(){
-		if(this.status==false){
+		if(status==false){
 			let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 		}else{
 			// if(debug)
