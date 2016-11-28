@@ -17,12 +17,16 @@ export default class transmitted{
 	constructor(){
 		this.ws = new WebSocket();
 		this.ws.init();
+		this.initSocket = this.initSocket.bind(this);
+		this.connect = this.connect.bind(this);
+		this.playgronud = this.playgroundInfo.bind(this);
 	}
 
 	initSocket(callback){
 		let userId = receiver.userId;
 		if(userId==undefined){
-			setTimeout(()=>{this.initSocket(callback)},100);
+			console.log("reload userId!")
+			setTimeout(()=>this.initSocket(callback),100);
 		}else{
 			callback(null,userId);
 		}
@@ -32,21 +36,22 @@ export default class transmitted{
 	connect(roomNumber,callback){
 		let message = sender.loginAnalyis(roomNumber);
 		if( this.ws.sendMessage(message.getDv()) ){
-			if(debug)
-				console.log("load send succeed!");
+			console.log(receiver.state)
 			if(receiver.state==2){
+				// if(debug)
+					console.log("load send succeed!");
 				callback(null,true);				
+			}else{
+				console.log("load send failed...reloading...");
+				setTimeout(()=>this.connect(roomNumber,callback),100);
 			}
-		}else{
-			console.log("load send failed...reloading...");
-			setTimeout(()=>{this.connect(roomNumber,callback)},100);
 		}
 	}
 
 	//analyis receiving message
 	playgroundInfo(){
 		// if(debug)
-			// console.log("playgronud send!");
+			console.log("playgronud send!");
 		let message = sender.playgroundInfoAnalyis();
 		if( this.ws.sendMessage(message.getDv()) ){
 			// if(debug)

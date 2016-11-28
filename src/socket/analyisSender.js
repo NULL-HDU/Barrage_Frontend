@@ -5,6 +5,7 @@
 
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
+import * as receiver from "./analyisReceiver.js"
 
 let debug = false;
 
@@ -213,7 +214,8 @@ function fillGroundForDv(dv,body){
 // //analyis the information of login
 export function loginAnalyis(roomNumber){
 	let messageBody = {
-		userId : gamemodel.data.engineControlData.airPlane.userId,
+		// userId : gamemodel.data.engineControlData.airPlane.userId,
+		userId : receiver.userId,
 		//32  4
 		roomNumber : roomNumber,
 		//32   4

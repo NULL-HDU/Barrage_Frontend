@@ -10,9 +10,9 @@ import CommonConstant from "../constant.js"
 
 let debug = false;
 
-export default let state = 0;
-export default let userId = undefined;
-export default let roomNumber = undefined;
+export let state = 0;
+export let userId = undefined;
+export let roomNumber = undefined;
 
 //update airplane
 function updateAirplane(airplane,obj){
@@ -109,18 +109,18 @@ export function receiveMessage(message){
 // //fill userid information to message;
 // //tempaoraryly cmap equal to userId!!
 function userIdToMes(dv){
-	let airplane = gamemodel.data.engineControlData.airPlane;
+	// let airplane = gamemodel.data.engineControlData.airPlane;
 	userId = dv.pop32();
 	state = 1;
-	return { userId : airplane.userId};
+	return { userId : userId};
 }
 
 function fillConnectToMes(dv){
-	let airPlane = gamemodel.data.engineControlData.airPlane;
+	// let airPlane = gamemodel.data.engineControlData.airPlane;
 	let userId = dv.pop32();
-	airPlane.userId = userId;
+	// airPlane.userId = userId;
 	let room = dv.pop32();
-	airPlane.roomNumber = room;
+	// airPlane.roomNumber = room;
 	roomNumber = roomNumber;
 	state = 2;
 	return {
