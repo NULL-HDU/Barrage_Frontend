@@ -19,7 +19,6 @@ export default class Airplane extends Ball {
 
     move() {
         this.locationCurrent.add(this.v);
-        console.log(this.locationCurrent);
         this.attackDir += this.vangle;
     }
 }

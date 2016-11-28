@@ -32,9 +32,12 @@ export default class Bullet extends Ball{
             let distance = PVector.dist(a,b);
 
             //距离检测，边界检测
-            if(distance >= 800){
+        if(distance >= 800){
+
+//                gamemodel.data.disappearBulletInformation.push(this.id);
                 this.alive = false;
                 this.isKilled = false;
+                
             }
 
 //        console.log("x: " + this.locationCurrent.x + "y: " + this.locationCurrent.y);

@@ -28,8 +28,10 @@ let uselessBulletsCollect = () => {
     data.bullet.map((bullet) => {
         if (bullet.alive === false && bullet.isKilled === true) {
             gamemodel.deadCache.push(bullet);
+            gamemodel.socketCache.disappearBulletInformation.push(bullet.id);
         } else if (bullet.alive === false && bullet.isKilled === false) {
             gamemodel.disappearCache.push(bullet);
+            gamemodel.socketCache.disappearBulletInformation.push(bullet.id);
         }
         return bullet;
     });
