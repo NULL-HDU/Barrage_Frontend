@@ -8,7 +8,7 @@ import React, { Component } from "react";
 
 import TextField from "./components/TextField.jsx";
 import Data from "./launcher_data.js";
-import {socketConnect} from "./bridge.js";
+import {socketConnect,initEngine} from "./bridge.js";
 
 export default class UsernameInputPage extends Component {
 
@@ -46,6 +46,9 @@ export default class UsernameInputPage extends Component {
         window.location.hash = `/error?error=${err.toString()}`;
         return;
       }
+
+    //when socket done,init engine
+    //initEngine(Data.UserId,Data.Name);
       window.location.hash = "/game";
     });
 

@@ -7,6 +7,7 @@
 import WebSocket from "./websocket.js";
 import gamemodel from "../model/gamemodel.js" 
 import * as sender from "./analyisSender.js"
+import * as receiver from "./analyisReceiver.js"
 
 let debug = false;
 let rollingTime = 1000/90;
@@ -19,12 +20,15 @@ export default class transmitted{
 	}
 
 	//send login message
-	login(airplane){
+	login(callback,airplane){
 		let message = sender.loginAnalyis(airplane);
 		if( this.ws.sendMessage(message.getDv()) ){
 			if(debug)
 				console.log("load send succeed!");
-			return true;
+			if(receiver.state==2){
+				callback();				
+			}
+				return true;
 		}else{
 			console.log("load send failed...");
 			return false;

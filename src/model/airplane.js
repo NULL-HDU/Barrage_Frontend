@@ -5,24 +5,22 @@
  */
 
 import Ball from "../model/ball"
-import global from "../engine/global"
-import constant from "../engine/CommonConstant.js"
+import constant from "../constant"
+import PVector from "./Point"
 
 export default class Airplane extends Ball {
     constructor() {
         super();
         this.ballType = constant.AIRPLANE;
         this.radius = 5;
+        this.v = new PVector(0,0);
+        this.vangle = 0;
     };
 
-    move(vx,vy,vangle) {
-        this.locationCurrent.x += vx;
-        this.locationCurrent.y += vy;
-        this.attackDir += vangle;
-    }
-
-    pathCalculate(){
-        console.log("this is airplane");
+    move() {
+        this.locationCurrent.add(this.v);
+        console.log(this.locationCurrent);
+        this.attackDir += this.vangle;
     }
 }
 

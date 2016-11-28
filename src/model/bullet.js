@@ -1,26 +1,31 @@
-import Ball from "../model/ball"
-import PVector from "../engine/Point"
-import global from "../engine/global"
-import constant from "../engine/CommonConstant"
-import gamemodel from "../model/gamemodel.js"
+import Ball from "./ball";
+import PVector from "./Point";
+import global from "../global.js"
+import gamemodel from "./gamemodel.js";
+import constant from "../constant";
+
+let bulletResource = gamemodel.resourceRecord.bulletTable;
 
 export default class Bullet extends Ball{
-    constructor() {
+    constructor(userId, roleId, angle) {
         super();
+        if(bulletResource[roleId] === undefined) {
+            throw "Invalid roleId!";
+        }
         this.ballType = constant.BULLET;
-        this.startPoint = {
-            x:0,
-            y:0,
-        };
-        this.radius = 5;
+        this.roleId = roleId;
+        this.userId = userId;
+        this.camp = userId;
+        this.attackDir = angle;
+        this.startPoint = new PVector(0, 0);
+        this.speed *= global.GAME_LOOP_INTERVAL / 1000;
+        Object.assign(this, bulletResource[roleId]);
+        this.run = this.pathFunc(this);
     }
 
     pathCalculate() {
+            this.run();
 
-            let speed = global.BULLET_SPEED;
-            let angel = this.attackDir % (2 * Math.PI);
-            this.locationCurrent.x += Math.cos(angel + (3/2)*Math.PI) * speed;
-            this.locationCurrent.y += Math.sin(angel + (3/2)*Math.PI) * speed;
             //如果遇到边界或者超出射程就消失
             let a = new PVector(this.startPoint.x,this.startPoint.y);
             let b = new PVector(this.locationCurrent.x,this.locationCurrent.y);
@@ -30,7 +35,6 @@ export default class Bullet extends Ball{
             if(distance >= 800){
                 this.alive = false;
                 this.isKilled = false;
-                gamemodel.socketCache.disapperBulletInformation.push(this.id);
             }
 
 //        console.log("x: " + this.locationCurrent.x + "y: " + this.locationCurrent.y);
