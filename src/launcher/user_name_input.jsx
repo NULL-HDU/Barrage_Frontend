@@ -23,6 +23,21 @@ export default class UsernameInputPage extends Component {
     this.re = /^[a-z]\w{2,}$/i;
 
     this.handleEnter = this.handleEnter.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(v){
+    if(v.length >= 3 && !this.re.test(v)){
+      this.setState({
+        errorValue: "Please tell me your correct name, warrior"
+      });
+      return;
+    }
+
+    // hide error info, show loading
+    this.setState({
+      errorValue: "",
+    });
   }
 
   handleEnter(v){
@@ -47,8 +62,8 @@ export default class UsernameInputPage extends Component {
         return;
       }
 
-    //when socket done,init engine
-    //initEngine(Data.UserId,Data.Name);
+      //when socket done,init engine
+      //initEngine(Data.UserId,Data.Name);
       window.location.hash = "/game";
     });
 
@@ -67,6 +82,7 @@ export default class UsernameInputPage extends Component {
           infoValue={this.state.infoValue}
           errorValue={this.state.errorValue}
           onEnter={this.handleEnter}
+          onChange={this.handleChange}
       />);
 
     if(this.state.loading){
