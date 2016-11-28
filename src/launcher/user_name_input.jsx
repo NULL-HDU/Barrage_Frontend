@@ -48,7 +48,7 @@ export default class UsernameInputPage extends Component {
       }
 
     //when socket done,init engine
-    initEngine(Data.UserId,Data.Name);
+    //initEngine(Data.UserId,Data.Name);
       window.location.hash = "/game";
     });
 
