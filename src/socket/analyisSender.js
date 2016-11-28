@@ -5,8 +5,9 @@
 
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"
+import * as receiver from "./analyisReceiver.js"
 
-let debug = false;
+let debug = true;
 
 function analyisUnnumber(obj){
 	//get a array for name coding by Unicode
@@ -211,11 +212,12 @@ function fillGroundForDv(dv,body){
 // }
 
 // //analyis the information of login
-export function loginAnalyis(airplane){
+export function loginAnalyis(roomNumber){
 	let messageBody = {
-		userId : airplane.userId,
+		// userId : gamemodel.data.engineControlData.airPlane.userId,
+		userId : receiver.userId,
 		//32  4
-		roomNumber : airplane.roomNumber,
+		roomNumber : roomNumber,
 		//32   4
 	}
 	let messageLength = (32+64+8+32+32)/8;
@@ -266,7 +268,6 @@ export function playgroundInfoAnalyis(){
 	let displacementInfoArray = [];
 	Array.prototype.push.apply(displacementInfoArray, balls.bullet);
 	displacementInfoArray.push(balls.airPlane);
-	displacementInfoArray = displacementInfoArray;
 	let lengthOfDisplacementInfos = displacementInfoArray.length;
 	if( typeof(socketCache.damageInformation)=="undefined")
 		socketCache.damageInformation==[];
@@ -282,17 +283,6 @@ export function playgroundInfoAnalyis(){
 	// 	console.logbackendControlData("balls length : "+calculcateBallsLength(newBallsInfoArray)+"  "
 	// +calculcateBallsLength(displacementInfoArray));
 	// }
-
-	let length = 32+32+32+32+calculcateBallsLength(newBallsInfoArray)
-	+calculcateBallsLength(displacementInfoArray)+lengthOfCollisionSocketInfos*128
-	+lengthOfDisappearInfos*16;
-
-	let messageLength = (32+64+8+length)/8;
-
-	if(debug){
-		// console.log("groundLength : "+ messageLength);
-		// console.log(calculcateBallsLength(displacementInfoArray))
-	}
 
 	let messageBody = {
 		newBallsInfos : {
@@ -312,7 +302,24 @@ export function playgroundInfoAnalyis(){
 			content : disappearInfoArray
 		}
 	}
-		let message = {
+
+	if(debug){
+		console.log("playground messageBody : ");
+		console.log(messageBody);
+	}
+
+	let length = 32+32+32+32+calculcateBallsLength(newBallsInfoArray)
+	+calculcateBallsLength(displacementInfoArray)+lengthOfCollisionSocketInfos*128
+	+lengthOfDisappearInfos*16;
+
+	let messageLength = (32+64+8+length)/8;
+
+	if(debug){
+		console.log("groundLength : "+ messageLength);
+		console.log(calculcateBallsLength(displacementInfoArray))
+	}
+		
+	let message = {
 		length : messageLength,
 		//32
 		timestamp : new Date().getTime(),
@@ -322,8 +329,8 @@ export function playgroundInfoAnalyis(){
 		body : messageBody
 	}
 	if(debug){
-		// console.log("playground message : ")
-		// console.log(message);
+		console.log("playground message : ")
+		console.log(message);
 	}
 	return fillDv(message);
 }

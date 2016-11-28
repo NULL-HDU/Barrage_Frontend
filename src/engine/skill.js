@@ -16,6 +16,21 @@ window.bulletMaker = undefined;
 
 // skill: shoot normal bullet
 // every skillFunc should include a timer and a flag to implement skill cold.
+
+var Count = (function () {
+    var counter = 0,    //私有静态属性
+        NewCount;
+
+    NewCount = function () {    //新构造函数
+        counter += 1;
+    }
+    NewCount.prototype.getLastCount = function () {
+        return counter;
+    }
+
+    return NewCount;    //覆盖构造函数
+}());
+
 let normalSkillFunc = () => {
     if (normalSkillCDFlag === 1) return;
 
@@ -23,6 +38,9 @@ let normalSkillFunc = () => {
     let airPlane = data.airPlane;
     let angle = airPlane.attackDir;
     let bullet = new Bullet(airPlane.userId, STRAIGHT_LINE_BULLET, angle);
+    var count = new Count();
+    bullet.id = count.getLastCount();
+    gamemodel.socketCache.newBallInformation.push(bullet);
     //bullet.ballType = "Bullet";
     let dirVector = new PVector(
         Math.cos(angle + (3 / 2) * Math.PI),

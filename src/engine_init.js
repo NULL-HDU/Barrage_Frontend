@@ -19,15 +19,12 @@ import {
   changeKeyEventBindings
 } from "./engine/keybinding.js";
 
-//let playerNameInput = document.getElementById('playerNameInput');
-
-
 export const startGame = (userId,userName)=> {
-//  document.getElementById('gameWrapper').style.display = "none";
   let airPlane = new Airplane();
   gamemodel.data.engineControlData.airPlane = airPlane;
   gamemodel.data.engineControlData.airPlane.name = userName;
   gamemodel.data.engineControlData.airPlane.userId = userId;
+  gamemodel.data.engineControlData.airPlane.id = 0;
   playGame();
   configCanvasEventListen();
 
@@ -35,50 +32,5 @@ export const startGame = (userId,userName)=> {
   startGameLoop();
   enableBulletsCollectingEngine();
 };
-
-// let debug = () =>{
-//     if (console && console.log) {
-//         //console.log(args);
-//     }
-// };
-
-// var validNick = function() {
-//     var regex = /^\w*$/;
-//     return regex.exec(playerNameInput.value) !== null;
-// };
-
-// function bindNameInputEvent(e){
-//     var p = document.getElementsByTagName('p');
-//     var key = e.which || e.keycode;
-//     if (validNick()) {
-//         playerNameInput.style.cssText = "color: white; border-color: white;";
-//         p[0].style.cssText = "color: white";
-//         p[1].style.cssText = "color: white";
-//         p[0].innerHTML = "Hi!";
-//         p[1].innerHTML = "Press enter and let's fighting";
-//         if (key === global.KEY_ENTER && playerNameInput.value.length !== 0) {
-//             debug(engine);
-//             if (screenfull.enabled) {
-//                 screenfull.request();
-//             }
-//             console.log("validNick");
-//             startGame();
-//         }
-//     } else {
-        
-//         playerNameInput.style.cssText = "color: red; border-color: red;";
-//         p[0].style.cssText = "color: red";
-//         p[1].style.cssText = "color: red";
-//         p[0].innerHTML = "Hey~";
-//         p[1].innerHTML = "Please tell me your correct name, warrior";
-//     }
-// }
-
-// window.onload = ()=> {
-//     let airPlane = new Airplane();
-//     gamemodel.data.engineControlData.airPlane = airPlane;
-//     playerNameInput.addEventListener('keyup', bindNameInputEvent);
-
-// };
 
 /*handle_user_input.js ends here*/

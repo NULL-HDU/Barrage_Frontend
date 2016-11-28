@@ -11,43 +11,67 @@ import * as receiver from "./analyisReceiver.js"
 
 let debug = false;
 let rollingTime = 1000/90;
+let status = false;
+
+ 	//switch the status of is updating socket
+export function socketStatusSwitcher(){
+		status = !status;
+		return status;
+	}
 
 export default class transmitted{
 
 	constructor(){
 		this.ws = new WebSocket();
 		this.ws.init();
+		this.status = false
+		this.socketStatusSwitcher = this.socketStatusSwitcher.bind(this);
+		this.initSocket = this.initSocket.bind(this);
+		this.connect = this.connect.bind(this);
+		this.playgronud = this.playgroundInfo.bind(this);
+	}
+
+	initSocket(callback){
+		let userId = receiver.userId;
+		if(userId==undefined){
+			console.log("reload userId!")
+			setTimeout(()=>this.initSocket(callback),100);
+		}else{
+			callback(null,userId);
+		}
 	}
 
 	//send login message
-	login(callback,airplane){
-		let message = sender.loginAnalyis(airplane);
+	connect(roomNumber,callback){
+		let message = sender.loginAnalyis(roomNumber);
 		if( this.ws.sendMessage(message.getDv()) ){
-			if(debug)
-				console.log("load send succeed!");
+			console.log(receiver.state)
 			if(receiver.state==2){
-				callback();				
+				// if(debug)
+					console.log("load send succeed!");
+				callback(null,true);				
+			}else{
+				console.log("load send failed...reloading...");
+				setTimeout(()=>this.connect(roomNumber,callback),100);
 			}
-				return true;
-		}else{
-			console.log("load send failed...");
-			return false;
 		}
 	}
 
 	//analyis receiving message
 	playgroundInfo(){
-		// if(debug)
-			// console.log("playgronud send!");
-		let message = sender.playgroundInfoAnalyis();
-		if( this.ws.sendMessage(message.getDv()) ){
-			// if(debug)
-				// console.log("playgronud send succeed!");
+		if(status==false){
+			let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 		}else{
-			  // console.log("playgronud send failed...");
-
-		console.log("asd")
+			// if(debug)
+				console.log("playgronud send!");
+			let message = sender.playgroundInfoAnalyis();
+			if( this.ws.sendMessage(message.getDv()) ){
+				// if(debug)
+					// console.log("playgronud send succeed!");
+			}else{
+				  console.log("playgronud send failed...");
+			}
+			let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 		}
-		let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 	}
 }

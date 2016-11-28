@@ -8,19 +8,6 @@ import * as receiver from "./analyisReceiver.js"
 
 let debug = false;
 
-//switch the status of is updating socket
-let socketStatusSwitcher = function(){
-	let status = true;
-
-	this.setStatus = function(sta){
-		status = sta;
-	}
-
-	this.getStatus = function(){
-		return status;
-	}
-}
-
 //action for websocket
 export default class socket {
 	

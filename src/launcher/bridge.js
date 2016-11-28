@@ -5,22 +5,17 @@
  */
 
 import {startGame} from "../engine_init.js"
+import transmitted from "../socket/transmitted.js"
 
-export const initSocket = (cb) => {
-    console.log("socket inited.");
-    cb(null, 1234);
-};
+let tm = new transmitted();
+
+export const initSocket = tm.initSocket;
 export const initView = () => console.log("view inited.");
-export const socketDealGameInfo = () => console.log("socket deal game info.");
+export const socketDealGameInfo = tm.playgroundInfo;
 export const initEngine = (userId, name) => {
 	console.log(`engine inited with ${userId} and ${name}`);
 	startGame(userId,name);
 };
-export const socketConnect = (cb) => {
-  setTimeout(() => {
-    console.log("socket connected!");
-    cb(null, true);
-  }, 3000);
-};
+export const socketConnect = tm.connect;
 
 /* bridge.js ends here */
