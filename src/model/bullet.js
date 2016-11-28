@@ -21,6 +21,7 @@ export default class Bullet extends Ball{
         this.speed *= global.GAME_LOOP_INTERVAL / 1000;
         Object.assign(this, bulletResource[roleId]);
         this.run = this.pathFunc(this);
+        this.pathCalculate = this.pathCalculate.bind(this);
     }
 
     pathCalculate() {
