@@ -38,6 +38,8 @@ let normalSkillFunc = () => {
     let airPlane = data.airPlane;
     let angle = airPlane.attackDir;
     let bullet = new Bullet(airPlane.userId, STRAIGHT_LINE_BULLET, angle);
+    console.log("bullet is ");
+    console.log(bullet);
     var count = new Count();
     bullet.id = count.getLastCount();
     gamemodel.socketCache.newBallInformation.push(bullet);
