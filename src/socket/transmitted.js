@@ -61,7 +61,7 @@ export default class transmitted{
 		if(status==false){
 			let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
 		}else{
-			// if(debug)
+			if(debug)
 				console.log("playgronud send!");
 			let message = sender.playgroundInfoAnalyis();
 			if( this.ws.sendMessage(message.getDv()) ){
