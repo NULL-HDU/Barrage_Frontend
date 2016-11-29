@@ -143,11 +143,12 @@ PVector.mult = function (p,mulfFactor) {
 }
 
 PVector.setMag = function (p,newMag) {
-    if( !PVector.mag(p) ){
+    let mag = PVector.mag(p)
+    if( !mag ){
         return new PVector(0,0);
     } else {
-        var m = newMag / PVector.mag(p) || 0;
-        return PVector.mult(p,m)
+        var m = newMag / mag || 0;
+        return PVector.mult(p,m);
     }
 
 }
