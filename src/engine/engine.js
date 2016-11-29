@@ -119,9 +119,8 @@ let engine = () => {
   let airPlane = data.airPlane;
   looper(() => {
     airPlane.move();
-    data.bullet.map((bullet) => {
+    data.bullet.forEach((bullet) => {
       bullet.pathCalculate();
-      return bullet;
     });
     collisionDetection();
 
