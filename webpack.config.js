@@ -17,7 +17,7 @@ let static_dir = join(__dirname, _static_dir);
 let node_env = process.env.NODE_ENV;
 
 let webpackDefineConfig = {
-  "process.env": JSON.stringify(node_env)
+  "__ENV__": JSON.stringify(node_env)
 }
 
 // https://github.com/ampedandwired/html-webpack-plugin
