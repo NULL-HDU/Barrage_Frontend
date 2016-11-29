@@ -8,20 +8,29 @@
 import * as PIXI from "./pixi.js";
 
 //////// global variables
+// cut view
+let HEIGHT_CUT = 800, WIDTH_CUT = 1280;
 // init standard size 
 let HEIGHT_LOCAL = window.innerHeight,
     WIDTH_LOCAL = window.innerWidth,
     X_CENTER = WIDTH_LOCAL / 2,
-    Y_CENTER = HEIGHT_LOCAL / 2;
+    Y_CENTER = HEIGHT_LOCAL / 2,
+    X_RATIO = WIDTH_LOCAL / WIDTH_CUT,
+    Y_RATIO = HEIGHT_LOCAL / HEIGHT_CUT,
+    // remember last size
+    RULER = [WIDTH_LOCAL, HEIGHT_LOCAL, 0, 0];
+
 // init renderer
 let renderer = PIXI.autoDetectRenderer(
     WIDTH_LOCAL, 
     HEIGHT_LOCAL, 
-    {backgroundColor: 0x141414}
+    {
+        // backgroundColor: 0x000000,
+        // clearBeforeRender: false,
+        // preserveDrawingBuffer: true
+    }
 );
 renderer.view.id = "canvas";
-renderer.view.height = HEIGHT_LOCAL;
-renderer.view.width = WIDTH_LOCAL;
 document.body.appendChild(renderer.view);
 
 // game state
@@ -41,12 +50,30 @@ let Stage = new Container(),
     EffectLayer = new Container(),
     UILayer = new Container();
 
+// sprites
+let fromImage = PIXI.Texture.fromImage,
+    Sprite = PIXI.Sprite;
+let texture = [];
+// BackgroundLayer
+let universe = new Container(),
+    rect_l = 40,
+    rect_xn = WIDTH_CUT / rect_l,
+    rect_yn = HEIGHT_CUT / rect_l,
+    rect_xl = [],
+    rect_yl = [];
+    rect_xl[0] = WIDTH_LOCAL / rect_xn;
+    rect_xl[1] = rect_xl[0];
+    rect_yl[0] = HEIGHT_LOCAL / rect_yn;
+    rect_yl[1] = rect_yl[0];
+
+
 
 //////// init functions
+let ProtoJ = "/static/view/pics/ufo.json";
 export function initView() {
     // load resources
     PIXI.loader
-        .add("/static/view/pics/ufo.json")
+        .add(ProtoJ)
         .load(initLayer);
 
 }
@@ -70,7 +97,29 @@ function initLayer() {
     loopRender();
 }
 
+function drawCrossLine(xp, yp) {
+    let Graphics = new PIXI.Graphics;
+    Graphics.lineStyle(1, 0xffffff, 0.1);
+    let ni = rect_yn + 2, nj = rect_xn + 2;
+    for (let i = 0; i < ni; i ++) {
+        for (let j = 0; j < nj; j ++) {
+            let x = j * rect_xl[1],
+                y = i * rect_yl[1];
+            Graphics.drawRect(x, y, rect_xl[1], rect_yl[1]);
+        }
+    }
+    Graphics.endFill();
+    
+    universe.addChild(Graphics);
+    universe.x = xp;
+    universe.y = yp;
+}
+
+// let xx = x => x * x;
 function initBackground() {
+    drawCrossLine(-rect_xl[1], -rect_yl[1]);
+
+    BackgroundLayer.addChild(universe);
     Stage.addChild(BackgroundLayer);
 }
 
@@ -119,14 +168,31 @@ function loopRender() {
 
 // resize standard and canvas's size
 function resizeStandard() {
-    HEIGHT_LOCAL = window.innerHeight;
+    RULER[2] = 0;
+    RULER[3] = 0;
+    rect_xl[0] = rect_xl[1];
+    rect_yl[0] = rect_yl[1];
     WIDTH_LOCAL = window.innerWidth;
-    X_CENTER = WIDTH_LOCAL / 2;
-    Y_CENTER = HEIGHT_LOCAL / 2;
-    renderer.height = HEIGHT_LOCAL;
-    renderer.width = WIDTH_LOCAL;
-    renderer.view.height = HEIGHT_LOCAL;
-    renderer.view.width = WIDTH_LOCAL;
+    HEIGHT_LOCAL = window.innerHeight;
+    let W = (WIDTH_LOCAL !== RULER[0]) ? true : false;
+    let H = (HEIGHT_LOCAL !== RULER[1]) ? true : false;
+    if (W || H) {
+        renderer.resize(WIDTH_LOCAL, HEIGHT_LOCAL);
+    }
+    if (W) {
+        X_CENTER = WIDTH_LOCAL / 2;
+        X_RATIO = WIDTH_LOCAL / WIDTH_CUT;
+        rect_xl[1] = WIDTH_LOCAL / rect_xn;
+        RULER[0] = WIDTH_LOCAL;
+        RULER[2] = 1;
+    }
+    if (H) {
+        Y_CENTER = HEIGHT_LOCAL / 2;
+        Y_RATIO = HEIGHT_LOCAL / HEIGHT_CUT;
+        rect_yl[1] = HEIGHT_LOCAL / rect_yn;
+        RULER[1] = HEIGHT_LOCAL;
+        RULER[3] = 1;
+    }
 }
 
 // catch the changed sprites and reset them
@@ -145,6 +211,19 @@ function playing() {
 }
 
 function rstBackground() {
+    if (universe.x <= -2 * rect_xl[0] || universe.x >= 0) {
+        universe.x = -rect_xl[0];
+    }
+    if (universe.y <= -2 * rect_yl[0] || universe.y >= 0) {
+        universe.y = -rect_yl[0];
+    }
+    if (RULER[2] === 1 || RULER[3] === 1) {
+        universe.removeChildren();
+        drawCrossLine(universe.x * X_RATIO, universe.y * Y_RATIO);
+    }
+
+    // universe.x -= 1;
+    // universe.y -= 1;
 }
 
 function rstObstacle() {
