@@ -16,6 +16,15 @@ export default {
     KEY_A: 65,
     KEY_S: 83,
     KEY_D: 68,
+    KEY_E: 69,
+
+    // skill
+    NORMAL_SKILL: 0,
+    E_SKILL: 1,
+
+    NORMAL_SKILL_CD: 500,
+    E_SKILL_CD: 1000,
+    SKILL_CHECk_LOOP_INTERVAL: 50,
 
     NORMAL_SKILL: 0,
     NORMAL_SKILL_CD: 500,
@@ -26,7 +35,7 @@ export default {
 
     AIRPLANE_SPEED: 2.5,
     AIRPLANE_SLOW_RATE: 0.3,
-    BULLET_SPEED: 4,
+    BULLET_SPEED: 200,              // px / s
 
     BULLET_MAKER_LOOP_INTERVAL: (1/5)*1000,
     BULLET_MAKER_DEMO_LOOP_INTERVAL: (1/10)*1000,

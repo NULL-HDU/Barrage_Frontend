@@ -127,6 +127,7 @@ export const changeKeyEventBindings = () => {
         up = keyboard(global.KEY_W),
         right = keyboard(global.KEY_D),
         down = keyboard(global.KEY_S),
+        skill1 = keyboard(global.KEY_E),
         shift = shiftLikeEvent("shift"),
         space = keyboard(global.KEY_SPACE);
 
@@ -263,4 +264,11 @@ export const changeKeyEventBindings = () => {
         }
     };
 
+    skill1.press = function() {
+      enableSkillEngine(global.E_SKILL);
+    };
+
+    skill1.release = function() {
+      disableSkillEngine(global.E_SKILL);
+    }
 };

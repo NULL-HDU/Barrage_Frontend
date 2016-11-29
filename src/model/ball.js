@@ -13,7 +13,7 @@ export default class Ball {
         this.id = 0;
         this.hp = 10000;
         this.damage = 100;
-        this.name = 'Arthury';
+        this.name = "Arthury";
         this.camp = undefined;
         this.userId = undefined;
         this.roleId = 0;
@@ -22,7 +22,7 @@ export default class Ball {
         this.attackDir = 0;
         this.state = ALIVE;
         this.hasJudge = false;
-        this.locationCurrent = new PVector(global.LOCAL_WIDTH/2,global.LOCAL_HEIGHT/2);
+        this.locationCurrent = undefined;
     }
 
 }
