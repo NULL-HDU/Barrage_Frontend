@@ -19,7 +19,7 @@ let _socketConnect = (roomId, cb) => {
     setTimeout(() => {
           console.log("socket connected!");
           cb(null, true);
-        }, 3000);
+        }, 1500);
 };
 
 // It won't connect to backend while you are developing by default,

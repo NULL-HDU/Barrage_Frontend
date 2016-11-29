@@ -1,8 +1,11 @@
-export default {
-    
-    AIRPLANE: 0,
-    BLOCK: 1,
-    BULLET: 2,
-    FOOD: 3,
 
-};
+// Ball Tpye
+export const AIRPLANE = 0;
+export const BLOCK = 1;
+export const BULLET = 2;
+export const FOOD = 3;
+
+// Ball State
+export const ALIVE = 0;
+export const DEAD = 1;
+export const DISAPPEAR = 2;

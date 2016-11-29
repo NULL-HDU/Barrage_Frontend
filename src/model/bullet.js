@@ -1,8 +1,8 @@
 import Ball from "./ball";
 import PVector from "./Point";
-import global from "../global.js"
+import global from "../global.js";
 import gamemodel from "./gamemodel.js";
-import constant from "../constant";
+import {BULLET, DISAPPEAR} from "../constant";
 
 let bulletResource = gamemodel.resourceRecord.bulletTable;
 
@@ -14,7 +14,7 @@ export default class Bullet extends Ball{
         if(bulletResource[roleId] === undefined) {
             throw "Invalid roleId!";
         }
-        this.ballType = constant.BULLET;
+        this.ballType = BULLET;
         this.roleId = roleId;
         this.radius = 7.5;
         this.userId = userId;
@@ -36,15 +36,9 @@ export default class Bullet extends Ball{
             let distance = PVector.dist(a,b);
 
             //距离检测，边界检测
-        if(distance >= 800){
-
-//                gamemodel.data.disappearBulletInformation.push(this.id);
-                this.alive = false;
-                this.isKilled = false;
-                
+            if(distance >= 800){
+              this.state = DISAPPEAR;
             }
-
-//        console.log("x: " + this.locationCurrent.x + "y: " + this.locationCurrent.y);
     }
 
 }

@@ -5,15 +5,10 @@
  */
 
 import gamemodel from "./model/gamemodel";
-import engine from "./engine/engine";
-import global from "./global"
 import Airplane from "./model/airplane";
 import {playGame} from "./view/view";
-import screenfull from "./engine/screenfull";
-import {socketStatusSwitcher} from "./socket/transmitted"
 import {
-  startGameLoop,
-  enableBulletsCollectingEngine
+  startEngine
 } from "./engine/engine.js";
 import {
   configCanvasEventListen,
@@ -22,16 +17,15 @@ import {
 
 export const startGame = (userId,userName)=> {
   let airPlane = new Airplane();
+  airPlane.name = userName;
+  airPlane.userId = userId;
+  airPlane.id = 0;
   gamemodel.data.engineControlData.airPlane = airPlane;
-  gamemodel.data.engineControlData.airPlane.name = userName;
-  gamemodel.data.engineControlData.airPlane.userId = userId;
-  gamemodel.data.engineControlData.airPlane.id = 0;
-  socketStatusSwitcher();
+
   playGame();
   configCanvasEventListen();
   changeKeyEventBindings();
-  startGameLoop();
-  enableBulletsCollectingEngine();
+  startEngine();
 };
 
 /*handle_user_input.js ends here*/
