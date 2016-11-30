@@ -1,11 +1,5 @@
 analySender.js
-	fillConnectForDv()
-		troop?
-
-	playgroundInfoAnalyis()
-		ther is no newBall and disappear
-		ball id is alway 0
-		damage is null
+	radius 122
 
 analyisReceive.js
 	receiveMessage()
@@ -16,3 +10,4 @@ analyisReceive.js
 
 ball.js need to be changed
 damageInformation need to be changed
+

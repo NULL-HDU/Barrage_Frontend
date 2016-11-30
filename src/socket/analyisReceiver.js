@@ -176,7 +176,7 @@ function fillBallToMes(dv){
 	ball.damage = dv.pop8();
 	ball.roleId = dv.pop8();
 	ball.special = dv.pop16();
-	ball.speed = dv.pop8();
+	ball.radius = dv.pop16();
 	ball.attackDir = dv.popFloat32();
 	//tmporaryly use this when ball.js isn't changed
 	let status = dv.pop8();

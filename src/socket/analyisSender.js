@@ -33,7 +33,7 @@ function analyisUnnumber(obj){
 // 	damage : 8,
 // 	role : 8,
 // 	special : 16,
-// 	speed : 8,
+// 	radius : 16,
 // 	attackDir : 32,
 // 	state : 8
 // 	localtionCurrent : {
@@ -41,7 +41,7 @@ function analyisUnnumber(obj){
 // 		y : 16
 // 	}
 // }
-// 216+lengthOfName*8
+// 222+lengthOfName*8
 // */
 // //calculcate length of balls
 function calculcateBallsLength(balls){
@@ -50,7 +50,7 @@ function calculcateBallsLength(balls){
 	let totalLength = 0;
 	for(let i=0;i<length;i++){
 		let nameLength = balls[i].name.length;
-		totalLength = totalLength+216+nameLength*8;
+		totalLength = totalLength+222+nameLength*8;
 	}
 	return totalLength;
 }
@@ -119,7 +119,7 @@ function fillBallArrayToDv(dv,content){
 		dv.push8( content[i].damage );
 		dv.push8( content[i].roleId );
 		dv.push16( content[i].special );
-		dv.push8( content[i].speed );
+		dv.push16( radius = content[i].radius||15 );
 		dv.pushFloat32( content[i].attackDir );
 		//temporaryly use this until ball.js is changed!
 		let alive = content[i].alive;
