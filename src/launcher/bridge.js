@@ -29,7 +29,7 @@ let _socketConnect = (roomId, cb) => {
 //    export NODE_ENV="testing"
 //
 // then start your webpack-server.
-if(__ENV__.NODE_ENV === "testing" || __ENV__.NODE_ENV === "production"){
+if(__ENV__ === "testing" || __ENV__ === "production"){
   let tm = new transmitted();
 
   _initSocket = tm.initSocket;
