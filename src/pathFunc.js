@@ -1,50 +1,52 @@
 import PVector from "./model/Point.js";
-import global from "./global.js";
 
 export const straightLinePath = (bullet) => {
     let angle = bullet.attackDir % (2 * Math.PI);
     let sv = new PVector(
-        Math.cos(angle + (3/2)*Math.PI) * bullet.speed,
-        Math.sin(angle + (3/2)*Math.PI) * bullet.speed
+        Math.cos(angle) * bullet.speed,
+        Math.sin(angle) * bullet.speed
     );
 
     return () => {
         bullet.locationCurrent.add(sv);
     };
-}
+};
 
-const circlePath = (bullet) => {
+// clockwise=1: clockwise
+// clockwise=-1: anticlockwise
+export const circlePath = (bullet, clockwise=1, minRadius=50, maxRadius=900, dRadius=0.3) => {
   let angle = bullet.attackDir % (2 * Math.PI);
   let sv = new PVector(
-    Math.sin(angle + (3/2)*Math.PI) * bullet.speed,
-    - Math.cos(angle + (3/2)*Math.PI) * bullet.speed
+    Math.cos(angle) * bullet.speed,
+    Math.sin(angle) * bullet.speed
   );
-  let R = 50; // a = v**2 / R
-  let dR = 0.2;
+  // sv.mult(direaction);
+  let R = minRadius; // a = v**2 / R
+  let dR = dRadius;
 
   return () => {
-    let asv = new PVector(sv.y , -sv.x);
+    let asv = new PVector(-sv.y , sv.x);
+    asv.mult(clockwise);
     asv.setMag(Math.pow(bullet.speed, 2) / R);
     sv.add(asv);
     sv.setMag(bullet.speed);
-    if(R <= 400){
+    if(R <= maxRadius){
       R += dR;
     }
     bullet.locationCurrent.add(sv);
   };
 };
 
-const MAX_S = 300;
-const uniformlyRetardedPath = (bullet) => {
+export const uniformlyRetardedPath = (bullet, maxS=300) => {
   let v1 = bullet.speed;                          // px / GLI (GAME_LOOP_INTERVAL)
   let angle = bullet.attackDir % (2 * Math.PI);
   let sv = new PVector(
-    Math.cos(angle + (3/2)*Math.PI) * v1,
-    Math.sin(angle + (3/2)*Math.PI) * v1
+    Math.cos(angle) * v1,
+    Math.sin(angle) * v1
   );
   let v0 = bullet.speed * 3;                    // px / GLI (GAME_LOOP_INTERVAL)
   // v0**2 - v1**2 = 2ax
-  let asv_mag = (Math.pow(v0, 2) - Math.pow(v1, 2)) / (2*MAX_S); // px / s**2
+  let asv_mag = (Math.pow(v0, 2) - Math.pow(v1, 2)) / (2*maxS); // px / s**2
   let asv = PVector.mult(sv, -1);
   asv.setMag(asv_mag);
   sv.setMag(v0);
@@ -57,19 +59,20 @@ const uniformlyRetardedPath = (bullet) => {
   };
 };
 
-const MAX_CRAWL_S = 150;
-const crawlPath = (bullet) => {
+export const crawlPath = (bullet, direction=1,maxCrawlS=150) => {
   let v1 = bullet.speed;                          // px / GLI (GAME_LOOP_INTERVAL)
   let angle = bullet.attackDir % (2 * Math.PI);
   let sv = new PVector(
-    Math.cos(angle + (3/2)*Math.PI) * v1,
-    Math.sin(angle + (3/2)*Math.PI) * v1
+    Math.cos(angle) * v1,
+    Math.sin(angle) * v1
   );
   // v0**2 - v1**2 = 2ax
-  let asv_mag =Math.pow(v1, 2)  / (2*MAX_CRAWL_S); // px / s**2
+  let asv_mag =Math.pow(v1, 2)  / (2*maxCrawlS); // px / s**2
   let asv = PVector.mult(sv, -1);
   asv.setMag(asv_mag);
   sv.setMag(v1);
+  sv.mult(direction);
+  asv.mult(direction);
 
   let step = 1;
 
@@ -82,5 +85,3 @@ const crawlPath = (bullet) => {
     bullet.locationCurrent.add(sv);
   };
 };
-
-export const testPath = crawlPath;

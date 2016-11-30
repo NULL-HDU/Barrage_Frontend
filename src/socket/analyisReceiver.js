@@ -4,9 +4,9 @@
 */
 
 import Bullet from "../model/bullet.js";
-import gamemodel from "../model/gamemodel"
-import dataview from "./dataview.js"
-import CommonConstant from "../constant.js"
+import gamemodel from "../model/gamemodel";
+import dataview from "./dataview.js";
+import * as CommonConstant from "../constant.js";
 
 let debug = false;
 

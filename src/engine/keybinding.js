@@ -1,4 +1,5 @@
 import global from "../global";
+import {KEY} from "../constant.js";
 import gamemodel from "../model/gamemodel";
 import {
   disableSkillEngine,
@@ -123,12 +124,13 @@ export const configCanvasEventListen=()=>{
 
 export const changeKeyEventBindings = () => {
   let ap = gamemodel.data.engineControlData.airPlane;
-    let left = keyboard(global.KEY_A),
-        up = keyboard(global.KEY_W),
-        right = keyboard(global.KEY_D),
-        down = keyboard(global.KEY_S),
+    let left = keyboard(KEY.A),
+        up = keyboard(KEY.W),
+        right = keyboard(KEY.D),
+        down = keyboard(KEY.S),
+        skill1 = keyboard(KEY.E),
         shift = shiftLikeEvent("shift"),
-        space = keyboard(global.KEY_SPACE);
+        space = keyboard(KEY.SPACE);
 
 
     shift.press = function() {
@@ -263,4 +265,11 @@ export const changeKeyEventBindings = () => {
         }
     };
 
+    skill1.press = function() {
+      enableSkillEngine(global.E_SKILL);
+    };
+
+    skill1.release = function() {
+      disableSkillEngine(global.E_SKILL);
+    }
 };

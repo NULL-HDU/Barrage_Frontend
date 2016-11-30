@@ -5,13 +5,18 @@
  */
 
 import global from "../global";
-import constant from "../constant.js";
+import {
+  DEAD,
+  DISAPPEAR,
+  BULLET
+} from "../constant.js";
 import gamemodel from "../model/gamemodel";
 import Quadtree from "./quadtree";
 import PVector from "../model/Point";
-import {socketStatusSwitcher} from "../socket/transmitted"
+import {socketStatusSwitcher} from "../socket/transmitted";
 
 let data = gamemodel.data.engineControlData;
+let backendData = gamemodel.data.backendControlData;
 let quad = new Quadtree({
     x: 0,
     y: 0,
@@ -19,44 +24,27 @@ let quad = new Quadtree({
     height: global.LOCAL_HEIGHT
 });
 
-window.bulletMaker = undefined;
-
 let looper = (f, t) => setTimeout(() => {f(); looper(f, t);}, t);
-let bulletMakerEngine = (f, t) => window.bulletMaker = setTimeout(
-  () => {f(); bulletMakerEngine(f, t);}, t);
 
 let uselessBulletsCollect = () => {
-    data.bullet.map((bullet) => {
-        if (bullet.alive === false && bullet.isKilled === true) {
+    if(data.bullet.length <= 0) return;
+
+    data.bullet = data.bullet.filter((bullet) => {
+        if (bullet.state === DEAD) {
             gamemodel.deadCache.push(bullet);
             gamemodel.socketCache.disapperBulletInformation.push(bullet.id);
-            
-        } else if (bullet.alive === false && bullet.isKilled === false) {
+            return false;
+        }
+        if (bullet.state === DISAPPEAR) {
             gamemodel.disappearCache.push(bullet);
             gamemodel.socketCache.disapperBulletInformation.push(bullet.id);
-            
+            return false;
         }
-        return bullet;
+        return true;
     });
-
-    let i = data.bullet.length;
-    while (i--) {
-        let bullet = data.bullet[i];
-        if (bullet.alive === false) {
-            data.bullet.splice(i, 1);
-        }
-    }
-
-    let j = gamemodel.data.backendControlData.bullet.length;
-    while (j--) {
-        let bullet = gamemodel.data.backendControlData.bullet[j];
-        if (bullet.alive === false) {
-            gamemodel.data.backendControlData.bullet.splice(j, 1);
-        }
-    }
 };
 
-let enableCollisionDetectionEngine = () => {
+let collisionDetection = () => {
     /*
       1.将要检测碰撞的球体加入四叉树
       2.对每个球体进行碰撞检测，检测到的就进行标记
@@ -66,7 +54,7 @@ let enableCollisionDetectionEngine = () => {
     let selfBullets = data.bullet.concat(airPlane);
     //console.log("selfBullets");
     //console.log(selfBullets);
-    let enemyBullets = gamemodel.data.backendControlData.bullet.concat(gamemodel.data.backendControlData.airPlane);
+    let enemyBullets = backendData.bullet.concat(backendData.airPlane);
     //console.log("enemyBullets");
     //console.log(enemyBullets);
     let bulletsBank = selfBullets.concat(enemyBullets);
@@ -75,15 +63,17 @@ let enableCollisionDetectionEngine = () => {
     for (i = 0; i < bulletsBank.length; i++) {
         quad.insert(bulletsBank[i]);
     }
-    i = 0;
-    while (i < selfBullets.length) {
+    for (i = 0; i < selfBullets.length; i++) {
         let collidors = quad.retrieve(selfBullets[i]);
         for (j = 0; j < collidors.length; j++) {
-            if (collidors[j].hasJudge || selfBullets[i] == collidors[j]) {
+            // 1 check camp
+            // 2 check distance
+            if (collidors[j].camp === selfBullets[i].camp) {
                 continue;
             }
-            let a = new PVector(selfBullets[i].locationCurrent.x, selfBullets[i].locationCurrent.y);
-            let b = new PVector(collidors[j].locationCurrent.x, collidors[j].locationCurrent.y);
+
+            let a = selfBullets[i].locationCurrent;
+            let b = collidors[j].locationCurrent;
             let distance = PVector.dist(a, b);
             console.log("respect distance is ");
             console.log(collidors[j].radius + selfBullets[i].radius);
@@ -93,19 +83,17 @@ let enableCollisionDetectionEngine = () => {
             console.log(collidors[j].camp);
             console.log("selfBullets camp");
             console.log(selfBullets[i].camp);
-            if (distance <= collidors[j].radius + selfBullets[i].radius && collidors[j].camp !== selfBullets[i].camp) {
+            if (distance <= collidors[j].radius + selfBullets[i].radius) {
 
                 //碰撞处理和伤害计算
-                if (collidors[j].ballType === constant.BULLET) {
-                    collidors[j].alive = false;
-                    collidors[j].isKilled = true;
-                    console.log("enemy bullet disappear detect");
+                if (collidors[j].ballType === BULLET) {
+                    collidors[j].state = DEAD;
+                    console.log("enemy bullet dead detect");
                 }
 
-                if (selfBullets[i].ballType === constant.BULLET) {
-                    selfBullets[i].alive = false;
-                    selfBullets[i].isKilled = true;
-                    console.log("self bullet disappear detect");
+                if (selfBullets[i].ballType === BULLET) {
+                    selfBullets[i].state = DEAD;
+                    console.log("self bullet dead detect");
                 }
 
                 console.log("damage!!!");
@@ -113,11 +101,10 @@ let enableCollisionDetectionEngine = () => {
                 //不管碰撞的是子弹和子弹，还是子弹和飞机都需要加入碰撞信息中
                 //暂未处理飞机撞击飞机的情况
                 let damageInformation = {
-                    collision1: collidors[j].id,
-                    collision2: selfBullets[i].id,
-                    damageValue: [collidors[j].damageValue, selfBullets[i].damageValue],
-                    isAlive: [collidors[j].alive, selfBullets[i].alive],
-                    willDisappear: [!collidors[j].alive, !selfBullets[i].alive],
+                    collision1: selfBullets[i].id,
+                    collision2: collidors[j].id,
+                    damageValue: [selfBullets[i].damageValue, collidors[j].damageValue],
+                    state: [selfBullets[i].state, collidors[j].state]
                 };
                 gamemodel.socketCache.damageInformation.push(damageInformation);
 
@@ -125,41 +112,25 @@ let enableCollisionDetectionEngine = () => {
                 break;
             }
         }
-
-        selfBullets[i].hasJudge = true;
-        i++;
     }
 };
 
-export const enableBulletsCollectingEngine = () => {
-    looper(() => {
-        uselessBulletsCollect();
-    }, global.BULLET_COLLECTING_INTERVAL);
+let engine = () => {
+  let airPlane = data.airPlane;
+  looper(() => {
+    airPlane.move();
+    data.bullet.forEach((bullet) => {
+      bullet.pathCalculate();
+    });
+    collisionDetection();
+
+    // uselessBulletsCollect useless balls always are in the end of a engine cycle;
+    uselessBulletsCollect();
+
+    socketStatusSwitcher();
+  }, global.GAME_LOOP_INTERVAL);
 };
 
-export const startGameLoop = () => {
-    let airPlane = data.airPlane;
-    looper(() => {
-        //gamemodel.data.backendControlData.airPlane[0].attackDir += 0.05;
-        airPlane.move();
-        //airPlane.attackDir += 0.05;
-        //自主机子弹
-        // console.log(gamemodel.data.engineControlData.bullet);
-        gamemodel.data.engineControlData.bullet.map((bullet) => {
-            bullet.pathCalculate();
-            return bullet;
-        });
-        //敌机子弹
-//        gamemodel.data.backendControlData.bullet.map((bullet) => {
-//            bullet.pathCalculate();
-//            return bullet;
-//        });
-
-        //        if(gamemodel.data.engineControlData.bullet.length !== 0){
-        enableCollisionDetectionEngine();
-        //        }
-
-        socketStatusSwitcher();
-    }, global.GAME_LOOP_INTERVAL);
+export const startEngine= () => {
+  engine();
 };
-

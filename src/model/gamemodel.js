@@ -37,6 +37,6 @@ export default {
         seatTable:[],
     },
     config: null,
-}
+};
 
 /*gamemodel.js ends here*/
