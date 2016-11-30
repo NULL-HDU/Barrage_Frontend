@@ -8,7 +8,6 @@ import gamemodel from "./model/gamemodel";
 import engine from "./engine/engine";
 import global from "./global"
 import Airplane from "./model/airplane";
-import {initView} from "./view/Nview";
 import screenfull from "./engine/screenfull";
 import transmitted from "./socket/transmitted.js"
 import {
@@ -30,7 +29,6 @@ export const startGame = ()=> {
   let airPlane = new Airplane();
   gamemodel.data.engineControlData.airPlane = airPlane;
   gamemodel.data.engineControlData.airPlane.name = "Arthury";
-  initView();
   configCanvasEventListen();
 
   changeKeyEventBindings();
