@@ -59,12 +59,8 @@ let universe = new Container(),
     rect_l = 40,
     rect_xn = WIDTH_CUT / rect_l,
     rect_yn = HEIGHT_CUT / rect_l,
-    rect_xl = [],
-    rect_yl = [];
-    rect_xl[0] = WIDTH_LOCAL / rect_xn;
-    rect_xl[1] = rect_xl[0];
-    rect_yl[0] = HEIGHT_LOCAL / rect_yn;
-    rect_yl[1] = rect_yl[0];
+    rect_xl = WIDTH_LOCAL / rect_xn,
+    rect_yl = HEIGHT_LOCAL / rect_yn;
 
 
 
@@ -103,9 +99,9 @@ function drawCrossLine(xp, yp) {
     let ni = rect_yn + 2, nj = rect_xn + 2;
     for (let i = 0; i < ni; i ++) {
         for (let j = 0; j < nj; j ++) {
-            let x = j * rect_xl[1],
-                y = i * rect_yl[1];
-            Graphics.drawRect(x, y, rect_xl[1], rect_yl[1]);
+            let x = j * rect_xl,
+                y = i * rect_yl;
+            Graphics.drawRect(x, y, rect_xl, rect_yl);
         }
     }
     Graphics.endFill();
@@ -117,7 +113,7 @@ function drawCrossLine(xp, yp) {
 
 // let xx = x => x * x;
 function initBackground() {
-    drawCrossLine(-rect_xl[1], -rect_yl[1]);
+    drawCrossLine(-rect_xl, -rect_yl);
 
     BackgroundLayer.addChild(universe);
     Stage.addChild(BackgroundLayer);
@@ -170,8 +166,6 @@ function loopRender() {
 function resizeStandard() {
     RULER[2] = 0;
     RULER[3] = 0;
-    rect_xl[0] = rect_xl[1];
-    rect_yl[0] = rect_yl[1];
     WIDTH_LOCAL = window.innerWidth;
     HEIGHT_LOCAL = window.innerHeight;
     let W = (WIDTH_LOCAL !== RULER[0]) ? true : false;
@@ -182,14 +176,14 @@ function resizeStandard() {
     if (W) {
         X_CENTER = WIDTH_LOCAL / 2;
         X_RATIO = WIDTH_LOCAL / WIDTH_CUT;
-        rect_xl[1] = WIDTH_LOCAL / rect_xn;
+        rect_xl = WIDTH_LOCAL / rect_xn;
         RULER[0] = WIDTH_LOCAL;
         RULER[2] = 1;
     }
     if (H) {
         Y_CENTER = HEIGHT_LOCAL / 2;
         Y_RATIO = HEIGHT_LOCAL / HEIGHT_CUT;
-        rect_yl[1] = HEIGHT_LOCAL / rect_yn;
+        rect_yl = HEIGHT_LOCAL / rect_yn;
         RULER[1] = HEIGHT_LOCAL;
         RULER[3] = 1;
     }
@@ -211,19 +205,21 @@ function playing() {
 }
 
 function rstBackground() {
-    if (universe.x <= -2 * rect_xl[0] || universe.x >= 0) {
-        universe.x = -rect_xl[0];
-    }
-    if (universe.y <= -2 * rect_yl[0] || universe.y >= 0) {
-        universe.y = -rect_yl[0];
-    }
     if (RULER[2] === 1 || RULER[3] === 1) {
         universe.removeChildren();
         drawCrossLine(universe.x * X_RATIO, universe.y * Y_RATIO);
     }
 
-    // universe.x -= 1;
-    // universe.y -= 1;
+    // universe.x += 81 * X_RATIO;
+    // universe.y -= 1 * Y_RATIO;
+
+    if (universe.x < -2 * rect_xl || universe.x > 0) {
+        universe.x = -rect_xl + (universe.x % rect_xl);
+    }
+    if (universe.y < -2 * rect_yl || universe.y > 0) {
+        universe.y = -rect_yl + (universe.y % rect_yl);
+    }
+
 }
 
 function rstObstacle() {
