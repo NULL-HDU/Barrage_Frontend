@@ -17,7 +17,7 @@ export default class Airplane extends Ball {
         this.v = new PVector(0,0);
         this.vangle = 0;
         this.locationCurrent = new PVector(global.LOCAL_WIDTH/2,global.LOCAL_HEIGHT/2);
-    };
+    }
 
     move() {
         this.locationCurrent.add(this.v);

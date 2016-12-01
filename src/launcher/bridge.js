@@ -9,7 +9,7 @@ import transmitted from "../socket/transmitted.js";
 
 let _initSocket = (cb) => {console.log("socket inited.");cb(null, 1234);};
 // TODO: Add view init interface.
-let _initView = () => console.log("view inited.");
+let _initView = iview;
 let _socketDealGameInfo = () => console.log("socket Deal game info");
 let _initEngine = (userId, name) => {
   console.log(`engine inited with ${userId} and ${name}`);
