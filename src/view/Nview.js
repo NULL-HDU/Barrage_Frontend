@@ -6,6 +6,7 @@
 
 //////// import modules
 import * as PIXI from "./pixi.js";
+import gamemodel from "../model/gamemodel.js";
 
 //////// global variables
 // cut view
@@ -61,8 +62,10 @@ let universe = new Container(),
     rect_yn = HEIGHT_CUT / rect_l,
     rect_xl = WIDTH_LOCAL / rect_xn,
     rect_yl = HEIGHT_LOCAL / rect_yn;
-
-
+// AirplaneLayer
+let airplane = new Container();
+let ap_info = gamemodel.data.engineControlData;
+console.log(ap_info.airPlane);
 
 //////// init functions
 let ProtoJ = "/static/view/pics/ufo.json";
@@ -210,8 +213,8 @@ function rstBackground() {
         drawCrossLine(universe.x * X_RATIO, universe.y * Y_RATIO);
     }
 
-    // universe.x += 81 * X_RATIO;
-    // universe.y -= 1 * Y_RATIO;
+    universe.x += 81 * X_RATIO;
+    universe.y -= 1 * Y_RATIO;
 
     if (universe.x < -2 * rect_xl || universe.x > 0) {
         universe.x = -rect_xl + (universe.x % rect_xl);
