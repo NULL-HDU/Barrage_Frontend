@@ -68,16 +68,17 @@ let ap_info = gamemodel.data.engineControlData;
 
 //////// init functions
 let ProtoJ = "/static/view/pics/ufo.json";
-export function initView() {
+export function initView(callback) {
     // load resources
     PIXI.loader
         .add(ProtoJ)
-        .load(initLayer);
-
+        .load(()=>{
+            initLayer(callback);
+        });
 }
 
 // init layers
-function initLayer() {
+function initLayer(callback) {
     // init sprites
     initBackground();
     initObstacle();
@@ -89,6 +90,9 @@ function initLayer() {
     initEffect();
     initUI();
 
+    console.log("init view");
+    callback()
+    
     // change sprites' state and loop render the view
     // set state playing
     state = playing;

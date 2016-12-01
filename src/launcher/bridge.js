@@ -6,9 +6,9 @@
 
 import {startGame} from "../engine_init.js";
 import transmitted from "../socket/transmitted.js";
+import {initView as iview} from "../view/Nview.js"
 
 let _initSocket = (cb) => {console.log("socket inited.");cb(null, 1234);};
-// TODO: Add view init interface.
 let _initView = iview;
 let _socketDealGameInfo = () => console.log("socket Deal game info");
 let _initEngine = (userId, name) => {

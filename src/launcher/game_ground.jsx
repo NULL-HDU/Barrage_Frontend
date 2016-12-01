@@ -33,9 +33,10 @@ export default class GameGroundPage extends Component {
     if (screenfull.enabled) {
       screenfull.request();
     }
-    initView();
-    socketDealGameInfo();
-    initEngine(Data.UserId, Data.Name);
+      initView(() => {
+        socketDealGameInfo();
+        initEngine(Data.UserId, Data.Name);
+      });
   }
 
   render() {
