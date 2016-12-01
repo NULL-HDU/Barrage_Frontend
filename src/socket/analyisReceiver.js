@@ -3,10 +3,10 @@
 ** author:yummyLcj
 */
 
-import Bullet from "../model/bullet.js";
-import gamemodel from "../model/gamemodel"
-import dataview from "./dataview.js"
-import CommonConstant from "../constant.js"
+import Ball from "../model/ball.js";
+import gamemodel from "../model/gamemodel";
+import dataview from "./dataview.js";
+import * as CommonConstant from "../constant.js";
 
 let debug = false;
 
@@ -35,18 +35,13 @@ function writeTobackendControlData(message){
 			continue;
 		}
 		if( message[i].ballType==CommonConstant.BULLET ){
-			let userId = message[i].userId;
-			let roleId = message[i].roleId;
-			let attackDir = message[i].attackDir;
-			let newBullet = new Bullet(userId,roleId,attackDir);
-			for(let j in newBullet){
-				newBullet[j] = message[i][j];
-			}
-			bullet.push(newBullet);
+      let newBullet = new Ball();
+      Object.assign(newBullet, message[i]);
+      bullet.push(newBullet);
 			continue;
 		}
 		if( message[i].ballType==CommonConstant.BLOCK ){
-			block.push(message[i])
+      block.push(message[i]);
 			continue;
 		}
 		else{
@@ -75,10 +70,8 @@ export function receiveMessage(message){
 			break;
 		case 7 :
 		// case 12 :
-			let mes = dv.getDetail();
-			body = groundToMes(dv);
-			let socketCache = gamemodel.socketCache;
-			// socketCache.newBallInformation = body.newBallsInfoArray;
+      body = groundToMes(dv);
+      // socketCache.newBallInformation = body.newBallsInfoArray;
 			gamemodel.collisionCache = body.collisionSocketInfosArray;
 			// gamemodel.disappearCache = body.disappearInfoArray;
 			writeTobackendControlData(body.displacementInfoArray);
@@ -148,16 +141,15 @@ function fillConnectToMes(dv){
 // 	damage : 8,
 // 	role : 8,
 // 	special : 16,
-// 	speed : 8,
-// 	attackDir : 16,
-// 	alive : 8,
-// 	isKilled : 8,
+// 	radius : 16,
+// 	attackDir : 32,
+//  state: 8,
 // 	localtionCurrent : {
 // 		x : 16,
 // 		y : 16
 // 	}
 // }
-// 208+lengthOfName*8
+// 224+lengthOfName*8
 // */
 // //fill ball information to message
 function fillBallToMes(dv){
@@ -176,15 +168,11 @@ function fillBallToMes(dv){
 	ball.damage = dv.pop8();
 	ball.roleId = dv.pop8();
 	ball.special = dv.pop16();
-	ball.speed = dv.pop8();
+	ball.radius = dv.pop16();
 	ball.attackDir = dv.popFloat32();
 	//tmporaryly use this when ball.js isn't changed
-	let status = dv.pop8();
-	ball.alive = (status==0);
-	ball.isKilled = !ball.alive;
-	//use this when ball.js is changed
-	// ball.status = dv.pop8();
-	ball.locationCurrent = {};
+  ball.status = dv.pop8();
+  ball.locationCurrent = {};
 	ball.locationCurrent.x = dv.pop16();
 	ball.locationCurrent.y = dv.pop16();
 	return ball;

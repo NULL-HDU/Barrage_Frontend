@@ -33,7 +33,7 @@ function analyisUnnumber(obj){
 // 	damage : 8,
 // 	role : 8,
 // 	special : 16,
-// 	speed : 8,
+// 	radius : 16,
 // 	attackDir : 32,
 // 	state : 8
 // 	localtionCurrent : {
@@ -41,7 +41,7 @@ function analyisUnnumber(obj){
 // 		y : 16
 // 	}
 // }
-// 216+lengthOfName*8
+// 224+lengthOfName*8
 // */
 // //calculcate length of balls
 function calculcateBallsLength(balls){
@@ -50,7 +50,7 @@ function calculcateBallsLength(balls){
 	let totalLength = 0;
 	for(let i=0;i<length;i++){
 		let nameLength = balls[i].name.length;
-		totalLength = totalLength+216+nameLength*8;
+    totalLength = totalLength+224+nameLength*8;
 	}
 	return totalLength;
 }
@@ -85,7 +85,7 @@ function fillDv(message){
 }
 
 function fillDisconnectForDv(dv,body){
-	let uerId = Number.parseInt(body.userId);
+  let userId = Number.parseInt(body.userId);
 	// let roomNumber = body.roomNumber;
 	let roomNumber = 1;
 	dv.push32(userId);
@@ -119,14 +119,11 @@ function fillBallArrayToDv(dv,content){
 		dv.push8( content[i].damage );
 		dv.push8( content[i].roleId );
 		dv.push16( content[i].special );
-		dv.push8( content[i].speed );
+    dv.push16(content[i].radius||15 );
 		dv.pushFloat32( content[i].attackDir );
 		//temporaryly use this until ball.js is changed!
-		let alive = content[i].alive;
-		let status = !content[i].alive;
-		dv.push8( status );
-		//use this when ball.js is changed
-		// dv.push8(content[i].status);
+    //use this when ball.js is changed
+    dv.push8(content[i].status);
 		dv.push16( content[i].locationCurrent.x );
 		dv.push16( content[i].locationCurrent.y );
 	}
@@ -144,8 +141,8 @@ function fillCollisionArrayToDv(dv,content){
 		dv.push8( content[i].damageValue[0] );
 		dv.push8(content[i].damageValue[1] );
 		//temporary use this before damageInfo isn't changed
-		dv.push8( content[i].isAlive[0] );
-		dv.push8( content[i].isAlive[1] );
+    dv.push8( content[i].state[0] );
+    dv.push8( content[i].state[1] );
 		//use this when damageInfo is changed
 		//dv.push8(cotnent[i].state[0]);
 		//dv.push8(cotnent[i].state[1]);
@@ -260,7 +257,6 @@ export function loginAnalyis(roomNumber){
 
 export function playgroundInfoAnalyis(){
 	let socketCache = gamemodel.socketCache;
-
 	let newBallsInfoArray = socketCache.newBallInformation;
 	let lengthOfNewBallsInfos = newBallsInfoArray.length;
 
