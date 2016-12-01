@@ -43,16 +43,16 @@ export default class transmitted{
 	//send login message
 	connect(roomNumber,callback){
 		let message = sender.loginAnalyis(roomNumber);
-		if( this.ws.sendMessage(message.getDv()) ){
-			console.log(receiver.state)
-			if(receiver.state==2){
-				// if(debug)
-					console.log("load send succeed!");
-				callback(null,true);				
-			}else{
-				console.log("load send failed...reloading...");
-				setTimeout(()=>this.connect(roomNumber,callback),100);
-			}
+		if(receiver.state==1){
+			this.ws.sendMessage( message.getDv() );
+		}
+		if(receiver.state==2){
+			if(debug)
+				console.log("load send succeed!");
+			callback(null,true);				
+		}else{
+			console.log("load send failed...reloading...");
+			setTimeout(()=>this.connect(roomNumber,callback),100);
 		}
 	}
 
@@ -65,8 +65,8 @@ export default class transmitted{
 				console.log("playgronud send!");
 			let message = sender.playgroundInfoAnalyis();
 			if( this.ws.sendMessage(message.getDv()) ){
-				// if(debug)
-					// console.log("playgronud send succeed!");
+				if(debug)
+					console.log("playgronud send succeed!");
 			}else{
 				  console.log("playgronud send failed...");
 			}

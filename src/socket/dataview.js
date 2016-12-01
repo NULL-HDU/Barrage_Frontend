@@ -49,16 +49,16 @@ export default class dataview{
 
 	isEnough(needLength){
 		if( (this.dvLength-this.head)<needLength ){
-      return false;
+      		return false;
 		}
 		else{
 			this.head +=needLength;
 		}
 		if(debug){
-			// console.log("need length : ");
-			// console.log(needLength);
-			// console.log("dvLength : ");
-			// console.log(this.dvLength);
+			console.log("need length : ");
+			console.log(needLength);
+			console.log("dvLength : ");
+			console.log(this.dvLength);
 		}
 		
 	}
