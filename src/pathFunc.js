@@ -85,3 +85,6 @@ export const crawlPath = (bullet, direction=1,maxCrawlS=150) => {
     bullet.locationCurrent.add(sv);
   };
 };
+
+export const testPath = circlePath;
+
