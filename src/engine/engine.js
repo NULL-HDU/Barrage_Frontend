@@ -73,18 +73,23 @@ let collisionDetection = () => {
             let distance = PVector.dist(a, b);
             if (distance <= collidors[j].radius + selfBullets[i].radius) {
 
+
                 //碰撞处理和伤害计算
                 if (collidors[j].ballType === BULLET) {
                     collidors[j].state = DEAD;
-                    console.log("enemy bullet dead detect");
+                    //console.log("enemy bullet dead detect");
+                }
+
+                if (selfBullets[i].ballType === AIRPLANE){
+                    selfBullets[i].hp -= collidors[j].damage;
                 }
 
                 if (selfBullets[i].ballType === BULLET) {
                     selfBullets[i].state = DEAD;
-                    console.log("self bullet dead detect");
+                    //console.log("self bullet dead detect");
                 }
 
-                console.log("damage!!!");
+                //console.log("damage!!!");
 
                 //不管碰撞的是子弹和子弹，还是子弹和飞机都需要加入碰撞信息中
                 //暂未处理飞机撞击飞机的情况
