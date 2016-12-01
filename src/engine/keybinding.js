@@ -1,5 +1,6 @@
 import global from "../global";
 import {KEY} from "../constant.js";
+import screenfull from "./screenfull.js"
 import gamemodel from "../model/gamemodel";
 import {
   disableSkillEngine,
@@ -130,7 +131,8 @@ export const changeKeyEventBindings = () => {
         down = keyboard(KEY.S),
         skill1 = keyboard(KEY.E),
         shift = shiftLikeEvent("shift"),
-        space = keyboard(KEY.SPACE);
+        space = keyboard(KEY.SPACE),
+        f11 = keyboard(KEY.F11);
 
 
     shift.press = function() {
@@ -177,6 +179,19 @@ export const changeKeyEventBindings = () => {
         if( test==1 )
             console.log('space release');
         disableSkillEngine(global.NORMAL_SKILL);
+   };
+
+    f11.press = function() {
+        if( test==1 )
+            console.log("f11 press");
+    };
+
+    f11.release = function() {
+        if( test==1 )
+            console.log("f11 release");
+        if (screenfull.enabled) {
+            screenfull.request();
+        }
     };
 
     up.press = function() {
