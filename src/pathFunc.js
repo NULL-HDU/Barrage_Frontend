@@ -83,4 +83,4 @@ const crawlPath = (bullet) => {
   };
 };
 
-export const testPath = crawlPath;
+export const testPath = circlePath;
