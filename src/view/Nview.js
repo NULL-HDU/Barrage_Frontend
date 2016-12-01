@@ -65,7 +65,6 @@ let universe = new Container(),
 // AirplaneLayer
 let airplane = new Container();
 let ap_info = gamemodel.data.engineControlData;
-console.log(ap_info.airPlane);
 
 //////// init functions
 let ProtoJ = "/static/view/pics/ufo.json";
