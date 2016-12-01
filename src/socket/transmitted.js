@@ -41,10 +41,11 @@ export default class transmitted{
 	}
 
 	//send login message
-	connect(roomNumber,callback){
+	connect(roomNumber,callback,times=0){
 		let message = sender.loginAnalyis(roomNumber);
 		if(receiver.state==1){
-			this.ws.sendMessage( message.getDv() );
+			if(times==0)
+				this.ws.sendMessage( message.getDv() );
 		}
 		if(receiver.state==2){
 			if(debug)
@@ -52,7 +53,7 @@ export default class transmitted{
 			callback(null,true);				
 		}else{
 			console.log("load send failed...reloading...");
-			setTimeout(()=>this.connect(roomNumber,callback),100);
+			setTimeout(()=>this.connect(roomNumber,callback,1),100);
 		}
 	}
 

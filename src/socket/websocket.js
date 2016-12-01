@@ -6,7 +6,7 @@
 
 import * as receiver from "./analyisReceiver.js"
 
-let debug = false;
+let debug = true;
 
 //action for websocket
 export default class socket {

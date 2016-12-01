@@ -54,11 +54,17 @@ function arrayToJson(arr,...key){
 
 function writeTobackendControlData(message){
 	message = arrayToJson(message,"userId","id");
+	
+	console.log(message);
 	if(debug){
 		console.log("write message : ");
 		console.log(message);	
 	}
 	let backend = gamemodel.data.backendControlData;
+
+	console.log("back bre")
+	console.log(backend);
+
 	let airPlane = backend.airPlane;
 	let bullet = backend.bullet;
 	// let block = backend.block;
@@ -79,6 +85,9 @@ function writeTobackendControlData(message){
 			delete(bullet[i]);
 		}
 	}
+
+	console.log("back : ");
+	console.log(backend);
 }
 
 function writeNewBallInf(newBall){
@@ -112,7 +121,9 @@ export function receiveMessage(message){
 			break;
 		case 7 :
 		// case 12 :
-      body = groundToMes(dv);
+      		body = groundToMes(dv);
+      		console.log("ground : ");
+      		console.log(body);
 			gamemodel.collisionCache = body.collisionSocketInfosArray;
 			// gamemodel.disappearCache = body.disappearInfoArray;
 			writeNewBallInf(body.newBallsInfoArray);
