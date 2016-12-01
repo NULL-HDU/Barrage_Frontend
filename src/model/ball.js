@@ -3,8 +3,6 @@
  * Maintainer: Arthury (ArthurYV)
  * Email: arthury.me@gmail.com
  */
-import global from "../global.js";
-import PVector from "./Point.js";
 import {ALIVE} from "../constant.js";
 
 export default class Ball {

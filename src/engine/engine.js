@@ -52,11 +52,7 @@ let collisionDetection = () => {
     */
     let airPlane = data.airPlane;
     let selfBullets = data.bullet.concat(airPlane);
-    //console.log("selfBullets");
-    //console.log(selfBullets);
     let enemyBullets = backendData.bullet.concat(backendData.airPlane);
-    //console.log("enemyBullets");
-    //console.log(enemyBullets);
     let bulletsBank = selfBullets.concat(enemyBullets);
     let i, j;
     quad.clear();
@@ -75,14 +71,6 @@ let collisionDetection = () => {
             let a = selfBullets[i].locationCurrent;
             let b = collidors[j].locationCurrent;
             let distance = PVector.dist(a, b);
-            console.log("respect distance is ");
-            console.log(collidors[j].radius + selfBullets[i].radius);
-            console.log("distance is ");
-            console.log(distance);
-            console.log("collidors camp is ");
-            console.log(collidors[j].camp);
-            console.log("selfBullets camp");
-            console.log(selfBullets[i].camp);
             if (distance <= collidors[j].radius + selfBullets[i].radius) {
 
                 //碰撞处理和伤害计算

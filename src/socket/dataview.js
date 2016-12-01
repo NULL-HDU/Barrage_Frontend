@@ -49,8 +49,7 @@ export default class dataview{
 
 	isEnough(needLength){
 		if( (this.dvLength-this.head)<needLength ){
-			console.log("DataView isn't lont enough to pop!!!");
-			return false;
+      return false;
 		}
 		else{
 			this.head +=needLength;
@@ -96,16 +95,10 @@ export default class dataview{
 
 	isLegal(needLength,content){
 		if( this.dvLength-this.head<needLength ){
-			console.log("DataView isn't long enough to push!!!")
-			console.log("your want to push ");
-			console.log(content);
-			return false;
+      return false;
 		}
 		if( typeof(content)!="number" && typeof(content)!="undefined" &&typeof(content)!="boolean" ){
-			console.log("type of content isn't legal!!");
-			console.log("your type is "+typeof(content));
-			console.log(content);
-			return false;	
+      return false;
 		}
 		// console.log("daHas : "+this.head);
 		this.head +=needLength;

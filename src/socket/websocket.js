@@ -11,11 +11,10 @@ let debug = false;
 //action for websocket
 export default class socket {
 	
-	// constructor(wsUrl="ws://192.168.43.82:1234/echo",rollingTime=11){
-	constructor(wsUrl="ws://139.199.174.225:2333/test",rollingTime=11){
+  // constructor(wsUrl="ws://139.199.174.225:2333/test"){
+  constructor(wsUrl="ws://localhost:2334/test"){
 		this.wsUrl = wsUrl;
-		this.rollingTime=rollingTime;
-		this.ws = null;
+    this.ws = null;
 			}
 
 	setUrl(url){
@@ -23,7 +22,7 @@ export default class socket {
 	}
 
 	getUrl(){
-		return wsUrl;
+    return this.wsUrl;
 	}
 
 	init(){
