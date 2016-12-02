@@ -9,6 +9,9 @@ import * as PIXI from "./pixi.js";
 import gamemodel from "../model/gamemodel.js";
 
 //////// global variables
+// fps
+let FPS = 60,
+    stot = 1000/ FPS;
 // cut view
 let HEIGHT_CUT = 800, WIDTH_CUT = 1280;
 // init standard size 
@@ -26,7 +29,10 @@ let renderer = PIXI.autoDetectRenderer(
     WIDTH_LOCAL, 
     HEIGHT_LOCAL, 
     {
-        // backgroundColor: 0x000000,
+        backgroundColor: 0x02233A,
+        // autoResize: true,
+        // resolution: 2
+        // roundPixels: true
         // clearBeforeRender: false,
         // preserveDrawingBuffer: true
     }
@@ -99,7 +105,7 @@ function initLayer(callback) {
     loopRender();
 }
 
-function drawCrossLine(xp, yp) {
+let  drawCrossLine = (xp, yp) => {
     let Graphics = new PIXI.Graphics;
     Graphics.lineStyle(1, 0xffffff, 0.1);
     let ni = rect_yn + 2, nj = rect_xn + 2;
@@ -159,13 +165,15 @@ function initUI() {
 
 //////// loop render functions
 function loopRender() {
-    requestAnimationFrame(loopRender);
+    // requestAnimationFrame(loopRender);
 
     resizeStandard();
 
     state();
 
     renderer.render(Stage);
+
+    setTimeout(loopRender, stot);
 }
 
 // resize standard and canvas's size
