@@ -33,6 +33,10 @@ function makeItem(item,depth,...key){
 //convert array to json and serveral item from array as keys
 //function arrayToJson(array,"first key","second key",...)
 function arrayToJson(arr,...key){
+	if( /\[(\{.*\})*\]/.test( JSON.stringify(arr) ) )
+		console.error(arr+"is illegal!!");
+		return undefined;
+	}
 	let depth = key.length;
 	let json = {};
 	for(var i in arr){
@@ -109,6 +113,7 @@ export function receiveMessage(message){
 		case 7 :
 		// case 12 :
       		body = groundToMes(dv);
+      		console.log(body);
 			gamemodel.collisionCache = body.collisionSocketInfosArray;
 			// gamemodel.disappearCache = body.disappearInfoArray;
 			writeTobackendControlData(body.displacementInfoArray);
