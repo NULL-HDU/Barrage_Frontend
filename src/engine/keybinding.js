@@ -129,7 +129,8 @@ export const changeKeyEventBindings = () => {
         up = keyboard(KEY.W),
         right = keyboard(KEY.D),
         down = keyboard(KEY.S),
-        skill1 = keyboard(KEY.E),
+        defend_skill = keyboard(KEY.E),
+        skill1 = keyboard(KEY.Q),
         shift = shiftLikeEvent("shift"),
         space = keyboard(KEY.SPACE),
         f11 = keyboard(KEY.F11);
@@ -281,10 +282,10 @@ export const changeKeyEventBindings = () => {
     };
 
     skill1.press = function() {
-      enableSkillEngine(global.E_SKILL);
+      enableSkillEngine(global.Q_SKILL);
     };
 
     skill1.release = function() {
-      disableSkillEngine(global.E_SKILL);
+      disableSkillEngine(global.Q_SKILL);
     }
 };

@@ -1,10 +1,12 @@
 export default {
     // skill
     NORMAL_SKILL: 0,
-    E_SKILL: 1,
+    E_DEFEND_SKILL: -1,
+    Q_SKILL: 1,
 
     NORMAL_SKILL_CD: 500,
     E_SKILL_CD: 1000,
+    Q_SKILL_CD: 1000,
     SKILL_CHECk_LOOP_INTERVAL: 50,
 
     // quadtree

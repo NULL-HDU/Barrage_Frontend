@@ -14,44 +14,86 @@ export let state = 0;
 export let userId = undefined;
 export let roomNumber = undefined;
 
-//update airplane
-function updateAirplane(airplane,obj){
-	for(let i in obj){
-		airplane[i] = obj[i]
+//return childItem
+function makeItem(item,depth,...key){
+	for(let i in key){
+		if( item[key[i]]==undefined ){
+			throw "item:" +item+ "didn't has "+key[i];
+		}
 	}
+	let json = {};
+	if(depth==0)
+		return item;
+	else{
+		json[ item[ key[ (key.length-depth)] ] ] = makeItem(item,--depth,...key);
+	}
+	return json;
+}
+
+//convert array to json and serveral item from array as keys
+//function arrayToJson(array,"first key","second key",...)
+function arrayToJson(arr,...key){
+	let depth = key.length;
+	let json = {};
+	for(var i in arr){
+		if( depth==0 )
+			json[i] = arr[i];
+		else{
+			let d = depth;
+			try {
+				json[ arr[i][key[0]] ] = makeItem(arr[i],--d,...key) 
+				}
+			catch (e) {
+				console.error(e);
+				break;
+			}
+		}
+	}
+	return json;
 }
 
 function writeTobackendControlData(message){
+	message = arrayToJson(message,"userId","id");
 	if(debug){
 		console.log("write message : ");
 		console.log(message);	
 	}
-	let airPlane = [];
-	let bullet = [];
-	let block = [];
-	for(let i in message){
-		if( message[i].ballType==CommonConstant.AIRPLANE ){
-			airPlane.push(message[i]);
-			continue;
-		}
-		if( message[i].ballType==CommonConstant.BULLET ){
-      let newBullet = new Ball();
-      Object.assign(newBullet, message[i]);
-      bullet.push(newBullet);
-			continue;
-		}
-		if( message[i].ballType==CommonConstant.BLOCK ){
-      block.push(message[i]);
-			continue;
-		}
-		else{
-			console.log("undefined type!!");
+	let backend = gamemodel.data.backendControlData;
+	let airPlane = backend.airPlane;
+	let bullet = backend.bullet;
+	// let block = backend.block;
+	for(let i in airPlane){
+		let userId = airPlane[i].userId;
+		if( message[userId]!=undefined && message[userId][0]!=undefined ){
+			airPlane[i].assign( message[userId][0] );
+		}else{
+			delete(airPlane[i]);
 		}
 	}
-	let backendControlData = gamemodel.data.backendControlData;
-	backendControlData.airPlane = airPlane;
-	backendControlData.bullet = bullet;
-	// backendControlData.block = block;
+	for(let i in bullet){
+		let userId = bullet[i].userId;
+		let id = bullet[i].id;
+		if( message[userId]!=undefined && message[userId][id]!=undefined ){
+			bullet[i].assign( message[userId][0] );
+		}else{
+			delete(bullet[i]);
+		}
+	}
+}
+
+function writeNewBallInf(newBall){
+	let backend = gamemodel.data.backendControlData;
+	for(let i in newBall){
+		if( newBall[i].userId==0 ){
+			backend.food.push(newBall[i]);
+		}else{
+			if(newBall[i].id==0){
+				backend.airPlane.push(newBall[i]);
+			}else{
+				backend.bullet.push(newBall[i]);
+			}
+		}
+	}
 }
 
 //analyis receiving massage
@@ -71,9 +113,9 @@ export function receiveMessage(message){
 		case 7 :
 		// case 12 :
       body = groundToMes(dv);
-      // socketCache.newBallInformation = body.newBallsInfoArray;
 			gamemodel.collisionCache = body.collisionSocketInfosArray;
 			// gamemodel.disappearCache = body.disappearInfoArray;
+			writeNewBallInf(body.newBallsInfoArray);
 			writeTobackendControlData(body.displacementInfoArray);
 			break;
 		case 9:
