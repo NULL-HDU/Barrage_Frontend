@@ -151,6 +151,8 @@ function fillCollisionArrayToDv(dv,content){
 
 // //fill background message body to DataView
 function fillGroundForDv(dv,body){
+	console.log("send ground : ");
+	console.log(body);
 	let length = body.newBallsInfos.length;
 	let content = body.newBallsInfos.content;
 	if(debug){
