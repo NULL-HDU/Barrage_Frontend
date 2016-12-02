@@ -13,6 +13,7 @@ let debug = false;
 export let state = 0;
 export let userId = undefined;
 export let roomNumber = undefined;
+let times = 0;
 
 //return childItem
 function makeItem(item,depth,...key){
@@ -22,8 +23,9 @@ function makeItem(item,depth,...key){
 		}
 	}
 	let json = {};
-	if(depth==0)
+	if(depth==0){
 		return item;
+	}
 	else{
 		json[ item[ key[ (key.length-depth)] ] ] = makeItem(item,--depth,...key);
 	}
@@ -33,8 +35,9 @@ function makeItem(item,depth,...key){
 //convert array to json and serveral item from array as keys
 //function arrayToJson(array,"first key","second key",...)
 function arrayToJson(arr,...key){
-	if( /\[(\{.*\})*\]/.test( JSON.stringify(arr) ) )
-		console.error(arr+"is illegal!!");
+	if( /\[(\.*:{.*\})*\]/.test( JSON.stringify(arr) ) ){
+		console.error(arr)
+		console.error("is illegal!!");
 		return undefined;
 	}
 	let depth = key.length;
@@ -57,6 +60,11 @@ function arrayToJson(arr,...key){
 }
 
 function writeTobackendControlData(message){
+	if(times==0){
+		times++;
+		writeNewBallInf(message);
+		return;
+	}
 	message = arrayToJson(message,"userId","id");
 	let backend = gamemodel.data.backendControlData;
 	let airPlane = backend.airPlane;
@@ -113,7 +121,6 @@ export function receiveMessage(message){
 		case 7 :
 		// case 12 :
       		body = groundToMes(dv);
-      		console.log(body);
 			gamemodel.collisionCache = body.collisionSocketInfosArray;
 			// gamemodel.disappearCache = body.disappearInfoArray;
 			writeTobackendControlData(body.displacementInfoArray);

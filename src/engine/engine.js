@@ -8,6 +8,7 @@ import global from "../global";
 import {
   DEAD,
   DISAPPEAR,
+  AIRPLANE,
   BULLET
 } from "../constant.js";
 import gamemodel from "../model/gamemodel";
