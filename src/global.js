@@ -5,7 +5,7 @@ export default {
     Q_SKILL: 1,
 
     NORMAL_SKILL_CD: 500,
-    E_SKILL_CD: 1000,
+    E_SKILL_CD: 1000 * 8,
     Q_SKILL_CD: 1000,
     SKILL_CHECk_LOOP_INTERVAL: 50,
 

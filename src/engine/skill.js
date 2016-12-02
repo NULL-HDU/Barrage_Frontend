@@ -20,7 +20,9 @@ let skillFlags = {
 // every skillFunc should include a timer and a flag to implement skill cold.
 
 let eSkillFunc = () => {
-    
+    if (skillFlags.eSkillCDFlag === 1) return;
+
+    skillFlags.eSkillCDFlag = 1;
 }
 
 let qSkillFunc = () => {
