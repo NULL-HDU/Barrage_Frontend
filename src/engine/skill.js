@@ -24,7 +24,11 @@ let eSkillFunc = () => {
 
     skillFlags.eSkillCDFlag = 1;
 
-//    gamemodel.data.engineControlData.airPlane.defense = 0.5;
+    gamemodel.data.engineControlData.airPlane.defense = 0.5;
+
+    setTimeout(() => {
+        gamemodel.data.engineControlData.airPlane.defense = 1;
+    }, global.E_SKILL_DURATION);
 
     setTimeout(() => {
         skillFlags.eSkillCDFlag = 0;

@@ -17,7 +17,6 @@ export default class Bullet extends Ball {
         this.camp = this.userId;
         this.userId = father.userId;
         this.id = Count();
-
         this.father = father;
         this.attackDir = angle;
         this.roleId = roleId;
