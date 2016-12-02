@@ -26,7 +26,8 @@ export default class Bullet extends Ball {
         this.srclocation = srclocation;
         this.locationCurrent = PVector.mult(this.srclocation, 1);
 
-        this.speed *= global.GAME_LOOP_INTERVAL / 1000;
+       this.speed *= global.GAME_LOOP_INTERVAL / 1000;
+      gamemodel.socketCache.newBallInformation.push(this);
     }
 
     pathCalculate() {

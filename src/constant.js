@@ -23,9 +23,11 @@ export const KEY = {
   BIGBOOM: 81,
   SPACE: 32,
   SHIFT: 16,
+  F11: 122,
   W: 87,
   A: 65,
   S: 83,
   D: 68,
   E: 69,
+  Q: 81,
 };

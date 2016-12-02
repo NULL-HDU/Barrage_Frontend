@@ -14,14 +14,19 @@ let skillFlags = {
     currentSkillType: null, // which skill user current use.
     normalSkillCDFlag: 0,// 0 for not in cd, 1 for in cd;
     eSkillCDFlag: 0,// 0 for not in cd, 1 for in cd;
+    qSkillCDFlag: 0,
 };
 // skill: shoot normal bullet
 // every skillFunc should include a timer and a flag to implement skill cold.
 
 let eSkillFunc = () => {
-    if (skillFlags.eSkillCDFlag === 1) return;
+    
+}
 
-    skillFlags.eSkillCDFlag = 1;
+let qSkillFunc = () => {
+    if (skillFlags.qSkillCDFlag === 1) return;
+
+    skillFlags.qSkillCDFlag = 1;
     let airPlane = data.airPlane;
     let a_angle = airPlane.attackDir;
     let to_circle_center = new PVector( Math.cos(a_angle) * 50, Math.sin(a_angle) * 50);
@@ -60,8 +65,8 @@ let eSkillFunc = () => {
     }
 
     setTimeout(() => {
-       skillFlags.eSkillCDFlag = 0;
-    }, global.E_SKILL_CD);
+       skillFlags.qSkillCDFlag = 0;
+    }, global.Q_SKILL_CD);
 };
 
 // skill: shoot normal bullet
@@ -105,7 +110,10 @@ let checkToCallSkillFuncThenLoop = (skillTpye) => {
         case global.NORMAL_SKILL:
             normalSkillFunc();
             break;
-        case global.E_SKILL:
+        case global.Q_SKILL:
+            qSkillFunc();
+            break;
+        case global.E_DEFEND_SKILL:
             eSkillFunc();
             break;
         default:
