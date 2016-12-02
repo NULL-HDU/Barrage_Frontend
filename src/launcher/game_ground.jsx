@@ -7,8 +7,12 @@
 import React, { Component } from "react";
 
 import Data from "./launcher_data.js";
-import {initEngine, initView, socketDealGameInfo} from "./bridge.js";
-import screenfull from "./screenfull.js";
+import {
+  initEngine,
+  initView,
+  initGameModel,
+  socketDealGameInfo
+} from "./bridge.js";
 
 export default class GameGroundPage extends Component {
 
@@ -27,12 +31,8 @@ export default class GameGroundPage extends Component {
       return;
     }
 
+    initGameModel();
 
-    // full screen
-    // TODO: press F11 to full screen
-    if (screenfull.enabled) {
-      screenfull.request();
-    }
     initView();
     socketDealGameInfo();
     initEngine(Data.UserId, Data.Name);
