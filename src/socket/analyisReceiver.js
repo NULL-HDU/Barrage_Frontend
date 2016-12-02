@@ -71,7 +71,7 @@ function writeTobackendControlData(message){
 	for(let i in airPlane){
 		let userId = airPlane[i].userId;
 		if( message[userId]!=undefined && message[userId][0]!=undefined ){
-			airPlane[i].assign( message[userId][0] );
+			Object.assign(airPlane[i],message[userId][0]);
 		}else{
 			delete(airPlane[i]);
 		}
@@ -80,7 +80,7 @@ function writeTobackendControlData(message){
 		let userId = bullet[i].userId;
 		let id = bullet[i].id;
 		if( message[userId]!=undefined && message[userId][id]!=undefined ){
-			bullet[i].assign( message[userId][0] );
+			Object.assign(bullet[i],message[userId][id]);
 		}else{
 			delete(bullet[i]);
 		}

@@ -6,14 +6,13 @@
 
 import * as receiver from "./analyisReceiver.js"
 
-let debug = true;
+let debug = false;
 
 //action for websocket
 export default class socket {
 	
   	constructor(wsUrl="ws://139.199.174.225:2333/test"){
 //  	constructor(wsUrl="ws://192.168.1.100:2334/test"){
-
 		this.wsUrl = wsUrl;
     	this.ws = null;
 	}

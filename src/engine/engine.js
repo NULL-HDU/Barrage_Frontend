@@ -81,7 +81,7 @@ let collisionDetection = () => {
                 }
 
                 if (selfBullets[i].ballType === AIRPLANE){
-                    selfBullets[i].hp -= collidors[j].damage;
+                    selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
                 }
 
                 if (selfBullets[i].ballType === BULLET) {
