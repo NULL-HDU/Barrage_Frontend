@@ -15,57 +15,35 @@ export let userId = undefined;
 export let roomNumber = undefined;
 let times = 0;
 
-//return childItem
-function makeItem(item,depth,...key){
-	for(let i in key){
-		if( item[key[i]]==undefined ){
-			throw "item:" +item+ "didn't has "+key[i];
-		}
-	}
-	let json = {};
-	if(depth==0){
-		return item;
-	}
-	else{
-		json[ item[ key[ (key.length-depth)] ] ] = makeItem(item,--depth,...key);
-	}
-	return json;
-}
-
 //convert array to json and serveral item from array as keys
 //function arrayToJson(array,"first key","second key",...)
-function arrayToJson(arr,...key){
+function arrayToJson(arr){
 	if( /\[(\.*:{.*\})*\]/.test( JSON.stringify(arr) ) ){
 		console.error(arr)
 		console.error("is illegal!!");
 		return undefined;
 	}
-	let depth = key.length;
 	let json = {};
-	for(var i in arr){
-		if( depth==0 )
-			json[i] = arr[i];
-		else{
-			let d = depth;
-			try {
-				json[ arr[i][key[0]] ] = makeItem(arr[i],--d,...key) 
-				}
-			catch (e) {
-				console.error(e);
-				break;
-			}
-		}
+	for(let i in arr){
+		let userId = arr[i]["userId"];
+		let id = arr[i]["id"];
+		if( json[userId]===undefined )
+			json[userId] = {};
+		json[userId][id] = arr[i];
+
 	}
 	return json;
 }
 
+let count=0;
+
 function writeTobackendControlData(message){
-	if(times==0){
+	if(times===0){
 		times++;
 		writeNewBallInf(message);
 		return;
 	}
-	message = arrayToJson(message,"userId","id");
+	message = arrayToJson(message);
 	let backend = gamemodel.data.backendControlData;
 	let airPlane = backend.airPlane;
 	let bullet = backend.bullet;
@@ -75,7 +53,7 @@ function writeTobackendControlData(message){
 		if( message[userId]!=undefined && message[userId][0]!=undefined ){
 			Object.assign(airPlane[i],message[userId][0]);
 		}else{
-			delete(airPlane[i]);
+			airPlane.splice(i,1);
 		}
 	}
 	for(let i in bullet){
@@ -84,7 +62,7 @@ function writeTobackendControlData(message){
 		if( message[userId]!=undefined && message[userId][id]!=undefined ){
 			Object.assign(bullet[i],message[userId][id]);
 		}else{
-			delete(bullet[i]);
+			bullet.splice(i,1);
 		}
 	}
 }
@@ -283,12 +261,12 @@ function getBallsInfoArray(dv,length){
 	return newBallsInfoArray;
 }
 
-function getDisplacementinfoToArray(dv,length){
-	let displacementInfoArray = [];
+function getDisappearInfoArray(dv,length){
+	let disappearInfoArray = [];
 	while(length--){
-		displacementInfoArray.push(dv.pop16());
+		disappearInfoArray.push(dv.pop16());
 	}
-	return displacementInfoArray;
+	return disappearInfoArray;
 }
 
 // //fill playground information to message
@@ -300,7 +278,7 @@ function groundToMes(dv){
 	let lengthOfCollisionSocketInfos = dv.pop32();
 	let collisionSocketInfoArray = getCollisionInfoToArray(dv,lengthOfCollisionSocketInfos);
 	let lengthOfDisappearInfos = dv.pop32();
-	let disappearInfoArray = getDisplacementinfoToArray(dv,lengthOfDisappearInfos);
+	let disappearInfoArray = getDisappearInfoArray(dv,lengthOfDisappearInfos);
 	return {
 		lengthOfNewBallsInfos : lengthOfNewBallsInfos,
 		newBallsInfoArray : newBallsInfoArray,
