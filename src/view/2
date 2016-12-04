@@ -23,8 +23,6 @@ let HEIGHT_LOCAL = window.innerHeight,
     Y_RATIO = HEIGHT_LOCAL / HEIGHT_CUT,
     // remember last size
     RULER = [WIDTH_LOCAL, HEIGHT_LOCAL, 0, 0];
-// size of airplane and enemy
-let SIZE_PLANE = 120;
 
 // init renderer
 let renderer = PIXI.autoDetectRenderer(
@@ -60,8 +58,7 @@ let Stage = new Container(),
     UILayer = new Container();
 
 // sprites
-let Sprite = PIXI.Sprite,
-    resources = PIXI.loader.resources;
+let Sprite = PIXI.Sprite;
 // BackgroundLayer
 let universe = new Container(),
     rect_l = 40,
@@ -128,10 +125,10 @@ let  drawCrossLine = (xp, yp) => {
     universe.y = yp;
 };
 function initBackground() {
-    drawCrossLine(-rect_xl, -rect_yl);
-
-    BackgroundLayer.addChild(universe);
-    Stage.addChild(BackgroundLayer);
+    // drawCrossLine(-rect_xl, -rect_yl);
+    //
+    // BackgroundLayer.addChild(universe);
+    // Stage.addChild(BackgroundLayer);
 }
 
 function initObstacle() {
@@ -146,29 +143,26 @@ function initEnemy() {
     Stage.addChild(EnemyLayer);
 }
 
-let createSP = (url, size) => {
-    let sprite = new Sprite(resources[url].texture);
-    sprite.width = size * X_RATIO;
-    sprite.height = size * Y_RATIO;
-    sprite.anchor.set(0.5, 0.5);
-    return sprite;
-}
-let putSP = (sp, x, y, r) => {
+let adjustSP = (sp, sz, x, y) => {
+    sp.width = sz * X_RATIO;
+    sp.height = sz * Y_RATIO;
+    
+    sp.anchor.set(0.5, 0.5);
+    sp.rotation = 0;
+
     sp.x = x;
-    sp.y= y;
-    sp.rotation = r;
-}
+    sp.y = y;
+};
 function initAirplane() {
-    ap_body = createSP(img_ap_body, SIZE_PLANE);
-    ap_arrow = createSP(img_ap_arrow, 160);
+    ap_body =  Sprite.fromImage(img_ap_body);
+    ap_arrow = Sprite.fromImage(img_ap_arrow);
 
-    putSP(ap_body, X_CENTER, Y_CENTER, 0);
-    putSP(ap_arrow, X_CENTER, Y_CENTER, 0);
-
+    // adjustSP(ap_body, 120, X_CENTER, Y_CENTER);
+    // adjustSP(ap_arrow, 120, X_CENTER, Y_CENTER);
+    //
     airplane.addChild(ap_body);
     airplane.addChild(ap_arrow);
 
-    AirplaneLayer.addChild(airplane);
     Stage.addChild(AirplaneLayer);
 }
 
@@ -244,20 +238,20 @@ function playing() {
 }
 
 function rstBackground() {
-    if (RULER[2] === 1 || RULER[3] === 1) {
-        universe.removeChildren();
-        drawCrossLine(universe.x * X_RATIO, universe.y * Y_RATIO);
-    }
-
-    universe.x += 81 * X_RATIO;
-    universe.y -= 1 * Y_RATIO;
-
-    if (universe.x < -2 * rect_xl || universe.x > 0) {
-        universe.x = -rect_xl + (universe.x % rect_xl);
-    }
-    if (universe.y < -2 * rect_yl || universe.y > 0) {
-        universe.y = -rect_yl + (universe.y % rect_yl);
-    }
+    // if (RULER[2] === 1 || RULER[3] === 1) {
+    //     universe.removeChildren();
+    //     drawCrossLine(universe.x * X_RATIO, universe.y * Y_RATIO);
+    // }
+    //
+    // universe.x += 81 * X_RATIO;
+    // universe.y -= 1 * Y_RATIO;
+    //
+    // if (universe.x < -2 * rect_xl || universe.x > 0) {
+    //     universe.x = -rect_xl + (universe.x % rect_xl);
+    // }
+    // if (universe.y < -2 * rect_yl || universe.y > 0) {
+    //     universe.y = -rect_yl + (universe.y % rect_yl);
+    // }
 }
 
 function rstObstacle() {
