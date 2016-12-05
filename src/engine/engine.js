@@ -76,10 +76,13 @@ let collisionDetection = () => {
 
 
                 //碰撞处理和伤害计算
-//                if (collidors[j].ballType === BULLET) {
-//                    collidors[j].state = DEAD;
-                    //console.log("enemy bullet dead detect");
-//                }
+                if (collidors[j].ballType === BULLET) {
+                    collidors[j].hp -= selfBullets[i].damage;
+                    if(collidors[j].hp === 0){
+                        collidors[j].state = DEAD;
+                        //console.log("enemy bullet dead detect");
+                    }
+                }
 
                 if (selfBullets[i].ballType === AIRPLANE){
                     selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
