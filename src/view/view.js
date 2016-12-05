@@ -1,4 +1,4 @@
-import PIXI from "../view/pixi.js";
+import * as PIXI from "../view/pixi.js";
 import gamemodel from "../model/gamemodel.js";
 
 // Imags

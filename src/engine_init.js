@@ -7,7 +7,7 @@
 import gamemodel from "./model/gamemodel";
 import Airplane from "./model/airplane";
 import {EVA01} from "./resource/airplane/roleId.js";
-import {playGame} from "./view/view";
+
 import {
   startEngine
 } from "./engine/engine.js";
@@ -23,7 +23,6 @@ export const startGame = (userId,userName)=> {
   airPlane.id = 0;
   gamemodel.data.engineControlData.airPlane = airPlane;
 
-  playGame();
   configCanvasEventListen();
   changeKeyEventBindings();
   startEngine();
