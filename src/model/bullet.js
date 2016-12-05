@@ -4,13 +4,13 @@ import PVector from "./Point";
 import {BULLET, DISAPPEAR} from "../constant";
 import gamemodel from "./gamemodel.js";
 
-let bulletResource = gamemodel.resourceRecord.bulletTable;
 let Count = ((id) => () => id++ )(1);
 
 export default class Bullet extends Ball {
   constructor(father, roleId, angle, srclocation) {
+        let bulletResource = gamemodel.resourceRecord.bulletTable;
         if(bulletResource[roleId] === undefined) {
-          throw "Invalid roleId!";
+          throw "Invalid bullet roleId!";
         }
         super();
         this.ballType = BULLET;

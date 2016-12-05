@@ -6,6 +6,7 @@
 
 import gamemodel from "./model/gamemodel";
 import Airplane from "./model/airplane";
+import {EVA01} from "./resource/airplane/roleId.js";
 import {playGame} from "./view/view";
 import {
   startEngine
@@ -16,7 +17,7 @@ import {
 } from "./engine/keybinding.js";
 
 export const startGame = (userId,userName)=> {
-  let airPlane = new Airplane();
+  let airPlane = new Airplane(EVA01);
   airPlane.name = userName;
   airPlane.userId = userId;
   airPlane.id = 0;
