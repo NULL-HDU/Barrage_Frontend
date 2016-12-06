@@ -33,12 +33,6 @@ export default class GameGroundPage extends Component {
 
     initGameModel();
 
-    // full screen
-    // TODO: press F11 to full screen
-    if (screenfull.enabled) {
-      screenfull.request();
-    }
-
     initView(() => {
     socketDealGameInfo();
     initEngine(Data.UserId, Data.Name);
