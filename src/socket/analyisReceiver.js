@@ -47,16 +47,14 @@ function writeTobackendControlData(message){
 	let backend = gamemodel.data.backendControlData;
 	let airPlane = backend.airPlane;
 	let bullet = backend.bullet;
-	let disappear = {};
-	disappear.airPlane = [];
-	disappear.bullet = [];
+	let disappear = [];
 	// let block = backend.block;
 	for(let i in airPlane){
 		let userId = airPlane[i].userId;
 		if( message[userId]!=undefined && message[userId][0]!=undefined ){
 			Object.assign(airPlane[i],message[userId][0]);
 		}else{
-			disappear.airPlane.push(airPlane.splice(i,1));
+			disappear.push(airPlane.splice(i,1));
 		}
 	}
 	for(let i in bullet){
@@ -65,7 +63,7 @@ function writeTobackendControlData(message){
 		if( message[userId]!=undefined && message[userId][id]!=undefined ){
 			Object.assign(bullet[i],message[userId][id]);
 		}else{
-			disappear.bullet.push(bullet.splice(i,1));
+			disappear.push(bullet.splice(i,1));
 		}
 	}
 	gamemodel.disappearCache = disappear;
