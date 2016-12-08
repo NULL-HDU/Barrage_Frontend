@@ -25,7 +25,10 @@ export default {
         disapperBulletInformation:[],
     },
     deadCache:[],
-    disappearCache:[],
+    disappearCache:{
+        airPlane : [],
+        bullet : []
+    },
     collisionCache:[],
     resourceRecord:{
         airPlaneTable:[],
