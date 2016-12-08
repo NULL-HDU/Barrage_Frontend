@@ -3,9 +3,6 @@
  * Maintainer: Arthury (ArthurYV)
  * Email: arthury.me@gmail.com
  */
-
-import bulletRole from "../bullet_role.js"
-
 export default {
     background: null,
     data: {
@@ -32,11 +29,10 @@ export default {
     collisionCache:[],
     resourceRecord:{
         airPlaneTable:[],
-        bulletTable:bulletRole,
+        bulletTable:[],
         blockTable:[],
         foodTable:[],
         foodFuncTable:[],
-        skillFuncTable:[],
         seatTable:[],
     },
     config: null,

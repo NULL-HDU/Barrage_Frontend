@@ -6,7 +6,9 @@
 
 import {startGame} from "../engine_init.js";
 import transmitted from "../socket/transmitted.js";
+import iGameModel from "../model/gamemodel_init.js";
 
+let _initGameModel = iGameModel;
 let _initSocket = (cb) => {console.log("socket inited.");cb(null, 1234);};
 // TODO: Add view init interface.
 let _initView = () => console.log("view inited.");
@@ -48,5 +50,6 @@ export const initView = _initView;
 export const socketDealGameInfo = _socketDealGameInfo;
 export const initEngine = _initEngine;
 export const socketConnect = _socketConnect;
+export const initGameModel = _initGameModel;
 
 /* bridge.js ends here */

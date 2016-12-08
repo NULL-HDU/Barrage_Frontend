@@ -113,6 +113,8 @@ let engine = () => {
   let airPlane = data.airPlane;
   looper(() => {
     airPlane.move();
+    airPlane.skillCountDown();
+
     data.bullet.forEach((bullet) => {
       bullet.pathCalculate();
     });
