@@ -4,63 +4,60 @@
  * Email: Neoco.wlp1002@gmail.com
  */
 
-//////// import modules
 import * as PIXI from "./pixi.js";
-import gamemodel from "../model/gamemodel.js";
-
-//////// global variables
-// fps
-const FPS = 60,
-    stot = 1000/ FPS;
-
-// view size
-const HEIGHT_CUT = 800, WIDTH_CUT = 1280;
-let WIDTH_LOCAL = window.innerWidth,
-    HEIGHT_LOCAL = window.innerHeight,
-    WIDTH_VIEW,
-    HEIGHT_VIEW;
-let adaptWindow = () => {
-    let xr = WIDTH_LOCAL / WIDTH_CUT,
-        yr = HEIGHT_LOCAL / HEIGHT_CUT;
-    if (xr < yr) {
-        WIDTH_VIEW = WIDTH_CUT * xr;
-        HEIGHT_VIEW = HEIGHT_CUT * xr;
-    } else {
-        WIDTH_VIEW = WIDTH_CUT * yr;
-        HEIGHT_VIEW = HEIGHT_CUT * yr;
-    }
-};
-adaptWindow();
-
-// other rules
-let X_CENTER = WIDTH_VIEW / 2,
-    Y_CENTER = HEIGHT_VIEW / 2,
-    RATIO = [WIDTH_VIEW / WIDTH_CUT, WIDTH_VIEW / WIDTH_CUT],
-    RULER = [WIDTH_VIEW, HEIGHT_VIEW, 0];
-
-// init renderer
-let renderer = PIXI.autoDetectRenderer(
-    WIDTH_VIEW, 
-    HEIGHT_VIEW, 
-    {
-        // backgroundColor: 0x000000,
-        // autoResize: true,
-        // resolution: 2
-        // roundPixels: true
-        // clearBeforeRender: false,
-        // preserveDrawingBuffer: true
-    }
-);
-renderer.view.id = "canvas";
-document.body.appendChild(renderer.view);
 
 // game state
 let state;
 
-// containers
-let Container = PIXI.Container;
+// fps
+const FPS = 60, stot = 1000 / FPS;
 
-// main containers
+// cut view size
+let CUT_W = 1280, CUT_H = 800; 
+
+// local window size
+let LOCAL_W = window.innerWidth,
+    LOCAL_H = window.innerHeight;
+
+// local view size
+let VIEW_W, VIEW_H;
+let adaptWindow = () => {
+    let xr = LOCAL_W / CUT_W,
+        yr = LOCAL_H / CUT_H;
+    if (xr < yr) {
+        VIEW_W = CUT_W * xr;
+        VIEW_H = CUT_H * xr;
+    } else {
+        VIEW_W = CUT_W * yr;
+        VIEW_H = CUT_H * yr;
+    }
+};
+adaptWindow();
+
+// center of the local view size
+let CENTER_X = VIEW_W / 2,
+    CENTER_Y = VIEW_H / 2;
+
+// ratio
+let RATIO_CRT = VIEW_W / CUT_W,
+    RATIO_PRE = RATIO_CRT,
+    TRANS_VALUE  = RATIO_CRT / RATIO_PRE;
+
+// resources
+let resources = PIXI.loader.resources;
+let img_url = "/static/view/imgs/",
+    img_ap_body = img_url + "ap_body.png",
+    img_ap_arrow = img_url + "ap_arrow.png";
+
+// pixi renderer
+let renderer = PIXI.autoDetectRenderer(
+    VIEW_W,
+    VIEW_H,
+    { backgroundColor: 0x000000 }
+); 
+
+// layers
+let Container = PIXI.Container;
 let Stage = new Container(),
     BackgroundLayer = new Container(),
     ObstacleLayer = new Container(),
@@ -73,39 +70,82 @@ let Stage = new Container(),
     UILayer = new Container();
 
 // sprites
-let Sprite = PIXI.Sprite,
-    resources = PIXI.loader.resources;
+let Sprite = PIXI.Sprite;
+let createSprite = (url) => {
+    let sp = new Sprite(resources[url].texture);
+    sp.anchor.set(0.5, 0.5);
+    return sp;
+};
+let setObjectSize = (obj, size) => {
+    obj.width = size * RATIO_CRT;
+    obj.height = size * RATIO_CRT;
+};
+
+// airplane
+const ap_l = 120;
+let airplane = new Container();
+let ap_data = {
+    x_pre: 0,
+    x_crt: 0,
+    x_len: 0,
+    y_pre: 0,
+    y_crt: 0,
+    y_len: 0,
+    r: 0
+};
+export function moveAirplane(x, y, r) {
+    ap_data.x_pre = ap_data.x_crt;
+    ap_data.y_pre = ap_data.y_crt;
+    
+    ap_data.x_crt = x;
+    ap_data.y_crt = y;
+
+    ap_data.x_len = x - ap_data.x_pre;
+    ap_data.y_len = y - ap_data.y_pre;
+
+    ap_data.r = r;
+}
 
 // BackgroundLayer
-const rect_l = 40;
-let universe = new Container(),
-    rect_xn = WIDTH_CUT / rect_l,
-    rect_yn = HEIGHT_CUT / rect_l,
-    rect_vl = rect_l * RATIO[0];
+let universe = new Container();
+const rect_l = 80;
+let rect_xn = CUT_W / rect_l,
+    rect_yn = CUT_H / rect_l,
+    rect_vl = rect_l * RATIO_CRT;
 
-// AirplaneLayer
-const ap_length = 120;
-let airplane = new Container(),
-    ap_body,
-    ap_arrow;
+let drawCrossLine = (x, y) => {
+    universe.removeChildren();
 
-//////// init functions
-let img_url = "/static/view/imgs/",
-    img_ap_body = img_url + "ap_body.png",
-    img_ap_arrow = img_url + "ap_arrow.png";
+    let Graphics = new PIXI.Graphics;
+    Graphics.lineStyle(1, 0x252525, 1);
+    let ni = rect_yn + 2, nj = rect_xn + 2;
+    for (let i = 0; i < ni; i ++) {
+        for (let j = 0; j < nj; j ++) {
+            let x = j * rect_vl,
+                y = i * rect_vl;
+            Graphics.drawRect(x, y, rect_vl, rect_vl);
+        }
+    }
+    Graphics.endFill();
+    
+    universe.addChild(Graphics);
+    universe.x = x;
+    universe.y = y;
+};
+
+// export for launch
 export function initView(callback) {
-    // load resources
     PIXI.loader
         .add(img_ap_body)
         .add(img_ap_arrow)
-        .load(() => {
-            initLayer(callback);
+        .load(() =>{
+            renderer.view.id = "canvas";
+            document.body.appendChild(renderer.view);
+            initLayers(callback);
         });
 }
 
-// init layers
-function initLayer(callback) {
-    // init sprites
+function initLayers(callback) {
     initBackground();
     initObstacle();
     initResource();
@@ -118,43 +158,13 @@ function initLayer(callback) {
 
     console.log("init view");
     callback();
-    
-    // change sprites' state and loop render the view
-    // set state playing
-    state = playing;
+
+    state = play;
     loopRender();
 }
 
-let createSP = (url) => {
-    let sprite = new Sprite(resources[url].texture);
-    sprite.anchor.set(0.5, 0.5);
-    return sprite;
-};
-let setObjSz = (obj, l) => {
-    let rl = l * RATIO[0];
-    obj.width = rl;
-    obj.height = rl;
-};
-let  drawCrossLine = (xp, yp) => {
-    let Graphics = new PIXI.Graphics;
-    Graphics.lineStyle(1, 0x212121, 1);
-    let ni = rect_yn + 2, nj = rect_xn + 2;
-    for (let i = 0; i < ni; i ++) {
-        for (let j = 0; j < nj; j ++) {
-            let x = j * rect_vl,
-                y = i * rect_vl;
-            Graphics.drawRect(x, y, rect_vl, rect_vl);
-        }
-    }
-    Graphics.endFill();
-    
-    universe.addChild(Graphics);
-    universe.x = xp;
-    universe.y = yp;
-};
 function initBackground() {
     drawCrossLine(-rect_vl, -rect_vl);
-
     BackgroundLayer.addChild(universe);
     Stage.addChild(BackgroundLayer);
 }
@@ -172,14 +182,14 @@ function initEnemy() {
 }
 
 function initAirplane() {
-    ap_body = createSP(img_ap_body);
-    ap_arrow = createSP(img_ap_arrow);
+    let body = createSprite(img_ap_body),
+        arrow = createSprite(img_ap_arrow);
 
-    airplane.addChild(ap_body);
-    airplane.addChild(ap_arrow);
-
-    setObjSz(airplane, ap_length);
-    airplane.position.set(X_CENTER, Y_CENTER);
+    airplane.addChildAt(body, 0);
+    airplane.addChildAt(arrow, 1);
+    
+    setObjectSize(airplane, ap_l);
+    airplane.position.set(CENTER_X, CENTER_Y);
 
     AirplaneLayer.addChild(airplane);
     Stage.addChild(AirplaneLayer);
@@ -201,77 +211,105 @@ function initUI() {
     Stage.addChild(UILayer);
 }
 
-//////// loop render functions
+// loop render
 function loopRender() {
-    // requestAnimationFrame(loopRender);
-
-    resizeStandard();
-
     state();
-
+    rszView();
     renderer.render(Stage);
-
     setTimeout(loopRender, stot);
 }
 
-// resize standard and canvas's size
-function resizeStandard() {
-    // remember last ratio
-    RATIO[1] = RATIO[0];
+function play() {
+    rstBackground();
+    rstObstacle();
+    rstResource();
+    rstEnemy();
+    rstAirplane();
+    rstRedBullet();
+    rstBlueBullet();
+    rstEffect();
+    rstUI();
+}
 
-    // suppose that not changed
-    RULER[2] = 0;
-
-    // current size
-    WIDTH_LOCAL = window.innerWidth;
-    HEIGHT_LOCAL = window.innerHeight;
-    
-    let W = WIDTH_LOCAL, H = HEIGHT_LOCAL, R0 = RULER[0], R1 = RULER[1];
-    let FUCK = ((W != R0 && H != R1) || (W == R0 && H < R1) || (W < R0 && H == R1)) ? true : false;
-
-    if (FUCK) {
-        adaptWindow();
-        renderer.resize(WIDTH_VIEW, HEIGHT_VIEW);
-        X_CENTER = WIDTH_VIEW / 2;
-        Y_CENTER = HEIGHT_VIEW / 2;
-        RATIO[0] = WIDTH_VIEW / WIDTH_CUT;
-        RULER[0] = WIDTH_VIEW;
-        RULER[1] = HEIGHT_VIEW;
-        RULER[2] = 1;
+function rstBackground() {
+    universe.x += -ap_data.x_len * RATIO_CRT;
+    if (universe.x < - 2 * rect_vl || universe.x > 0) {
+        universe.x = -rect_vl + (universe.x % rect_vl);
+    }
+    universe.y += -ap_data.y_len * RATIO_CRT;
+    if (universe.y < - 2 * rect_vl || universe.y > 0) {
+        universe.y = -rect_vl + (universe.y % rect_vl);
     }
 }
 
-// catch the changed sprites and reset them
-function playing() {
-    // reset sprites
-    rszBackground();
-    rszObstacle();
-    rszResource();
-    rszEnemy();
-    rszAirplane();
-    rszRedBullet();
-    rszBlueBullet();
-    rszEffect();
-    rszUI();
+function rstObstacle() {
+}
 
+function rstResource() {
+}
+
+function rstEnemy() {
+}
+
+function rstAirplane() {
+    airplane.getChildAt(1).rotation = ap_data.r;
+}
+
+function rstRedBullet() {
+}
+
+function rstBlueBullet() {
+}
+
+function rstEffect() {
+}
+
+function rstUI() {
+}
+
+// resize view when window'size changed
+function rszView() {
+    // remember the last ratio;
+    RATIO_PRE = RATIO_CRT;
+
+    // current window size
+    LOCAL_W = window.innerWidth;
+    LOCAL_H = window.innerHeight;
+
+    if (
+        (LOCAL_W !== VIEW_W && LOCAL_H !== VIEW_H) ||
+        (LOCAL_W === VIEW_W && LOCAL_H < VIEW_H) ||
+        (LOCAL_W < VIEW_W && LOCAL_H === VIEW_H)
+    ) {
+        adaptWindow();
+        renderer.resize(VIEW_W, VIEW_H);
+
+        CENTER_X = VIEW_W / 2;
+        CENTER_Y = VIEW_H / 2;
+
+        RATIO_CRT = VIEW_W / CUT_W;
+        TRANS_VALUE  = RATIO_CRT / RATIO_PRE;
+
+        rszBackground();
+        rszObstacle();
+        rszResource();
+        rszEnemy();
+        rszAirplane();
+        rszRedBullet();
+        rszBlueBullet();
+        rszEffect();
+        rszUI();
+    }
 }
 
 function rszBackground() {
-    if (RULER[2] === 1) {
-        universe.removeChildren();
-        rect_vl = rect_l * RATIO[0];
-        drawCrossLine(universe.x / RATIO[1] * RATIO[0], universe.y / RATIO[1] * RATIO[0]);
-    }
+    let pl = rect_vl;
+    rect_vl = rect_l * RATIO_CRT;
 
-    universe.x += 81 * RATIO[0];
-    universe.y -= 1 * RATIO[0];
-
-    if (universe.x < -2 * rect_vl || universe.x > 0) {
-        universe.x = -rect_vl + (universe.x % rect_vl);
-    }
-    if (universe.y < -2 * rect_vl || universe.y > 0) {
-        universe.y = -rect_vl + (universe.y % rect_vl);
-    }
+    let nx = -rect_vl + (universe.x - pl) * TRANS_VALUE;
+    let ny = -rect_vl + (universe.y - pl) * TRANS_VALUE;
+    
+    drawCrossLine(nx, ny);
 }
 
 function rszObstacle() {
@@ -284,10 +322,8 @@ function rszEnemy() {
 }
 
 function rszAirplane() {
-    if (RULER[2] === 1) {
-        setObjSz(airplane, ap_length);
-        airplane.position.set(X_CENTER, Y_CENTER);
-    }
+    setObjectSize(airplane, ap_l);
+    airplane.position.set(CENTER_X, CENTER_Y);
 }
 
 function rszRedBullet() {
@@ -301,5 +337,3 @@ function rszEffect() {
 
 function rszUI() {
 }
-
-/* view.js ends here */

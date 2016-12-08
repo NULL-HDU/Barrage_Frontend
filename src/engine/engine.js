@@ -15,6 +15,7 @@ import gamemodel from "../model/gamemodel";
 import Quadtree from "./quadtree";
 import PVector from "../model/Point";
 import {socketStatusSwitcher} from "../socket/transmitted";
+import {moveAirplane} from "../view/Nview";
 
 let data = gamemodel.data.engineControlData;
 let backendData = gamemodel.data.backendControlData;
@@ -113,6 +114,7 @@ let engine = () => {
   let airPlane = data.airPlane;
   looper(() => {
     airPlane.move();
+    moveAirplane(airPlane.locationCurrent.x, airPlane.locationCurrent.y, airPlane.attackDir);
     airPlane.skillCountDown();
 
     data.bullet.forEach((bullet) => {
