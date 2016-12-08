@@ -12,6 +12,7 @@ import gamemodel from "../model/gamemodel.js";
 // fps
 const FPS = 60,
     stot = 1000/ FPS;
+
 // view size
 const HEIGHT_CUT = 800, WIDTH_CUT = 1280;
 let WIDTH_LOCAL = window.innerWidth,
@@ -30,6 +31,13 @@ let adaptWindow = () => {
     }
 };
 adaptWindow();
+
+// other rules
+let X_CENTER = WIDTH_VIEW / 2,
+    Y_CENTER = HEIGHT_VIEW / 2,
+    RATIO = [WIDTH_VIEW / WIDTH_CUT, WIDTH_VIEW / WIDTH_CUT],
+    RULER = [WIDTH_VIEW, HEIGHT_VIEW, 0];
+
 // init renderer
 let renderer = PIXI.autoDetectRenderer(
     WIDTH_VIEW, 
@@ -45,18 +53,13 @@ let renderer = PIXI.autoDetectRenderer(
 );
 renderer.view.id = "canvas";
 document.body.appendChild(renderer.view);
-// other rules
-let X_CENTER = WIDTH_VIEW / 2,
-    Y_CENTER = HEIGHT_VIEW / 2,
-    RATIO = [WIDTH_VIEW / WIDTH_CUT, WIDTH_VIEW / WIDTH_CUT],
-    // remember last size of local
-    RULER = [WIDTH_VIEW, HEIGHT_VIEW, 0];
 
 // game state
 let state;
 
 // containers
 let Container = PIXI.Container;
+
 // main containers
 let Stage = new Container(),
     BackgroundLayer = new Container(),
@@ -72,12 +75,14 @@ let Stage = new Container(),
 // sprites
 let Sprite = PIXI.Sprite,
     resources = PIXI.loader.resources;
+
 // BackgroundLayer
 const rect_l = 40;
 let universe = new Container(),
     rect_xn = WIDTH_CUT / rect_l,
     rect_yn = HEIGHT_CUT / rect_l,
     rect_vl = rect_l * RATIO[0];
+
 // AirplaneLayer
 const ap_length = 120;
 let airplane = new Container(),
@@ -120,6 +125,16 @@ function initLayer(callback) {
     loopRender();
 }
 
+let createSP = (url) => {
+    let sprite = new Sprite(resources[url].texture);
+    sprite.anchor.set(0.5, 0.5);
+    return sprite;
+};
+let setObjSz = (obj, l) => {
+    let rl = l * RATIO[0];
+    obj.width = rl;
+    obj.height = rl;
+};
 let  drawCrossLine = (xp, yp) => {
     let Graphics = new PIXI.Graphics;
     Graphics.lineStyle(1, 0x212121, 1);
@@ -156,29 +171,15 @@ function initEnemy() {
     Stage.addChild(EnemyLayer);
 }
 
-let createSP = (url) => {
-    let sprite = new Sprite(resources[url].texture);
-    sprite.anchor.set(0.5, 0.5);
-    return sprite;
-};
-let setSPSz = (sp, l) => {
-    let rl = l * RATIO[0];
-    sp.width = rl;
-    sp.height = rl;
-};
 function initAirplane() {
     ap_body = createSP(img_ap_body);
-    setSPSz(ap_body, ap_length);
-    ap_body.position.set(X_CENTER, Y_CENTER);
-    ap_body.rotation = 0;
-
     ap_arrow = createSP(img_ap_arrow);
-    setSPSz(ap_arrow, ap_length);
-    ap_arrow.position.set(X_CENTER, Y_CENTER);
-    ap_arrow.rotation = 0;
 
     airplane.addChild(ap_body);
     airplane.addChild(ap_arrow);
+
+    setObjSz(airplane, ap_length);
+    airplane.position.set(X_CENTER, Y_CENTER);
 
     AirplaneLayer.addChild(airplane);
     Stage.addChild(AirplaneLayer);
@@ -215,13 +216,19 @@ function loopRender() {
 
 // resize standard and canvas's size
 function resizeStandard() {
-    RULER[2] = 0;
+    // remember last ratio
     RATIO[1] = RATIO[0];
+
+    // suppose that not changed
+    RULER[2] = 0;
+
+    // current size
     WIDTH_LOCAL = window.innerWidth;
     HEIGHT_LOCAL = window.innerHeight;
+    
     let W = WIDTH_LOCAL, H = HEIGHT_LOCAL, R0 = RULER[0], R1 = RULER[1];
-    // let FUCK = ( (W == R0 && H < R1) || (W < R0 && H == R1) || (W > R0 && H > R1) || (W < R0 && H < R1) || (W > R0 && H < R1) || (W < R0 && H > R1)) ? true : false;
     let FUCK = ((W != R0 && H != R1) || (W == R0 && H < R1) || (W < R0 && H == R1)) ? true : false;
+
     if (FUCK) {
         adaptWindow();
         renderer.resize(WIDTH_VIEW, HEIGHT_VIEW);
@@ -237,19 +244,19 @@ function resizeStandard() {
 // catch the changed sprites and reset them
 function playing() {
     // reset sprites
-    rstBackground();
-    rstObstacle();
-    rstResource();
-    rstEnemy();
-    rstAirplane();
-    rstRedBullet();
-    rstBlueBullet();
-    rstEffect();
-    rstUI();
+    rszBackground();
+    rszObstacle();
+    rszResource();
+    rszEnemy();
+    rszAirplane();
+    rszRedBullet();
+    rszBlueBullet();
+    rszEffect();
+    rszUI();
 
 }
 
-function rstBackground() {
+function rszBackground() {
     if (RULER[2] === 1) {
         universe.removeChildren();
         rect_vl = rect_l * RATIO[0];
@@ -267,35 +274,32 @@ function rstBackground() {
     }
 }
 
-function rstObstacle() {
+function rszObstacle() {
 }
 
-function rstResource() {
+function rszResource() {
 }
 
-function rstEnemy() {
+function rszEnemy() {
 }
 
-function rstAirplane() {
+function rszAirplane() {
     if (RULER[2] === 1) {
-        setSPSz(ap_body, ap_length);
-        ap_body.position.set(X_CENTER, Y_CENTER);
-
-        setSPSz(ap_arrow, ap_length);
-        ap_arrow.position.set(X_CENTER, Y_CENTER);
+        setObjSz(airplane, ap_length);
+        airplane.position.set(X_CENTER, Y_CENTER);
     }
 }
 
-function rstRedBullet() {
+function rszRedBullet() {
 }
 
-function rstBlueBullet() {
+function rszBlueBullet() {
 }
 
-function rstEffect() {
+function rszEffect() {
 }
 
-function rstUI() {
+function rszUI() {
 }
 
 /* view.js ends here */
