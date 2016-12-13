@@ -23,7 +23,7 @@ let quad = new Quadtree({
     y: 0,
     width: global.LOCAL_WIDTH,
     height: global.LOCAL_HEIGHT
-});
+}, 10, 5);
 
 let looper = (f, t) => setTimeout(() => {f(); looper(f, t);}, t);
 
