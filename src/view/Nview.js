@@ -5,6 +5,7 @@
  */
 
 import * as PIXI from "./pixi.js";
+import GMD from "../model/gamemodel.js";
 
 // game state
 let state;
@@ -47,7 +48,8 @@ let RATIO_CRT = VIEW_W / CUT_W,
 let resources = PIXI.loader.resources;
 let img_url = "/static/view/imgs/",
     img_ap_body = img_url + "ap_body.png",
-    img_ap_arrow = img_url + "ap_arrow.png";
+    img_ap_arrow = img_url + "ap_arrow.png",
+    img_b_bullet = img_url + "b_bullet.png";
 
 // pixi renderer
 let renderer = PIXI.autoDetectRenderer(
@@ -81,30 +83,86 @@ let setObjectSize = (obj, size) => {
     obj.height = size * RATIO_CRT;
 };
 
-// airplane
+let centerAPX = (me, ap) => {
+    return (me - ap) * RATIO_CRT + CENTER_X;
+};
+
+let centerAPY = (me, ap) => {
+    return (me - ap) * RATIO_CRT + CENTER_Y;
+};
+
+// select exact size balls to draw array from gamemodel
+let selectBalls = (con, sparr, gmd, size, url, type) => {
+    // renge
+    let right = ap_data.x_crt + (CUT_W + size) / 2,
+        left = ap_data.x_crt - (CUT_W + size) / 2,
+        top = ap_data.y_crt - (CUT_H + size) / 2,
+        bottom = ap_data.y_crt + (CUT_H + size) / 2;
+
+    let count = 0;
+
+    for (let i = 0; i < gmd.length; i ++) {
+        let x = gmd[i].locationCurrent.x,
+            y = gmd[i].locationCurrent.y,
+            r = gmd[i].attackDir;
+        let data = [x, y, r];
+        if (x < right && x > left && y > top && y < bottom) {
+            count += 1;
+            if (count > sparr.length) {
+                switch (type) {
+                    case T_BULLET: addBullet(con, sparr, url, size, data); break;
+                    default: break;
+                }
+            } else {
+                switch (type) {
+                    case T_BULLET: updateBullet(sparr, count - 1, size, data); break;
+                    default: break;
+                }
+            }
+        }
+    }
+
+    if (count < sparr.length) {
+        for (let j = count; j < sparr.length; j ++) {
+            sparr[j].visible = false;
+        }
+    }
+};
+
+// AirplaneLayer
 const ap_l = 120;
 let airplane = new Container();
-let ap_data = {
-    x_pre: 0,
-    x_crt: 0,
-    x_len: 0,
-    y_pre: 0,
-    y_crt: 0,
-    y_len: 0,
-    r: 0
+let ap_gi,
+    ap_data = {
+        x_pre: 0,
+        x_crt: 0,
+        x_len: 0,
+        y_pre: 0,
+        y_crt: 0,
+        y_len: 0,
+        r: 0,
+        flag: 0
+    };
+let copyAirplaneInfo = () => {
+    ap_gi = GMD.data.engineControlData.airPlane;
+
+    if (ap_data.flag === 0) {
+        ap_data.x_pre = ap_gi.locationCurrent.x;
+        ap_data.y_pre = ap_gi.locationCurrent.y;
+        ap_data.flag = 1;
+    } else {
+        ap_data.x_pre = ap_data.x_crt;
+        ap_data.y_pre = ap_data.y_crt;
+    }
+
+    ap_data.x_crt = ap_gi.locationCurrent.x;
+    ap_data.x_len = ap_data.x_crt - ap_data.x_pre;
+
+    ap_data.y_crt = ap_gi.locationCurrent.y;
+    ap_data.y_len = ap_data.y_crt - ap_data.y_pre;
+
+    ap_data.r = ap_gi.attackDir;
 };
-export function moveAirplane(x, y, r) {
-    ap_data.x_pre = ap_data.x_crt;
-    ap_data.y_pre = ap_data.y_crt;
-    
-    ap_data.x_crt = x;
-    ap_data.y_crt = y;
-
-    ap_data.x_len = x - ap_data.x_pre;
-    ap_data.y_len = y - ap_data.y_pre;
-
-    ap_data.r = r;
-}
 
 // BackgroundLayer
 let universe = new Container();
@@ -133,11 +191,33 @@ let drawCrossLine = (x, y) => {
     universe.y = y;
 };
 
+// BULLET
+const T_BULLET = 1;
+// BlueBulletLayer
+const bblt_l = 20;
+let Bbullets = [],
+    bblt_gi;
+let updateBullet = (sparr, index, size, data) => {
+    sparr[index].visible = true;
+    setObjectSize(sparr[index], size);
+    sparr[index].x = centerAPX(data[0], ap_data.x_crt);
+    sparr[index].y = centerAPY(data[1], ap_data.y_crt);
+    sparr[index].rotation = data[2];
+};
+
+let addBullet = (con, sparr, url, size, data) => {
+    sparr.push(createSprite(url));
+    let p = sparr.length - 1;
+    updateBullet(sparr, p, size, data);
+    con.addChild(sparr[p]);
+};
+
 // export for launch
 export function initView(callback) {
     PIXI.loader
         .add(img_ap_body)
         .add(img_ap_arrow)
+        .add(img_b_bullet)
         .load(() =>{
             renderer.view.id = "canvas";
             document.body.appendChild(renderer.view);
@@ -220,6 +300,8 @@ function loopRender() {
 }
 
 function play() {
+    copyAirplaneInfo();
+
     rstBackground();
     rstObstacle();
     rstResource();
@@ -259,6 +341,9 @@ function rstRedBullet() {
 }
 
 function rstBlueBullet() {
+    bblt_gi = GMD.data.engineControlData.bullet;
+    selectBalls(BlueBulletLayer, Bbullets, bblt_gi, bblt_l, img_b_bullet, T_BULLET);
+    // console.log(Bbullets);
 }
 
 function rstEffect() {
@@ -282,13 +367,16 @@ function rszView() {
         (LOCAL_W < VIEW_W && LOCAL_H === VIEW_H)
     ) {
         adaptWindow();
-        renderer.resize(VIEW_W, VIEW_H);
 
         CENTER_X = VIEW_W / 2;
         CENTER_Y = VIEW_H / 2;
 
         RATIO_CRT = VIEW_W / CUT_W;
         TRANS_VALUE  = RATIO_CRT / RATIO_PRE;
+
+        renderer.resize(VIEW_W, VIEW_H);
+
+        rect_vl = rect_l * RATIO_CRT;
 
         rszBackground();
         rszObstacle();
@@ -303,13 +391,7 @@ function rszView() {
 }
 
 function rszBackground() {
-    let pl = rect_vl;
-    rect_vl = rect_l * RATIO_CRT;
-
-    let nx = -rect_vl + (universe.x - pl) * TRANS_VALUE;
-    let ny = -rect_vl + (universe.y - pl) * TRANS_VALUE;
-    
-    drawCrossLine(nx, ny);
+    drawCrossLine(universe.x * TRANS_VALUE, universe.x * TRANS_VALUE);
 }
 
 function rszObstacle() {
