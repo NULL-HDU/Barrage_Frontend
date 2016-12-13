@@ -9,8 +9,8 @@ export default class Ball {
     constructor() {
         this.ballType = undefined;
         this.id = 0;
-        this.hp = 10000;
-        this.damage = 100;
+        this.hp = 5000;
+        this.damage = 500;
         this.name = "Arthury";
         this.camp = undefined;
         this.userId = undefined;

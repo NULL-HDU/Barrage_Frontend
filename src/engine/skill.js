@@ -9,7 +9,20 @@ let skillFlags = {
 };
 
 let eSkillFunc = () => {
-    
+
+    if (skillFlags.eSkillCDFlag === 1) return;
+
+    skillFlags.eSkillCDFlag = 1;
+
+    gamemodel.data.engineControlData.airPlane.defense = 0.5;
+
+    setTimeout(() => {
+        gamemodel.data.engineControlData.airPlane.defense = 1;
+    }, global.E_SKILL_DURATION);
+
+    setTimeout(() => {
+        skillFlags.eSkillCDFlag = 0;
+    }, global.E_SKILL_CD);
 };
 
 let qSkillFunc = () => {
