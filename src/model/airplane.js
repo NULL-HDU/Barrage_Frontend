@@ -28,6 +28,8 @@ export default class Airplane extends Ball {
         this.normalSkillCD = this.normalSkill.skillCD / global.GAME_LOOP_INTERVAL;
         this.qSkillCount = 0;
         this.qSkillCD = this.qSkill.skillCD / global.GAME_LOOP_INTERVAL;
+        // all function in actionSkill while be call in each engine loop;
+        this.activeSkillList = [];
 
         this.v = new PVector(0,0);
         this.vangle = 0;
@@ -46,18 +48,25 @@ export default class Airplane extends Ball {
         if(this.normalSkillCount > 0) this.normalSkillCount--;
     }
 
+    // skillActive call all functions in activeSkillList, those functions may generate
+    // bullets but must return a boolean.
+    // if the returned boolean is false, the function will be delete from activeSkillList.
+    skillActive() {
+      this.activeSkillList = this.activeSkillList.filter(f => f(this,this.attackDir + Math.PI*3/2));
+    }
+
     useQSkill() {
       if (this.qSkillCount > 0) return;
 
       this.qSkillCount = this.qSkillCD;
-      this.qSkill.skillFunc(this, this.attackDir + Math.PI*3/2);
+      this.activeSkillList.push(this.qSkill.skillFunc());
     }
 
     useNormalSkill() {
       if (this.normalSkillCount > 0) return;
 
       this.normalSkillCount = this.normalSkillCD;
-      this.normalSkill.skillFunc(this, this.attackDir + Math.PI*3/2);
+      this.activeSkillList.push(this.normalSkill.skillFunc());
     }
 }
 
