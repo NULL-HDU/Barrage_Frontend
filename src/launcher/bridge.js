@@ -35,8 +35,6 @@ if(__ENV__ === "testing" || __ENV__ === "production"){
   let tm = new transmitted();
 
   _initSocket = tm.initSocket;
-  // TODO: Add view init interface.
-  _initView = () => console.log("view inited.");
   _socketDealGameInfo = tm.playgroundInfo;
   _initEngine = (userId, name) => {
     console.log(`engine inited with ${userId} and ${name}`);
