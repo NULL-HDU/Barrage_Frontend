@@ -150,7 +150,6 @@ let engine = () => {
         uselessBulletsCollect();
 
         playgroundInfo();
-
     }, global.GAME_LOOP_INTERVAL);
 };
 

@@ -5,29 +5,29 @@
  */
 
 import {
-  startGame
+    startGame
 } from "../engine_init.js";
 import * as tm from "../socket/transmitted.js";
 import iGameModel from "../model/gamemodel_init.js";
 import {
-  initView as iview
+    initView as iview
 } from "../view/Nview.js"
 
 let _initGameModel = iGameModel;
 let _initSocket = (cb) => {
-  console.log("socket inited.");
-  cb(null, 1234);
+    console.log("socket inited.");
+    cb(null, 1234);
 };
 let _initView = iview;
 let _initEngine = (userId, name) => {
-  console.log(`engine inited with ${userId} and ${name}`);
-  startGame(userId, name);
+    console.log(`engine inited with ${userId} and ${name}`);
+    startGame(userId, name);
 };
 let _socketConnect = (roomId, cb) => {
-  setTimeout(() => {
-    console.log("socket connected!");
-    cb(null, true);
-  }, 1500);
+    setTimeout(() => {
+        console.log("socket connected!");
+        cb(null, true);
+    }, 1500);
 };
 
 // It won't connect to backend while you are developing by default,
@@ -38,8 +38,8 @@ let _socketConnect = (roomId, cb) => {
 //
 // then start your webpack-server.
 if (__ENV__ === "testing" || __ENV__ === "production") {
-  _initSocket = tm.initSocket;
-  _socketConnect = tm.connect;
+    _initSocket = tm.initSocket;
+    _socketConnect = tm.connect;
 }
 
 export const initSocket = _initSocket;
