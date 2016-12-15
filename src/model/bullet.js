@@ -9,6 +9,7 @@ let Count = ((id) => () => id++ )(1);
 export default class Bullet extends Ball {
   constructor(father, roleId, angle, srclocation) {
         let bulletResource = gamemodel.resourceRecord.bulletTable;
+        let skinResource = gamemodel.resourceRecord.skinTable.bullet;
         if(bulletResource[roleId] === undefined) {
           throw "Invalid bullet roleId!";
         }
@@ -19,8 +20,10 @@ export default class Bullet extends Ball {
         this.id = Count();
         this.father = father;
         this.attackDir = angle;
-        this.roleId = roleId;
         Object.assign(this, bulletResource[roleId]);
+        this.roleId = roleId;
+        this.radius = skinResource[this.skinId].judge_radius;
+        this.skin_radius = skinResource[this.skinId].skin_radius;
 
         this.srclocation = srclocation;
         this.locationCurrent = PVector.mult(this.srclocation, 1);

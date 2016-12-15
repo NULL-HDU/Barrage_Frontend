@@ -36,7 +36,7 @@ let skillFunc = () => {
             angle,
             PVector.add(
               airPlane.locationCurrent,
-              PVector.mult(dirVector, airPlane.radius)
+              PVector.mult(dirVector, airPlane.skin_radius)
             )
         );
         bullet.run = bullet.pathFunc(bullet);

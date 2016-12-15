@@ -13,14 +13,17 @@ import gamemodel from "./gamemodel";
 export default class Airplane extends Ball {
     constructor(roleId) {
         let airplaneResource = gamemodel.resourceRecord.airPlaneTable;
+        let skinResource = gamemodel.resourceRecord.skinTable.airplane;
         if(airplaneResource[roleId] === undefined) {
           throw "Invalid airplane roleId!";
         }
         super();
         this.ballType = AIRPLANE;
 
-        this.roleId = roleId;
         Object.assign(this, airplaneResource[roleId]);
+        this.roleId = roleId;
+        this.radius = skinResource[this.skinId].judge_radius;
+        this.skin_radius = skinResource[this.skinId].skin_radius;
 
         // init skills and its cd.
         // **SkillCount > 0, means this skill is in cd.
