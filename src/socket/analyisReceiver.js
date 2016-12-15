@@ -38,8 +38,7 @@ function arrayToJson(arr) {
 let count = 0;
 
 function writeTobackendControlData(message) {
-	if (times === 0) {
-		times++;
+	if (times++ === 0) {
 		writeNewBallInf(message);
 		return;
 	}

@@ -12,70 +12,66 @@ import * as receiver from "./analyisReceiver.js"
 let debug = false;
 let rollingTime = 1000 / 90;
 let status = false;
+let ws = null;
+let status = null;
 
 //switch the status of is updating socket
-export function socketStatusSwitcher() {
+export default function socketStatusSwitcher() {
 	status = !status;
 	return status;
 }
 
-export default class transmitted {
 
-	constructor() {
-		this.ws = new WebSocket();
-		this.ws.init();
-		this.status = false
-		this.initSocket = this.initSocket.bind(this);
-		this.connect = this.connect.bind(this);
-		this.playgroundInfo = this.playgroundInfo.bind(this);
+export default initSocket(callback, times === 0) {
+	if (times === 0) {
+		ws = new WebSocket();
+		ws.init();
 	}
-
-	initSocket(callback) {
-		let userId = receiver.userId;
-		if (userId == undefined) {
-			console.log("reload userId!")
-			setTimeout(() => this.initSocket(callback), 100);
-		} else {
-			callback(null, userId);
-		}
+	let userId = receiver.userId;
+	if (userId == undefined) {
+		console.log("reload userId!")
+		setTimeout(() => initSocket(callback, 1), 100);
+	} else {
+		callback(null, userId);
 	}
+}
 
-	//send login message
-	connect(roomNumber, callback, times = 0) {
-		let message = sender.loginAnalyis(roomNumber);
-		if (receiver.state == 1) {
-			if (debug)
-				console.log("start loading...");
-			if (times == 0)
-				this.ws.sendMessage(message.getDv());
-		}
-		if (receiver.state == 2) {
-			if (debug)
-				console.log("load send succeed!");
-			callback(null, true);
-		} else {
-			console.log("load send failed...reloading...");
-			setTimeout(() => this.connect(roomNumber, callback, 1), 100);
-		}
-	}
-
-	//analyis receiving message
-	playgroundInfo() {
+//send login message
+export default connect(roomNumber, callback, times = 0) {
+	let message = sender.loginAnalyis(roomNumber);
+	if (receiver.state == 1) {
 		if (debug)
-			console.log("start send playgroundInfo");
-		// if (status == false) {
-		// let play = setTimeout(() => this.playgroundInfo(), rollingTime);
-		// } else {
-		if (debug)
-			console.log("playgronud send!");
-		let message = sender.playgroundInfoAnalyis();
-		if (this.ws.sendMessage(message.getDv())) {
-			if (debug)
-				console.log("playgronud send succeed!");
-		} else {
-			console.log("playgronud send failed...");
-		}
-		// let play = setTimeout(() => this.playgroundInfo(), rollingTime);
-		// }
+			console.log("start loading...");
+		if (times == 0)
+			ws.sendMessage(message.getDv());
 	}
+	if (receiver.state == 2) {
+		if (debug)
+			console.log("load send succeed!");
+		callback(null, true);
+	} else {
+		console.log("load send failed...reloading...");
+		setTimeout(() => connect(roomNumber, callback, 1), 100);
+	}
+}
+
+//analyis receiving message
+export default playgroundInfo() {
+	if (debug)
+		console.log("start send playgroundInfo");
+	// if (status == false) {
+	// let play = setTimeout(() => this.playgroundInfo(), rollingTime);
+	// } else {
+	if (debug)
+		console.log("playgronud send!");
+	let message = sender.playgroundInfoAnalyis();
+	if (ws.sendMessage(message.getDv())) {
+		if (debug)
+			console.log("playgronud send succeed!");
+	} else {
+		console.log("playgronud send failed...");
+	}
+	// let play = setTimeout(() => this.playgroundInfo(), rollingTime);
+	// }
+}
 }

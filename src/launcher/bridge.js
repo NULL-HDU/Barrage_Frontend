@@ -4,24 +4,31 @@
  * Email: mephistommm@gmail.com
  */
 
-import {startGame} from "../engine_init.js";
-import transmitted from "../socket/transmitted.js";
+import {
+  startGame
+} from "../engine_init.js";
+import tm as * from "../socket/transmitted.js";
 import iGameModel from "../model/gamemodel_init.js";
-import {initView as iview} from "../view/Nview.js"
+import {
+  initView as iview
+} from "../view/Nview.js"
 
 let _initGameModel = iGameModel;
-let _initSocket = (cb) => {console.log("socket inited.");cb(null, 1234);};
+let _initSocket = (cb) => {
+  console.log("socket inited.");
+  cb(null, 1234);
+};
 let _initView = iview;
 let _socketDealGameInfo = () => console.log("socket Deal game info");
 let _initEngine = (userId, name) => {
   console.log(`engine inited with ${userId} and ${name}`);
-  startGame(userId,name);
+  startGame(userId, name);
 };
 let _socketConnect = (roomId, cb) => {
-    setTimeout(() => {
-          console.log("socket connected!");
-          cb(null, true);
-        }, 1500);
+  setTimeout(() => {
+    console.log("socket connected!");
+    cb(null, true);
+  }, 1500);
 };
 
 // It won't connect to backend while you are developing by default,
@@ -31,14 +38,13 @@ let _socketConnect = (roomId, cb) => {
 //    export NODE_ENV="testing"
 //
 // then start your webpack-server.
-if(__ENV__ === "testing" || __ENV__ === "production"){
-  let tm = new transmitted();
+if (__ENV__ === "testing" || __ENV__ === "production") {
 
   _initSocket = tm.initSocket;
   _socketDealGameInfo = tm.playgroundInfo;
   _initEngine = (userId, name) => {
     console.log(`engine inited with ${userId} and ${name}`);
-    startGame(userId,name);
+    startGame(userId, name);
   };
   _socketConnect = tm.connect;
 }
