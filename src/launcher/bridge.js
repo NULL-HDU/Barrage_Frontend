@@ -41,11 +41,11 @@ let _socketConnect = (roomId, cb) => {
 if (__ENV__ === "testing" || __ENV__ === "production") {
 
   _initSocket = tm.initSocket;
-  _socketDealGameInfo = tm.playgroundInfo;
-  _initEngine = (userId, name) => {
-    console.log(`engine inited with ${userId} and ${name}`);
-    startGame(userId, name);
-  };
+  // _socketDealGameInfo = tm.playgroundInfo;
+  // _initEngine = (userId, name) => {
+  //   console.log(`engine inited with ${userId} and ${name}`);
+  //   startGame(userId, name);
+  // };
   _socketConnect = tm.connect;
 }
 
