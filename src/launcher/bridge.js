@@ -28,7 +28,7 @@ let _socketConnect = (roomId, cb) => {
 // if you want to connect to backend, run following command in the session of shell
 // where you run webpack-server:
 //
-//    export NODE_ENV="testing"
+//   export NODE_ENV="testing"
 //
 // then start your webpack-server.
 if(__ENV__ === "testing" || __ENV__ === "production"){
@@ -36,7 +36,7 @@ if(__ENV__ === "testing" || __ENV__ === "production"){
 
   _initSocket = tm.initSocket;
   // TODO: Add view init interface.
-  _initView = () => console.log("view inited.");
+  _initView = iview;
   _socketDealGameInfo = tm.playgroundInfo;
   _initEngine = (userId, name) => {
     console.log(`engine inited with ${userId} and ${name}`);

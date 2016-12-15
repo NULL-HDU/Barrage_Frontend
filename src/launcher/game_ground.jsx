@@ -34,8 +34,10 @@ export default class GameGroundPage extends Component {
     initGameModel();
 
     initView(() => {
-    socketDealGameInfo();
-    initEngine(Data.UserId, Data.Name);
+        socketDealGameInfo();
+        console.log("socketDealGameInfo success");
+        initEngine(Data.UserId, Data.Name);
+        console.log("initEngine success");
     });
   }
 
