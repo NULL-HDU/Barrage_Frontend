@@ -283,12 +283,11 @@ function initLayers(callback) {
     initEffect();
     initUI();
 
+    state = play;
     console.log("init view");
     callback();
     console.log("callback success");
 
-    state = play;
-    loopRender();
 }
 
 function initBackground() {
