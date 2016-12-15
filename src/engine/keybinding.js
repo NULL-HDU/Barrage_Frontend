@@ -8,7 +8,7 @@ import {
 } from "./skill.js";
 
 let data = gamemodel.data.engineControlData;
-let test = 1;
+let test = -1;
 
 let mouseMove=(e)=>{
   let oppositeSide = e.screenX - global.LOCAL_WIDTH/2;
