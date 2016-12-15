@@ -33,7 +33,7 @@ export default class GameGroundPage extends Component {
     initGameModel();
 
     initView(() => {
-      initEngine(Data.UserId, Data.Name);
+        initEngine(Data.UserId, Data.Name);
     });
   }
 
