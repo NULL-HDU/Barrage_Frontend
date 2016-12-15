@@ -19,7 +19,6 @@ let _initSocket = (cb) => {
   cb(null, 1234);
 };
 let _initView = iview;
-let _socketDealGameInfo = () => console.log("socket Deal game info");
 let _initEngine = (userId, name) => {
   console.log(`engine inited with ${userId} and ${name}`);
   startGame(userId, name);
@@ -35,23 +34,16 @@ let _socketConnect = (roomId, cb) => {
 // if you want to connect to backend, run following command in the session of shell
 // where you run webpack-server:
 //
-//    export NODE_ENV="testing"
+//   export NODE_ENV="testing"
 //
 // then start your webpack-server.
 if (__ENV__ === "testing" || __ENV__ === "production") {
-
   _initSocket = tm.initSocket;
-  // _socketDealGameInfo = tm.playgroundInfo;
-  // _initEngine = (userId, name) => {
-  //   console.log(`engine inited with ${userId} and ${name}`);
-  //   startGame(userId, name);
-  // };
   _socketConnect = tm.connect;
 }
 
 export const initSocket = _initSocket;
 export const initView = _initView;
-export const socketDealGameInfo = _socketDealGameInfo;
 export const initEngine = _initEngine;
 export const socketConnect = _socketConnect;
 export const initGameModel = _initGameModel;

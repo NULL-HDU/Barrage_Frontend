@@ -35,6 +35,15 @@ let adaptWindow = () => {
 };
 adaptWindow();
 
+// center the canvas
+let centerCanvas = () => {
+    let LEFT = (LOCAL_W - VIEW_W) / 2 === 0? 0 : (LOCAL_W - VIEW_W) / 2 + "px",
+        TOP = (LOCAL_H - VIEW_H) / 2 === 0? 0 : (LOCAL_H - VIEW_H) / 2 + "px";
+
+    let canvas = document.getElementById("canvas");
+    canvas.style.margin = `${TOP} ${LEFT}`;
+};
+
 // center of the local view size
 let CENTER_X = VIEW_W / 2,
     CENTER_Y = VIEW_H / 2;
@@ -49,7 +58,10 @@ let resources = PIXI.loader.resources;
 let img_url = "/static/view/imgs/",
     img_ap_body = img_url + "ap_body.png",
     img_ap_arrow = img_url + "ap_arrow.png",
-    img_b_bullet = img_url + "b_bullet.png";
+    img_b_bullet = img_url + "b_bullet.png",
+    img_enm_body = img_url + "enm_body.png",
+    img_enm_arrow = img_url + "enm_arrow.png",
+    img_r_bullet = img_url + "r_bullet.png";
 
 // pixi renderer
 let renderer = PIXI.autoDetectRenderer(
@@ -111,11 +123,13 @@ let selectBalls = (con, sparr, gmd, size, url, type) => {
             if (count > sparr.length) {
                 switch (type) {
                     case T_BULLET: addBullet(con, sparr, url, size, data); break;
+                    case T_ENM: addEnm(con, sparr, url, size, data); break;
                     default: break;
                 }
             } else {
                 switch (type) {
                     case T_BULLET: updateBullet(sparr, count - 1, size, data); break;
+                    case T_ENM: updateEnm(sparr, count - 1, size, data); break;
                     default: break;
                 }
             }
@@ -191,15 +205,47 @@ let drawCrossLine = (x, y) => {
     universe.y = y;
 };
 
+// EnemyLayer
+const T_ENM = 0;
+const enm_l = 120; 
+let Enemys = [], enm_gi;
+let updateEnm = (sparr, index, size, data) => {
+    sparr[index].visible = true;
+    if (sparr[index].width !== size * RATIO_CRT) {
+        setObjectSize(sparr[index.size]);
+    }
+    sparr[index].x = centerAPX(data[0], ap_data.x_crt);
+    sparr[index].y = centerAPY(data[1], ap_data.y_crt);
+    sparr[index].getChildAt(1).rotation = data[2];
+
+};
+
+let addEnm = (con, sparr, url, size, data) => {
+    let enemy = new Container();
+    enemy.addChildAt(createSprite(url[0]), 0);
+    enemy.addChildAt(createSprite(url[1]), 1);
+    setObjectSize(enemy, size);
+    sparr.push(enemy);
+
+    let p = sparr.length - 1;
+    updateEnm(sparr, p, size, data);
+    con.addChild(sparr[p]);
+};
+
 // BULLET
 const T_BULLET = 1;
 // BlueBulletLayer
 const bblt_l = 20;
-let Bbullets = [],
-    bblt_gi;
+let Bbullets = [], bblt_gi;
+// RedBulletLayer
+const rblt_l = 20;
+let Rbullets = [], rblt_gi;
+
 let updateBullet = (sparr, index, size, data) => {
     sparr[index].visible = true;
-    setObjectSize(sparr[index], size);
+    if (sparr[index].width !== size * RATIO_CRT) {
+        setObjectSize(sparr[index], size);
+    }
     sparr[index].x = centerAPX(data[0], ap_data.x_crt);
     sparr[index].y = centerAPY(data[1], ap_data.y_crt);
     sparr[index].rotation = data[2];
@@ -218,9 +264,13 @@ export function initView(callback) {
         .add(img_ap_body)
         .add(img_ap_arrow)
         .add(img_b_bullet)
+        .add(img_enm_body)
+        .add(img_enm_arrow)
+        .add(img_r_bullet)
         .load(() =>{
             renderer.view.id = "canvas";
             document.body.appendChild(renderer.view);
+            centerCanvas();
             initLayers(callback);
         });
 }
@@ -238,6 +288,7 @@ function initLayers(callback) {
 
     console.log("init view");
     callback();
+    console.log("callback success");
 
     state = play;
     loopRender();
@@ -331,6 +382,9 @@ function rstResource() {
 }
 
 function rstEnemy() {
+    enm_gi = GMD.data.backendControlData.airPlane;
+    let url =[img_enm_body, img_ap_arrow];
+    selectBalls(EnemyLayer, Enemys, enm_gi, enm_l, url, T_ENM);
 }
 
 function rstAirplane() {
@@ -338,6 +392,8 @@ function rstAirplane() {
 }
 
 function rstRedBullet() {
+    rblt_gi = GMD.data.backendControlData.bullet;
+    selectBalls(RedBulletLayer, Rbullets, rblt_gi, rblt_l, img_r_bullet, T_BULLET);
 }
 
 function rstBlueBullet() {
@@ -358,6 +414,7 @@ function rszView() {
     RATIO_PRE = RATIO_CRT;
 
     // current window size
+    let lw = LOCAL_W, lh = LOCAL_H;
     LOCAL_W = window.innerWidth;
     LOCAL_H = window.innerHeight;
 
@@ -366,6 +423,7 @@ function rszView() {
         (LOCAL_W === VIEW_W && LOCAL_H < VIEW_H) ||
         (LOCAL_W < VIEW_W && LOCAL_H === VIEW_H)
     ) {
+
         adaptWindow();
 
         CENTER_X = VIEW_W / 2;
@@ -387,6 +445,9 @@ function rszView() {
         rszBlueBullet();
         rszEffect();
         rszUI();
+    }
+    if (LOCAL_W !== lw || LOCAL_H !== lh) {
+        centerCanvas();
     }
 }
 

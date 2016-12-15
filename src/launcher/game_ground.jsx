@@ -11,7 +11,6 @@ import {
   initEngine,
   initView,
   initGameModel,
-  socketDealGameInfo
 } from "./bridge.js";
 
 export default class GameGroundPage extends Component {
@@ -34,8 +33,7 @@ export default class GameGroundPage extends Component {
     initGameModel();
 
     initView(() => {
-    socketDealGameInfo();
-    initEngine(Data.UserId, Data.Name);
+        initEngine(Data.UserId, Data.Name);
     });
   }
 

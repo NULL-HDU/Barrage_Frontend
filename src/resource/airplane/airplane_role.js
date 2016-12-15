@@ -4,12 +4,13 @@
  * Email: mephistommm@gmail.com
  */
 import {EVA01} from "./roleId.js";
+import {EVA01_AIRPLANE} from "../skin/skinId.js";
 import LinearPark from "../skills/normalStraightShut.js";
 import PosAndNegWheel from "../skills/posAndNegWheel.js";
 
 export default {
   [EVA01]: {
-    radius: 5,
+    skinId: EVA01_AIRPLANE,
 
     normalSkill: LinearPark,
     qSkill: PosAndNegWheel,
