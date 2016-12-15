@@ -211,9 +211,6 @@ const enm_l = 120;
 let Enemys = [], enm_gi;
 let updateEnm = (sparr, index, size, data) => {
     sparr[index].visible = true;
-    if (sparr[index].width !== size * RATIO_CRT) {
-        setObjectSize(sparr[index.size]);
-    }
     sparr[index].x = centerAPX(data[0], ap_data.x_crt);
     sparr[index].y = centerAPY(data[1], ap_data.y_crt);
     sparr[index].getChildAt(1).rotation = data[2];
@@ -347,6 +344,9 @@ function loopRender() {
     state();
     rszView();
     renderer.render(Stage);
+    GMD.deadCache = [];
+    GMD.disappearCache = [];
+    GMD.collisionCache = [];
     setTimeout(loopRender, stot);
 }
 
@@ -383,7 +383,8 @@ function rstResource() {
 
 function rstEnemy() {
     enm_gi = GMD.data.backendControlData.airPlane;
-    let url =[img_enm_body, img_ap_arrow];
+    // console.log("sss: " + enm_gi);
+    let url =[img_enm_body, img_enm_arrow];
     selectBalls(EnemyLayer, Enemys, enm_gi, enm_l, url, T_ENM);
 }
 
@@ -393,11 +394,13 @@ function rstAirplane() {
 
 function rstRedBullet() {
     rblt_gi = GMD.data.backendControlData.bullet;
+    // console.log(rblt_gi);
     selectBalls(RedBulletLayer, Rbullets, rblt_gi, rblt_l, img_r_bullet, T_BULLET);
 }
 
 function rstBlueBullet() {
     bblt_gi = GMD.data.engineControlData.bullet;
+    // console.log(bblt_gi);
     selectBalls(BlueBulletLayer, Bbullets, bblt_gi, bblt_l, img_b_bullet, T_BULLET);
     // console.log(Bbullets);
 }
@@ -431,6 +434,7 @@ function rszView() {
 
         RATIO_CRT = VIEW_W / CUT_W;
         TRANS_VALUE  = RATIO_CRT / RATIO_PRE;
+        console.log("change: " + RATIO_CRT);
 
         renderer.resize(VIEW_W, VIEW_H);
 
@@ -462,6 +466,9 @@ function rszResource() {
 }
 
 function rszEnemy() {
+    for (let i = 0; i < Enemys.length; i ++) {
+        setObjectSize(Enemys[i], enm_l);
+    }
 }
 
 function rszAirplane() {

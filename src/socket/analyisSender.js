@@ -258,6 +258,7 @@ export function loginAnalyis(roomNumber) {
 export function playgroundInfoAnalyis() {
 	let socketCache = gamemodel.socketCache;
 	let newBallsInfoArray = socketCache.newBallInformation;
+    socketCache.newBallInformation = [];
 	let lengthOfNewBallsInfos = newBallsInfoArray.length;
 
 	let balls = gamemodel.data.engineControlData;
@@ -273,6 +274,7 @@ export function playgroundInfoAnalyis() {
 	let lengthOfCollisionSocketInfos = collisionSocketInfoArray.length;
 
 	let disappearInfoArray = socketCache.disapperBulletInformation;
+    socketCache.disapperBulletInformation = [];
 	let lengthOfDisappearInfos = disappearInfoArray.length;
 
 	// if(debug){
