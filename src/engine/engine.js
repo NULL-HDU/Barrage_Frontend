@@ -15,7 +15,7 @@ import gamemodel from "../model/gamemodel";
 import Quadtree from "./quadtree";
 import PVector from "../model/Point";
 import {
-    socketStatusSwitcher
+    playgroundInfo
 } from "../socket/transmitted";
 
 let data, backendData;
@@ -149,7 +149,8 @@ let engine = () => {
         // uselessBulletsCollect useless balls always are in the end of a engine cycle;
         uselessBulletsCollect();
 
-        socketStatusSwitcher();
+        playgroundInfo();
+
     }, global.GAME_LOOP_INTERVAL);
 };
 
