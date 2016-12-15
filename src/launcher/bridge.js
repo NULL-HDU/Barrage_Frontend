@@ -7,7 +7,7 @@
 import {
   startGame
 } from "../engine_init.js";
-import tm as * from "../socket/transmitted.js";
+import * as tm from "../socket/transmitted.js";
 import iGameModel from "../model/gamemodel_init.js";
 import {
   initView as iview

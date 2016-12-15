@@ -13,7 +13,6 @@ let debug = false;
 let rollingTime = 1000 / 90;
 let status = false;
 let ws = null;
-let status = null;
 
 //switch the status of is updating socket
 export default function socketStatusSwitcher() {
@@ -22,7 +21,7 @@ export default function socketStatusSwitcher() {
 }
 
 
-export default initSocket(callback, times === 0) {
+export function initSocket(callback, times = 0) {
 	if (times === 0) {
 		ws = new WebSocket();
 		ws.init();
@@ -37,7 +36,7 @@ export default initSocket(callback, times === 0) {
 }
 
 //send login message
-export default connect(roomNumber, callback, times = 0) {
+export function connect(roomNumber, callback, times = 0) {
 	let message = sender.loginAnalyis(roomNumber);
 	if (receiver.state == 1) {
 		if (debug)
@@ -56,7 +55,7 @@ export default connect(roomNumber, callback, times = 0) {
 }
 
 //analyis receiving message
-export default playgroundInfo() {
+export function playgroundInfo() {
 	if (debug)
 		console.log("start send playgroundInfo");
 	// if (status == false) {
@@ -73,5 +72,4 @@ export default playgroundInfo() {
 	}
 	// let play = setTimeout(() => this.playgroundInfo(), rollingTime);
 	// }
-}
 }
