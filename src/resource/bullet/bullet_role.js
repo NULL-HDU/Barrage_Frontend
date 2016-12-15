@@ -6,6 +6,7 @@
 import global from "../../global.js";
 import straightLinePath from "../pathFunc/straightLine.js";
 import circlePath from "../pathFunc/circlePath.js";
+import {MIN_BULLET} from "../skin/skinId.js";
 import {
   STRAIGHT_LINE_BULLET,
   CIRCLE_BULLET,
@@ -13,14 +14,14 @@ import {
 
 export default {
   [STRAIGHT_LINE_BULLET]: {
-    radius: 7.5,
+    skinId: MIN_BULLET,
     pathFunc: straightLinePath,
     hp: 100,
     damage: 50,
     speed: global.BULLET_SPEED, // px / s
   },
   [CIRCLE_BULLET]: {
-    radius: 7.5,
+    skinId: MIN_BULLET,
     pathFunc: circlePath,
     hp: 100,
     damage: 50,

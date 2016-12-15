@@ -1,77 +1,75 @@
 /*
-*send message to server
-*author:yummyLcj
-*email:luchenjiemail@gmail.com
-*/
+ *send message to server
+ *author:yummyLcj
+ *email:luchenjiemail@gmail.com
+ */
 
 import WebSocket from "./websocket.js";
-import gamemodel from "../model/gamemodel.js" 
+import gamemodel from "../model/gamemodel.js"
 import * as sender from "./analyisSender.js"
 import * as receiver from "./analyisReceiver.js"
 
 let debug = false;
-let rollingTime = 1000/90;
+let rollingTime = 1000 / 90;
 let status = false;
+let ws = null;
 
- 	//switch the status of is updating socket
-export function socketStatusSwitcher(){
-		status = !status;
-		return status;
+//switch the status of is updating socket
+export default function socketStatusSwitcher() {
+	status = !status;
+	return status;
+}
+
+
+export function initSocket(callback, times = 0) {
+	if (times === 0) {
+		ws = new WebSocket();
+		ws.init();
 	}
-
-export default class transmitted{
-
-	constructor(){
-		this.ws = new WebSocket();
-		this.ws.init();
-		this.status = false
-		this.initSocket = this.initSocket.bind(this);
-		this.connect = this.connect.bind(this);
-		this.playgroundInfo = this.playgroundInfo.bind(this);
+	let userId = receiver.userId;
+	if (userId == undefined) {
+		console.log("reload userId!")
+		setTimeout(() => initSocket(callback, 1), 100);
+	} else {
+		callback(null, userId);
 	}
+}
 
-	initSocket(callback){
-		let userId = receiver.userId;
-		if(userId==undefined){
-			console.log("reload userId!")
-			setTimeout(()=>this.initSocket(callback),100);
-		}else{
-			callback(null,userId);
-		}
+//send login message
+export function connect(roomNumber, callback, times = 0) {
+	let message = sender.loginAnalyis(roomNumber);
+	if (receiver.state == 1) {
+		if (debug)
+			console.log("start loading...");
+		if (times == 0)
+			ws.sendMessage(message.getDv());
 	}
+	if (receiver.state == 2) {
+		if (debug)
+			console.log("load send succeed!");
+		callback(null, true);
+	} else {
+		console.log("load send failed...reloading...");
+		setTimeout(() => connect(roomNumber, callback, 1), 100);
+	}
+}
 
-	//send login message
-	connect(roomNumber,callback,times=0){
-		let message = sender.loginAnalyis(roomNumber);
-		if(receiver.state==1){
-			if(times==0)
-				this.ws.sendMessage( message.getDv() );
-		}
-		if(receiver.state==2){
-			if(debug)
-				console.log("load send succeed!");
-			callback(null,true);				
-		}else{
-			console.log("load send failed...reloading...");
-			setTimeout(()=>this.connect(roomNumber,callback,1),100);
-		}
+//analyis receiving message
+export function playgroundInfo() {
+	if (debug)
+		console.log("start send playgroundInfo");
+	// if (status == false) {
+	// let play = setTimeout(() => this.playgroundInfo(), rollingTime);
+	// } else {
+	if (debug)
+		console.log("playgronud send!");
+	let message = sender.playgroundInfoAnalyis();
+	if (ws.sendMessage(message.getDv())) {
+		if (debug)
+			console.log("playgronud send succeed!");
+	} else {
+		console.log("playgronud send failed...");
 	}
-
-	//analyis receiving message
-	playgroundInfo(){
-		if(status==false){
-			let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
-		}else{
-			if(debug)
-				console.log("playgronud send!");
-			let message = sender.playgroundInfoAnalyis();
-			if( this.ws.sendMessage(message.getDv()) ){
-				if(debug)
-					console.log("playgronud send succeed!");
-			}else{
-				  console.log("playgronud send failed...");
-			}
-			let play = setTimeout(()=>this.playgroundInfo(),rollingTime );
-		}
-	}
+	// let play = setTimeout(() => this.playgroundInfo(), rollingTime);
+	// }
 }

@@ -6,18 +6,19 @@
 
 import global from "../global";
 import {
-  DEAD,
-  DISAPPEAR,
-  AIRPLANE,
-  BULLET
+    DEAD,
+    DISAPPEAR,
+    AIRPLANE,
+    BULLET
 } from "../constant.js";
 import gamemodel from "../model/gamemodel";
 import Quadtree from "./quadtree";
 import PVector from "../model/Point";
-import {socketStatusSwitcher} from "../socket/transmitted";
+import {
+    playgroundInfo
+} from "../socket/transmitted";
 
-let data = gamemodel.data.engineControlData;
-let backendData = gamemodel.data.backendControlData;
+let data, backendData;
 let quad = new Quadtree({
     x: 0,
     y: 0,
@@ -25,10 +26,13 @@ let quad = new Quadtree({
     height: global.LOCAL_HEIGHT
 }, 10, 5);
 
-let looper = (f, t) => setTimeout(() => {f(); looper(f, t);}, t);
+let looper = (f, t) => setTimeout(() => {
+    f();
+    looper(f, t);
+}, t);
 
 let uselessBulletsCollect = () => {
-    if(data.bullet.length <= 0) return;
+    if (data.bullet.length <= 0) return;
 
     data.bullet = data.bullet.filter((bullet) => {
         if (bullet.state === DEAD) {
@@ -39,6 +43,18 @@ let uselessBulletsCollect = () => {
         if (bullet.state === DISAPPEAR) {
             gamemodel.disappearCache.push(bullet);
             gamemodel.socketCache.disapperBulletInformation.push(bullet.id);
+            return false;
+        }
+        return true;
+    });
+
+    backendData.bullet = backendData.bullet.filter((bullet) => {
+        if (bullet.state === DEAD) {
+            gamemodel.deadCache.push(bullet);
+            return false;
+        }
+        if (bullet.state === DISAPPEAR) {
+            gamemodel.disappearCache.push(bullet);
             return false;
         }
         return true;
@@ -78,22 +94,22 @@ let collisionDetection = () => {
                 //碰撞处理和伤害计算
                 if (collidors[j].ballType === BULLET) {
                     collidors[j].hp -= selfBullets[i].damage;
-                    if(collidors[j].hp === 0){
+                    if (collidors[j].hp === 0) {
                         collidors[j].state = DEAD;
                         //console.log("enemy bullet dead detect");
                     }
                 }
 
-                if (selfBullets[i].ballType === AIRPLANE){
+                if (selfBullets[i].ballType === AIRPLANE) {
                     selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
-                    if(selfBullets[i].hp === 0){
+                    if (selfBullets[i].hp === 0) {
                         selfBullets[i].state = DEAD;
                     }
                 }
 
                 if (selfBullets[i].ballType === BULLET) {
                     selfBullets[i].hp -= collidors[j].damage;
-                    if(selfBullets[i].hp === 0){
+                    if (selfBullets[i].hp === 0) {
                         selfBullets[i].state = DEAD;
                         //console.log("self bullet dead detect");
                     }
@@ -119,23 +135,27 @@ let collisionDetection = () => {
 };
 
 let engine = () => {
-  let airPlane = data.airPlane;
-  looper(() => {
-    airPlane.move();
-    airPlane.skillCountDown();
+    let airPlane = data.airPlane;
+    looper(() => {
+        airPlane.move();
+        airPlane.skillActive();
+        airPlane.skillCountDown();
 
-    data.bullet.forEach((bullet) => {
-      bullet.pathCalculate();
-    });
-    collisionDetection();
+        data.bullet.forEach((bullet) => {
+            bullet.pathCalculate();
+        });
+        collisionDetection();
 
-    // uselessBulletsCollect useless balls always are in the end of a engine cycle;
-    uselessBulletsCollect();
+        // uselessBulletsCollect useless balls always are in the end of a engine cycle;
+        uselessBulletsCollect();
 
-    socketStatusSwitcher();
-  }, global.GAME_LOOP_INTERVAL);
+        playgroundInfo();
+
+    }, global.GAME_LOOP_INTERVAL);
 };
 
-export const startEngine= () => {
-  engine();
+export const startEngine = () => {
+    data = gamemodel.data.engineControlData;
+    backendData = gamemodel.data.backendControlData;
+    engine();
 };
