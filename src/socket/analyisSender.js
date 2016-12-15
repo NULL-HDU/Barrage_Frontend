@@ -1,7 +1,7 @@
-// /* analyising the send message of websocket
-// ** date:11/14/2016
-// ** author:yummyLcj
-// */
+/* analyising the send message of websocket
+ ** date:11/14/2016
+ ** author:yummyLcj
+ */
 
 import gamemodel from "../model/gamemodel"
 import dataview from "./dataview.js"

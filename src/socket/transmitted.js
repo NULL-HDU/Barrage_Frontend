@@ -25,6 +25,7 @@ export function initSocket(callback, times = 0) {
 	if (times === 0) {
 		ws = new WebSocket();
 		ws.init();
+		socketStatusSwitcher();
 	}
 	let userId = receiver.userId;
 	if (userId == undefined) {
@@ -37,6 +38,7 @@ export function initSocket(callback, times = 0) {
 
 //send login message
 export function connect(roomNumber, callback, times = 0) {
+	if (status == false) return;
 	let message = sender.loginAnalyis(roomNumber);
 	if (receiver.state == 1) {
 		if (debug)
@@ -56,6 +58,7 @@ export function connect(roomNumber, callback, times = 0) {
 
 //analyis receiving message
 export function playgroundInfo() {
+	if (status == false) return;
 	if (debug)
 		console.log("start send playgroundInfo");
 	// if (status == false) {
