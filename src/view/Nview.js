@@ -340,14 +340,13 @@ function initUI() {
 }
 
 // loop render
-function loopRender() {
+export function loopRender() {
     state();
     rszView();
     renderer.render(Stage);
     GMD.deadCache = [];
     GMD.disappearCache = [];
     GMD.collisionCache = [];
-    setTimeout(loopRender, stot);
 }
 
 function play() {
