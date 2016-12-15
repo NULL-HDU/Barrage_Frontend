@@ -17,6 +17,9 @@ import PVector from "../model/Point";
 import {
     playgroundInfo
 } from "../socket/transmitted";
+import {
+    loopRender
+} from "../view/Nview"
 
 let data, backendData;
 let quad = new Quadtree({
@@ -136,6 +139,11 @@ let collisionDetection = () => {
 
 let engine = () => {
     let airPlane = data.airPlane;
+    let socketCount = 0;
+    let socketCountMax = global.SOCKET_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL;
+    let viewCount = 0;
+    let viewCountMax = Math.floor(global.VIEW_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL);
+
     looper(() => {
         airPlane.move();
         airPlane.skillActive();
@@ -149,7 +157,15 @@ let engine = () => {
         // uselessBulletsCollect useless balls always are in the end of a engine cycle;
         uselessBulletsCollect();
 
-        playgroundInfo();
+        if(++socketCount >= socketCountMax){
+            socketCount = 0;
+            playgroundInfo();
+        }
+        
+        if(++viewCount >= viewCountMax){
+            viewCount = 0;
+            loopRender();
+        }
     }, global.GAME_LOOP_INTERVAL);
 };
 
