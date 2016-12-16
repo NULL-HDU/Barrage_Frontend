@@ -75,10 +75,11 @@ function writeNewBallInf(newBall) {
 	for (let i in newBall) {
 		let roleId = newBall[i].roleId;
 		let skinId = null;
-		if (newBall[i].ballType === CommonConstant.AIRPLANE)
+		if (newBall[i].ballType === CommonConstant.AIRPLANE) {
 			skinId = airPlane[roleId]["skinId"];
-		else
+		} else {
 			skinId = bullet[roleId]["skinId"];
+		}
 		newBall[i]["skinId"] = skinId;
 		if (newBall[i].userId == 0) {
 			backend.food.push(newBall[i]);
