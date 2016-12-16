@@ -160,6 +160,17 @@ let ap_gi,
 let copyAirplaneInfo = () => {
     ap_gi = GMD.data.engineControlData.airPlane;
 
+    if (ap_gi === undefined) {
+        ap_data.x_pre = 0;
+        ap_data.y_pre = 0;
+        ap_data.flag = 0;
+        ap_data.x_crt = 0;
+        ap_data.x_len = 0;
+        ap_data.y_crt = 0;
+        ap_data.y_len = 0;
+        ap_data.r = 0;
+    }
+
     if (ap_data.flag === 0) {
         ap_data.x_pre = ap_gi.locationCurrent.x;
         ap_data.y_pre = ap_gi.locationCurrent.y;
