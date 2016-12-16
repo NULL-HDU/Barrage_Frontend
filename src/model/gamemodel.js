@@ -9,7 +9,7 @@ export default {
     userId: null,
     data: {
         engineControlData:{
-            airPlane:null,
+            airPlane: undefined,
             bullet:[],
         },
         backendControlData:{
@@ -27,12 +27,13 @@ export default {
     disappearCache:[],
     collisionCache:[],
     resourceRecord:{
-        airPlaneTable:[],
-        bulletTable:[],
-        blockTable:[],
-        foodTable:[],
-        foodFuncTable:[],
-        seatTable:[],
+        airPlaneTable:{},
+        bulletTable:{},
+        blockTable:{},
+        foodTable:{},
+        skinTable:{},
+        foodFuncTable:{},
+        seatTable:{},
     },
     config: null,
 };
