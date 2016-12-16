@@ -95,6 +95,11 @@ let collisionDetection = () => {
       2.对每个球体进行碰撞检测，检测到的就进行标记
       3.碰撞效果和伤害检测处理之后清空四叉树，进行下一轮碰撞检测
     */
+
+    if(data.airPlane === undefined) {
+        return;
+    }
+
     let selfBullets = data.bullet.concat(data.airPlane);
     let enemyBullets = backendData.bullet.concat(backendData.airPlane);
     let bulletsBank = selfBullets.concat(enemyBullets);
@@ -140,11 +145,13 @@ let collisionDetection = () => {
                 if (selfBullets[i].ballType === AIRPLANE) {
                     console.log("self airplane detect");
                     //                    selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
-                    selfBullets[j].hp = 0;
+                    selfBullets[i].hp = 0;
                     if (selfBullets[i].hp === 0) {
                         console.log("self dead");
                         selfBullets[i].state = DEAD;
-//                        window.dialogs.info.Open("You are dead!!!","",);
+                        window.dialogs.info.Open("You are dead!!!","Try again?",(yes) => {
+                            
+                        });
                     }
                 }
 
