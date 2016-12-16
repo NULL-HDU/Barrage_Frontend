@@ -41,6 +41,11 @@ let uselessBulletsCollect = () => {
 
     data.bullet = selfBalls.filter((bullet) => {
         if (bullet.state === DEAD) {
+
+            if (bullet.ballType === AIRPLANE) {
+                data.airPlane === undefined;
+            }
+
             gamemodel.deadCache.push(bullet);
             gamemodel.socketCache.disapperBulletInformation.push(bullet.id);
             return false;
@@ -58,19 +63,23 @@ let uselessBulletsCollect = () => {
         return true;
     });
 
-    let enemyBalls = backendData.bullet.concat(backendData.airPlane);
+    backendData.airPlane = backendData.airPlane.filter((airPlane) => {
+        if (airPlane.state === DEAD) {
+            gamemodel.deadCache.push(airPlane);
+            return false;
+        }
 
-    backendData.bullet = enemyBalls.filter((bullet) => {
+        return true;
+        
+    });
+
+    backendData.bullet = backendData.bullet.filter((bullet) => {
         if (bullet.state === DEAD) {
             gamemodel.deadCache.push(bullet);
             return false;
         }
         if (bullet.state === DISAPPEAR) {
             gamemodel.disappearCache.push(bullet);
-            return false;
-        }
-
-        if (bullet.ballType === AIRPLANE) {
             return false;
         }
 
@@ -121,6 +130,7 @@ let collisionDetection = () => {
                     console.log("enemy airplane detect");
                     collidors[j].hp -= selfBullets[i].damage * collidors[j].defense;
                     if (collidors[j].hp === 0) {
+                        console.log("enemy dead");
                         collidors[j].state = DEAD;
                     }
                 }
@@ -129,6 +139,7 @@ let collisionDetection = () => {
                     console.log("self airplane detect");
                     selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
                     if (selfBullets[i].hp === 0) {
+                        console.log("self dead");
                         selfBullets[i].state = DEAD;
                     }
                 }
