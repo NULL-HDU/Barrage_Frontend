@@ -40,6 +40,9 @@ let normalSkillFunc = () => {
 // if skillOnFlag is on and currentSkillType is the same as the skillTpye parameter,
 // it will call skill fucntion, then loop itself.
 let checkToCallSkillFuncThenLoop = (skillTpye) => {
+    if(data.airPlane === undefined){
+        return;
+    }
     if (skillFlags.engineOn !== 0) {
         skillFlags.currentSkillType = null;
     }

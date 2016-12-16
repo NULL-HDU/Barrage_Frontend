@@ -22,6 +22,10 @@ import {
 import {
     loopRender
 } from "../view/Nview"
+import {
+    configCanvasEventListen,
+    changeKeyEventBindings
+}from "./keybinding.js";
 
 
 let data, backendData;
@@ -160,8 +164,11 @@ let collisionDetection = () => {
                                 airPlane.name = gamemodel.userName;
                                 airPlane.userId = gamemodel.userId;
                                 gamemodel.data.engineControlData.airPlane = airPlane;
+                                configCanvasEventListen();
+                                changeKeyEventBindings();
                                 startEngine();
                             }else{
+
                             }
                         });
                     }

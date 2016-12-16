@@ -128,7 +128,6 @@ export const configCanvasEventListen=()=>{
 };
 
 export const changeKeyEventBindings = () => {
-  let ap = gamemodel.data.engineControlData.airPlane;
     let left = keyboard(KEY.A),
         up = keyboard(KEY.W),
         right = keyboard(KEY.D),
@@ -139,8 +138,12 @@ export const changeKeyEventBindings = () => {
         space = keyboard(KEY.SPACE),
         f11 = keyboard(KEY.F11);
 
+    let ifApIsValid = (f) => () => {
+        if(gamemodel.data.engineControlData.airPlane === undefined) return;
+         f(gamemodel.data.engineControlData.airPlane);   
+    };
 
-    shift.press = function() {
+    shift.press = ifApIsValid( (ap) => {
 
         if( test==1 )
             console.log("shift press");
@@ -156,9 +159,9 @@ export const changeKeyEventBindings = () => {
         if(right.isDown){
             ap.v.x = global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
         }
-    };
+    });
 
-    shift.release = function() {
+    shift.release = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log("shift release");
@@ -174,38 +177,38 @@ export const changeKeyEventBindings = () => {
         if(right.isDown){
             ap.v.x = global.AIRPLANE_SPEED;
         }
-    };
+    });
 
-    space.press = function() {
+    space.press = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log('space press');
         enableSkillEngine(global.NORMAL_SKILL);
-    };
+    });
 
-    space.release = function() {
+    space.release = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log('space release');
         disableSkillEngine(global.NORMAL_SKILL);
-   };
+    });
 
-    f11.press = function() {
+    f11.press = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log("f11 press");
-    };
+    });
 
-    f11.release = function() {
+    f11.release = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log("f11 release");
         if (screenfull.enabled) {
             screenfull.request();
         }
-    };
+    });
 
-    up.press = function() {
+    up.press = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log('up press');
@@ -215,9 +218,9 @@ export const changeKeyEventBindings = () => {
             ap.v.y = -global.AIRPLANE_SPEED;
         }
 
-    };
+    });
 
-    up.release = function() {
+    up.release = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log('up release');
@@ -226,9 +229,9 @@ export const changeKeyEventBindings = () => {
         }else{
              down.press();
         }
-    };
+    });
 
-    down.press = function() {
+    down.press = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log('down press');
@@ -238,9 +241,9 @@ export const changeKeyEventBindings = () => {
             ap.v.y = global.AIRPLANE_SPEED;
         }
 
-    };
+    });
 
-    down.release = function() {
+    down.release = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log('down release');
@@ -249,10 +252,10 @@ export const changeKeyEventBindings = () => {
         }else{
             up.press();
         }
-    };
+    });
 
 
-    left.press = function() {
+    left.press = ifApIsValid( (ap) =>  {
 
         if (test==1)
             console.log('left press');
@@ -262,10 +265,10 @@ export const changeKeyEventBindings = () => {
             ap.v.x = -global.AIRPLANE_SPEED;
         }
 
-    };
+    });
 
 
-    left.release = function() {
+    left.release = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log('left release');
@@ -274,9 +277,9 @@ export const changeKeyEventBindings = () => {
         }else{
             right.press();
         }
-    };
+    });
 
-    right.press = function() {
+    right.press = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log('right press');
@@ -286,9 +289,9 @@ export const changeKeyEventBindings = () => {
             ap.v.x = global.AIRPLANE_SPEED;
         }
 
-    };
+    });
 
-    right.release = function() {
+    right.release = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log('right release');
@@ -297,14 +300,14 @@ export const changeKeyEventBindings = () => {
         }else{
             left.press();
         }
-    };
+    });
 
-    skill1.press = function() {
+    skill1.press = ifApIsValid( (ap) =>  {
 
       enableSkillEngine(global.Q_SKILL);
-    };
+    });
 
-    skill1.release = function() {
+    skill1.release = ifApIsValid( (ap) =>  {
       disableSkillEngine(global.Q_SKILL);
-    }
+    });
 };

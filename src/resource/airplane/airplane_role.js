@@ -11,7 +11,7 @@ import PosAndNegWheel from "../skills/posAndNegWheel.js";
 export default {
   [EVA01]: {
     skinId: EVA01_AIRPLANE,
-
+    speed: 50,
     normalSkill: LinearPark,
     qSkill: PosAndNegWheel,
   }
