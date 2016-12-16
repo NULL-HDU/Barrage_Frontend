@@ -258,8 +258,11 @@ function getCollisionInfoToArray(dv, length) {
 		collisionInfo.willDisappear = [AWillDisappear, BWillDisappear];
 		//use this when damageInfo is changed
 		//collisionInfo.state=[Astate,Bstate];
-		let userId = gamemodel.data.engineControlData.airPlane.userId;
-		if (userId == BUserId)
+		let userId = 0;
+		let airPlane = gamemodel.data.engineControlData.airPlane
+		if (airPlane !== undefined)
+			userId = airPlane.userId;
+		if (userId === BUserId)
 			deleteSelf(BId);
 		collisionInfos.push(collisionInfo);
 	}
