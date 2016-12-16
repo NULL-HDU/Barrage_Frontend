@@ -20,7 +20,8 @@ export const startGame = (userId,userName)=> {
   let airPlane = new Airplane(EVA01);
   airPlane.name = userName;
   airPlane.userId = userId;
-  airPlane.id = 0;
+  gamemodel.userId = userId;
+  gamemodel.userName = userName;
   gamemodel.data.engineControlData.airPlane = airPlane;
 
   configCanvasEventListen();

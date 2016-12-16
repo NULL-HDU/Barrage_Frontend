@@ -5,6 +5,8 @@
  */
 
 import global from "../global";
+import Airplane from "../model/airplane";
+import {EVA01} from "../resource/airplane/roleId.js";
 import {
     DEAD,
     DISAPPEAR,
@@ -39,7 +41,6 @@ let uselessBulletsCollect = () => {
 
     if (data.airPlane.state === DEAD) {
         gamemodel.deadCache.push(data.airPlane);
-        gamemodel.socketCache.disappearBulletInformation.push(data.airPlane);
         data.airPlane = undefined;
         data.bullet.map((bullet) => {
             bullet.state = DISAPPEAR;
@@ -150,7 +151,15 @@ let collisionDetection = () => {
                         console.log("self dead");
                         selfBullets[i].state = DEAD;
                         window.dialogs.info.Open("You are dead!!!","Try again?",(yes) => {
-                            
+                            if(yes){
+                                let airPlane = new Airplane(EVA01);
+                                airPlane.name = gamemodel.userName;
+                                airPlane.userId = gamemodel.userId;
+                                gamemodel.data.engineControlData.airPlane = airPlane;
+
+                            }else{
+                                
+                            }
                         });
                     }
                 }
