@@ -73,9 +73,9 @@ function writeNewBallInf(newBall) {
 	let bullet = gamemodel.resourceRecord.bulletTable;
 	let airPlane = gamemodel.resourceRecord.airPlaneTable;
 	for (let i in newBall) {
-		let roleId = newBall[I].roleId;
+		let roleId = newBall[i].roleId;
 		let skinId = null;
-		if (newBall[i].type === CommonConstant.AIRPLANE)
+		if (newBall[i].ballType === CommonConstant.AIRPLANE)
 			skinId = airPlane[roleId].skinId;
 		else
 			skinId = bullet[roleId].skinId;
