@@ -11,14 +11,16 @@ let data = gamemodel.data.engineControlData;
 let test = -1;
 
 let mouseMove=(e)=>{
+
   let oppositeSide = e.screenX - global.LOCAL_WIDTH/2;
   let limb = e.screenY - global.LOCAL_HEIGHT/2;
-  let A = Math.atan2(limb,oppositeSide) + Math.PI / 2;
+  let A = Math.atan2(limb,oppositeSide) + Math.PI/2;
   data.airPlane.attackDir = A;
 };
 
 
 let mouseRelease=(e)=>{
+
   if(e.which === 3){
     // console.log("right click");
   }else if(e.which === 1){
@@ -28,6 +30,7 @@ let mouseRelease=(e)=>{
 };
 
 let mousePress=(e)=>{
+
   if(e.which === 3){
     // console.log("right click");
   }else if(e.which === 1){
@@ -38,6 +41,7 @@ let mousePress=(e)=>{
 
 //shift like event detect
 let shiftLikeEvent=(desc)=> {
+
     let key = {};
     key.desc = desc;
     key.isDown = false;
@@ -137,6 +141,7 @@ export const changeKeyEventBindings = () => {
 
 
     shift.press = function() {
+
         if( test==1 )
             console.log("shift press");
         if(up.isDown){
@@ -154,6 +159,7 @@ export const changeKeyEventBindings = () => {
     };
 
     shift.release = function() {
+
         if( test==1 )
             console.log("shift release");
         if(up.isDown){
@@ -171,23 +177,27 @@ export const changeKeyEventBindings = () => {
     };
 
     space.press = function() {
+
         if( test==1 )
             console.log('space press');
         enableSkillEngine(global.NORMAL_SKILL);
     };
 
-   space.release = function() {
+    space.release = function() {
+
         if( test==1 )
             console.log('space release');
         disableSkillEngine(global.NORMAL_SKILL);
    };
 
     f11.press = function() {
+
         if( test==1 )
             console.log("f11 press");
     };
 
     f11.release = function() {
+
         if( test==1 )
             console.log("f11 release");
         if (screenfull.enabled) {
@@ -196,6 +206,7 @@ export const changeKeyEventBindings = () => {
     };
 
     up.press = function() {
+
         if( test==1 )
             console.log('up press');
         if(shift.isDown){
@@ -207,6 +218,7 @@ export const changeKeyEventBindings = () => {
     };
 
     up.release = function() {
+
         if( test==1 )
             console.log('up release');
         if(down.isUp){
@@ -217,6 +229,7 @@ export const changeKeyEventBindings = () => {
     };
 
     down.press = function() {
+
         if( test==1 )
             console.log('down press');
         if(shift.isDown){
@@ -228,6 +241,7 @@ export const changeKeyEventBindings = () => {
     };
 
     down.release = function() {
+
         if( test==1 )
             console.log('down release');
         if(up.isUp){
@@ -239,6 +253,7 @@ export const changeKeyEventBindings = () => {
 
 
     left.press = function() {
+
         if (test==1)
             console.log('left press');
         if(shift.isDown){
@@ -251,6 +266,7 @@ export const changeKeyEventBindings = () => {
 
 
     left.release = function() {
+
         if( test==1 )
             console.log('left release');
         if(right.isUp){
@@ -261,6 +277,7 @@ export const changeKeyEventBindings = () => {
     };
 
     right.press = function() {
+
         if( test==1 )
             console.log('right press');
         if(shift.isDown){
@@ -272,6 +289,7 @@ export const changeKeyEventBindings = () => {
     };
 
     right.release = function() {
+
         if( test==1 )
             console.log('right release');
         if(left.isUp){
@@ -282,6 +300,7 @@ export const changeKeyEventBindings = () => {
     };
 
     skill1.press = function() {
+
       enableSkillEngine(global.Q_SKILL);
     };
 

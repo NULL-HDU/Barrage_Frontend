@@ -7,15 +7,19 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import {Router, Route, IndexRoute, hashHistory} from "react-router";
+import injectTapEventPlugin from "react-tap-event-plugin";
 
 import UsernameInputPage from "./launcher/user_name_input.jsx";
 import ShowErrorPage from "./launcher/error.jsx";
 import GameGroundPage from "./launcher/game_ground.jsx";
 
-import {initSocket} from "./launcher/bridge.js";
+import {initSocket, initGameModel} from "./launcher/bridge.js";
 import Data from "./launcher/launcher_data.js";
 
+injectTapEventPlugin();
+
 window.onload = () => {
+  initGameModel();
   initSocket((err, userId) => {
     if(err !== null){
       window.location.hash = `error?error=${err.toString()}`;
