@@ -70,7 +70,16 @@ function writeTobackendControlData(message) {
 
 function writeNewBallInf(newBall) {
 	let backend = gamemodel.data.backendControlData;
+	let bullet = gamemodel.resourceRecord.bulletTable;
+	let airPlane = gamemodel.resourceRecord.airPlaneTable;
 	for (let i in newBall) {
+		let roleId = newBall[I].roleId;
+		let skinId = null;
+		if (newBall[i].type === CommonConstant.AIRPLANE)
+			skinId = airPlane[roleId].skinId;
+		else
+			skinId = bullet[roleId].skinId;
+		newBall[i]["skinId"] = skinId;
 		if (newBall[i].userId == 0) {
 			backend.food.push(newBall[i]);
 		} else {
