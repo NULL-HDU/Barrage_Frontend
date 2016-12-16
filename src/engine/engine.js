@@ -5,6 +5,8 @@
  */
 
 import global from "../global";
+import Airplane from "../model/airplane";
+import {EVA01} from "../resource/airplane/roleId.js";
 import {
     DEAD,
     DISAPPEAR,
@@ -39,7 +41,6 @@ let uselessBulletsCollect = () => {
 
     if (data.airPlane.state === DEAD) {
         gamemodel.deadCache.push(data.airPlane);
-        gamemodel.socketCache.disappearBulletInformation.push(data.airPlane);
         data.airPlane = undefined;
         data.bullet.map((bullet) => {
             bullet.state = DISAPPEAR;
@@ -95,6 +96,11 @@ let collisionDetection = () => {
       2.对每个球体进行碰撞检测，检测到的就进行标记
       3.碰撞效果和伤害检测处理之后清空四叉树，进行下一轮碰撞检测
     */
+
+    if(data.airPlane === undefined) {
+        return;
+    }
+
     let selfBullets = data.bullet.concat(data.airPlane);
     let enemyBullets = backendData.bullet.concat(backendData.airPlane);
     let bulletsBank = selfBullets.concat(enemyBullets);
@@ -116,6 +122,10 @@ let collisionDetection = () => {
             let b = collidors[j].locationCurrent;
             let distance = PVector.dist(a, b);
             if (distance <= collidors[j].radius + selfBullets[i].radius) {
+
+                if(collidors[j].ballType === AIRPLANE && selfBullets[i].ballType === AIRPLANE){
+                    break;
+                }
 
 
                 //碰撞处理和伤害计算
@@ -140,11 +150,20 @@ let collisionDetection = () => {
                 if (selfBullets[i].ballType === AIRPLANE) {
                     console.log("self airplane detect");
                     //                    selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
-                    selfBullets[j].hp = 0;
+                    selfBullets[i].hp = 0;
                     if (selfBullets[i].hp === 0) {
                         console.log("self dead");
                         selfBullets[i].state = DEAD;
-//                        window.dialogs.info.Open("You are dead!!!","",);
+                        window.dialogs.info.Open("You are dead!!!","Try again?",(yes) => {
+                            if(yes){
+                                let airPlane = new Airplane(EVA01);
+                                airPlane.name = gamemodel.userName;
+                                airPlane.userId = gamemodel.userId;
+                                gamemodel.data.engineControlData.airPlane = airPlane;
+                                startEngine();
+                            }else{
+                            }
+                        });
                     }
                 }
 
@@ -156,10 +175,6 @@ let collisionDetection = () => {
                     }
                 }
 
-                //console.log("damage!!!");
-
-                //不管碰撞的是子弹和子弹，还是子弹和飞机都需要加入碰撞信息中
-                //暂未处理飞机撞击飞机的情况
                 let damageInformation = {
                     collision1: selfBullets[i].id,
                     collision2: collidors[j].id,
@@ -176,12 +191,16 @@ let collisionDetection = () => {
 };
 
 let engine = () => {
+
     let socketCount = 0;
     let socketCountMax = global.SOCKET_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL;
     let viewCount = 0;
     let viewCountMax = Math.floor(global.VIEW_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL);
 
     looper(() => {
+        if(data.airPlane === undefined) {
+            return;
+        }
         data.airPlane.move();
         data.airPlane.skillActive();
         data.airPlane.skillCountDown();
