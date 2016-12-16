@@ -128,6 +128,7 @@ export const configCanvasEventListen=()=>{
 };
 
 export const changeKeyEventBindings = () => {
+    let ecdata = gamemodel.data.engineControlData;
     let left = keyboard(KEY.A),
         up = keyboard(KEY.W),
         right = keyboard(KEY.D),
@@ -139,8 +140,7 @@ export const changeKeyEventBindings = () => {
         f11 = keyboard(KEY.F11);
 
     let ifApIsValid = (f) => () => {
-        if(gamemodel.data.engineControlData.airPlane === undefined) return;
-         f(gamemodel.data.engineControlData.airPlane);   
+        if(ecdata.airPlane !== undefined) return f(ecdata.airPlane);
     };
 
     shift.press = ifApIsValid( (ap) => {

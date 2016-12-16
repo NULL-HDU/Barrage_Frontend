@@ -21,7 +21,7 @@ import {
 } from "../socket/transmitted";
 import {
     loopRender
-} from "../view/Nview"
+} from "../view/Nview";
 import {
     configCanvasEventListen,
     changeKeyEventBindings
@@ -46,18 +46,15 @@ let uselessBulletsCollect = () => {
     if (data.airPlane.state === DEAD) {
         gamemodel.deadCache.push(data.airPlane);
         data.airPlane = undefined;
-        data.bullet.map((bullet) => {
+        data.bullet.forEach((bullet) => {
             bullet.state = DISAPPEAR;
         });
     }
 
     if (data.bullet.length <= 0) return;
 
-    
-
     data.bullet = data.bullet.filter((bullet) => {
         if (bullet.state === DEAD) {
-
             gamemodel.deadCache.push(bullet);
             gamemodel.socketCache.disapperBulletInformation.push(bullet.id);
             return false;
@@ -77,7 +74,6 @@ let uselessBulletsCollect = () => {
             return false;
         }
         return true;
-        
     });
 
     backendData.bullet = backendData.bullet.filter((bullet) => {
@@ -205,12 +201,11 @@ let engine = () => {
     let viewCountMax = Math.floor(global.VIEW_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL);
 
     looper(() => {
-        if(data.airPlane === undefined) {
-            return;
+        if(data.airPlane !== undefined) {
+            data.airPlane.move();
+            data.airPlane.skillActive();
+            data.airPlane.skillCountDown();
         }
-        data.airPlane.move();
-        data.airPlane.skillActive();
-        data.airPlane.skillCountDown();
 
         data.bullet.forEach((bullet) => {
             bullet.pathCalculate();
