@@ -36,15 +36,22 @@ let looper = (f, t) => setTimeout(() => {
 }, t);
 
 let uselessBulletsCollect = () => {
+
+    if (data.airPlane.state === DEAD) {
+        gamemodel.deadCache.push(data.airPlane);
+        gamemodel.socketCache.disappearBulletInformation.push(data.airPlane);
+        data.airPlane = undefined;
+        data.bullet.map((bullet) => {
+            bullet.state = DISAPPEAR;
+        });
+    }
+
     if (data.bullet.length <= 0) return;
-    let selfBalls = data.bullet.concat(data.airPlane);
 
-    data.bullet = selfBalls.filter((bullet) => {
+    
+
+    data.bullet = data.bullet.filter((bullet) => {
         if (bullet.state === DEAD) {
-
-            if (bullet.ballType === AIRPLANE) {
-                data.airPlane === undefined;
-            }
 
             gamemodel.deadCache.push(bullet);
             gamemodel.socketCache.disapperBulletInformation.push(bullet.id);
@@ -56,10 +63,6 @@ let uselessBulletsCollect = () => {
             return false;
         }
 
-        if (bullet.ballType === AIRPLANE) {
-            return false;
-        }
-
         return true;
     });
 
@@ -68,7 +71,6 @@ let uselessBulletsCollect = () => {
             gamemodel.deadCache.push(airPlane);
             return false;
         }
-
         return true;
         
     });
@@ -93,8 +95,7 @@ let collisionDetection = () => {
       2.对每个球体进行碰撞检测，检测到的就进行标记
       3.碰撞效果和伤害检测处理之后清空四叉树，进行下一轮碰撞检测
     */
-    let airPlane = data.airPlane;
-    let selfBullets = data.bullet.concat(airPlane);
+    let selfBullets = data.bullet.concat(data.airPlane);
     let enemyBullets = backendData.bullet.concat(backendData.airPlane);
     let bulletsBank = selfBullets.concat(enemyBullets);
     let i, j;
@@ -128,7 +129,8 @@ let collisionDetection = () => {
 
                 if (collidors[j].ballType === AIRPLANE) {
                     console.log("enemy airplane detect");
-                    collidors[j].hp -= selfBullets[i].damage * collidors[j].defense;
+                    //                    collidors[j].hp -= selfBullets[i].damage * collidors[j].defense;
+                    collidors[j].hp = 0;
                     if (collidors[j].hp === 0) {
                         console.log("enemy dead");
                         collidors[j].state = DEAD;
@@ -137,10 +139,12 @@ let collisionDetection = () => {
 
                 if (selfBullets[i].ballType === AIRPLANE) {
                     console.log("self airplane detect");
-                    selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
+                    //                    selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
+                    selfBullets[j].hp = 0;
                     if (selfBullets[i].hp === 0) {
                         console.log("self dead");
                         selfBullets[i].state = DEAD;
+//                        window.dialogs.info.Open("You are dead!!!","",);
                     }
                 }
 
@@ -172,16 +176,15 @@ let collisionDetection = () => {
 };
 
 let engine = () => {
-    let airPlane = data.airPlane;
     let socketCount = 0;
     let socketCountMax = global.SOCKET_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL;
     let viewCount = 0;
     let viewCountMax = Math.floor(global.VIEW_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL);
 
     looper(() => {
-        airPlane.move();
-        airPlane.skillActive();
-        airPlane.skillCountDown();
+        data.airPlane.move();
+        data.airPlane.skillActive();
+        data.airPlane.skillCountDown();
 
         data.bullet.forEach((bullet) => {
             bullet.pathCalculate();
