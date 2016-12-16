@@ -14,7 +14,6 @@ import Data from "./launcher_data.js";
 import {
   initEngine,
   initView,
-  initGameModel,
 } from "./bridge.js";
 
 window.dialogs = {};
@@ -41,8 +40,6 @@ export default class GameGroundPage extends Component {
       window.location.hash = "/";
       return;
     }
-
-    initGameModel();
 
     initView(() => {
         initEngine(Data.UserId, Data.Name);
