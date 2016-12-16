@@ -258,9 +258,43 @@ function getCollisionInfoToArray(dv, length) {
 		collisionInfo.willDisappear = [AWillDisappear, BWillDisappear];
 		//use this when damageInfo is changed
 		//collisionInfo.state=[Astate,Bstate];
+		let userId = gamemodel.data.engineControlData.airPlane.userId;
+		if (userId == BUserId)
+			deleteSelf(BId);
 		collisionInfos.push(collisionInfo);
 	}
 	return collisionInfos;
+}
+
+function deleteSelt(id) {
+	let engine = gamemodel.data.engineControlData;
+	if (id == 0)
+		engine.airPlane = undefined;
+	else
+		deleteBullet(0, engine.bullet.length, id);
+}
+
+function deleteBullet(start, end, id) {
+	if (start > end) {
+		let tem = start;
+		start = end;
+		end = tem;
+	}
+	let bullet = gamemodel.data.engineControlData.bullet;
+	let index = Math.floor((start + end) / 2);
+	if (index > bullet.length - 1)
+		return;
+	let selfId = bullet[index].id;
+	if (selfId == id) {
+		bullet.splice(index, 1);
+		return;
+	} else if (index == start || index == end) {
+		return;
+	} else if (selfId < id) {
+		deleteBullet(index, end, id);
+	} else {
+		deleteBullet(start, index, id);
+	}
 }
 
 // //make balls information to a array
