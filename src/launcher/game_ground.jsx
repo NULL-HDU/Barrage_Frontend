@@ -5,6 +5,10 @@
  */
 
 import React, { Component } from "react";
+import getMuiTheme from "material-ui/styles/getMuiTheme";
+
+import ghostTheme from "./ghostTheme.js";
+import InfoDialog from "./components/InfoDialog.jsx";
 
 import Data from "./launcher_data.js";
 import {
@@ -13,10 +17,18 @@ import {
   initGameModel,
 } from "./bridge.js";
 
+window.dialogs = {};
+
 export default class GameGroundPage extends Component {
 
   constructor(props){
     super(props);
+  }
+
+  getChildContext(){
+    return {
+      muiTheme: getMuiTheme(ghostTheme)
+    };
   }
 
   componentDidMount() {
@@ -40,15 +52,19 @@ export default class GameGroundPage extends Component {
   render() {
     return (
       <div>
+        <InfoDialog ref={(c)=>window.dialogs.info = c}/>
       </div>
     );
   }
 }
 GameGroundPage.propTypes = {
-  style: React.PropTypes.object
+  style: React.PropTypes.object,
 };
 GameGroundPage.defaultProps = {
   style: {}
+};
+GameGroundPage.childContextTypes = {
+  muiTheme: React.PropTypes.object
 };
 
 
