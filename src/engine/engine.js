@@ -21,6 +21,7 @@ import {
     loopRender
 } from "../view/Nview"
 
+
 let data, backendData;
 let quad = new Quadtree({
     x: 0,
@@ -36,8 +37,8 @@ let looper = (f, t) => setTimeout(() => {
 
 let uselessBulletsCollect = () => {
     if (data.bullet.length <= 0) return;
-    
     let selfBalls = data.bullet.concat(data.airPlane);
+
     data.bullet = selfBalls.filter((bullet) => {
         if (bullet.state === DEAD) {
             gamemodel.deadCache.push(bullet);
@@ -53,6 +54,7 @@ let uselessBulletsCollect = () => {
         if (bullet.ballType === AIRPLANE) {
             return false;
         }
+
         return true;
     });
 
@@ -68,7 +70,7 @@ let uselessBulletsCollect = () => {
             return false;
         }
 
-        if(bullet.ballType === AIRPLANE) {
+        if (bullet.ballType === AIRPLANE) {
             return false;
         }
 
@@ -182,11 +184,13 @@ let engine = () => {
             socketCount = 0;
             playgroundInfo();
         }
-        
+
         if(++viewCount >= viewCountMax){
             viewCount = 0;
             loopRender();
         }
+
+
     }, global.GAME_LOOP_INTERVAL);
 };
 
