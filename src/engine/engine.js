@@ -36,7 +36,8 @@ let looper = (f, t) => setTimeout(() => {
 
 let uselessBulletsCollect = () => {
     if (data.bullet.length <= 0) return;
-
+    
+    let selfBalls = data.bullet.concat(data.airPlane);
     data.bullet = data.bullet.filter((bullet) => {
         if (bullet.state === DEAD) {
             gamemodel.deadCache.push(bullet);
