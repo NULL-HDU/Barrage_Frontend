@@ -38,7 +38,7 @@ let uselessBulletsCollect = () => {
     if (data.bullet.length <= 0) return;
     
     let selfBalls = data.bullet.concat(data.airPlane);
-    data.bullet = data.bullet.filter((bullet) => {
+    data.bullet = selfBalls.filter((bullet) => {
         if (bullet.state === DEAD) {
             gamemodel.deadCache.push(bullet);
             gamemodel.socketCache.disapperBulletInformation.push(bullet.id);
@@ -47,12 +47,18 @@ let uselessBulletsCollect = () => {
         if (bullet.state === DISAPPEAR) {
             gamemodel.disappearCache.push(bullet);
             gamemodel.socketCache.disapperBulletInformation.push(bullet.id);
+            return false;
+        }
+
+        if (bullet.ballType === AIRPLANE) {
             return false;
         }
         return true;
     });
 
-    backendData.bullet = backendData.bullet.filter((bullet) => {
+    let enemyBalls = backendData.bullet.concat(backendData.airPlane);
+
+    backendData.bullet = enemyBalls.filter((bullet) => {
         if (bullet.state === DEAD) {
             gamemodel.deadCache.push(bullet);
             return false;
@@ -61,6 +67,11 @@ let uselessBulletsCollect = () => {
             gamemodel.disappearCache.push(bullet);
             return false;
         }
+
+        if(bullet.ballType === AIRPLANE) {
+            return false;
+        }
+
         return true;
     });
 };
@@ -104,7 +115,16 @@ let collisionDetection = () => {
                     }
                 }
 
+                if (collidors[j].ballType === AIRPLANE) {
+                    console.log("enemy airplane detect");
+                    collidors[j].hp -= selfBullets[i].damage * collidors[j].defense;
+                    if (collidors[j].hp === 0) {
+                        collidors[j].state = DEAD;
+                    }
+                }
+
                 if (selfBullets[i].ballType === AIRPLANE) {
+                    console.log("self airplane detect");
                     selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
                     if (selfBullets[i].hp === 0) {
                         selfBullets[i].state = DEAD;
