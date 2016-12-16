@@ -5,6 +5,8 @@
  */
 export default {
     background: null,
+    userName: null,
+    userId: null,
     data: {
         engineControlData:{
             airPlane: undefined,
