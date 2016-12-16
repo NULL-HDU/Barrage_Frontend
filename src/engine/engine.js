@@ -110,7 +110,16 @@ let collisionDetection = () => {
                     }
                 }
 
+                if (collidors[j].ballType === AIRPLANE) {
+                    console.log("enemy airplane detect");
+                    collidors[j].hp -= selfBullets[i].damage * collidors[j].defense;
+                    if (collidors[j].hp === 0) {
+                        collidors[j].state = DEAD;
+                    }
+                }
+
                 if (selfBullets[i].ballType === AIRPLANE) {
+                    console.log("self airplane detect");
                     selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
                     if (selfBullets[i].hp === 0) {
                         selfBullets[i].state = DEAD;
