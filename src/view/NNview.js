@@ -5,10 +5,6 @@ import {
     bulletSkins,
     airplaneSkins
 } from "../resource/skin/skin.js";
-import {
-    EVA01_AIRPLANE,
-    MIN_BULLET
-} from "../resource/skin/skinId.js";
 
 // pixi alias
 const loader = PIXI.loader,
@@ -139,7 +135,6 @@ let drawBackground = (x_crt, y_crt) => {
 
 // Airplane
 
-
 // Sprite
 let createSprite = (path) => {
     let sprite = new Sprite(resources[path].texture);
@@ -150,7 +145,9 @@ let setObjectSize = (object, size) => {
     object.width = size * VIEW.ratio.crt;
     object.height = size * VIEW.ratio.crt;
 };
+let setObjectPosition = (object, x_ori, y_ori) => {
 
+};
 
 
 export function initView(callback) {
