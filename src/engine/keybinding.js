@@ -11,6 +11,7 @@ let data = gamemodel.data.engineControlData;
 let test = -1;
 
 let mouseMove=(e)=>{
+  if(data.airPlane === undefined) return;
 
   let oppositeSide = e.screenX - global.LOCAL_WIDTH/2;
   let limb = e.screenY - global.LOCAL_HEIGHT/2;
@@ -147,36 +148,14 @@ export const changeKeyEventBindings = () => {
 
         if( test==1 )
             console.log("shift press");
-        if(up.isDown){
-            ap.v.y = -global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
-        }
-        if(down.isDown){
-            ap.v.y = global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
-        }
-        if(left.isDown){
-            ap.v.x = -global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
-        }
-        if(right.isDown){
-            ap.v.x = global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
-        }
+        ap.slowRate = global.AIRPLANE_SLOW_RATE;
     });
 
     shift.release = ifApIsValid( (ap) =>  {
 
         if( test==1 )
             console.log("shift release");
-        if(up.isDown){
-            ap.v.y = -global.AIRPLANE_SPEED;
-        }
-        if(down.isDown){
-            ap.v.y = global.AIRPLANE_SPEED;
-        }
-        if(left.isDown){
-            ap.v.x = -global.AIRPLANE_SPEED;
-        }
-        if(right.isDown){
-            ap.v.x = global.AIRPLANE_SPEED;
-        }
+        ap.slowRate = 1;
     });
 
     space.press = ifApIsValid( (ap) =>  {
@@ -212,12 +191,7 @@ export const changeKeyEventBindings = () => {
 
         if( test==1 )
             console.log('up press');
-        if(shift.isDown){
-            ap.v.y = -global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
-        }else{
-            ap.v.y = -global.AIRPLANE_SPEED;
-        }
-
+        ap.vd.y = -1;
     });
 
     up.release = ifApIsValid( (ap) =>  {
@@ -225,7 +199,7 @@ export const changeKeyEventBindings = () => {
         if( test==1 )
             console.log('up release');
         if(down.isUp){
-             ap.v.y = 0;
+             ap.vd.y = 0;
         }else{
              down.press();
         }
@@ -235,12 +209,7 @@ export const changeKeyEventBindings = () => {
 
         if( test==1 )
             console.log('down press');
-        if(shift.isDown){
-            ap.v.y = global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
-        }else{
-            ap.v.y = global.AIRPLANE_SPEED;
-        }
-
+        ap.vd.y = 1;
     });
 
     down.release = ifApIsValid( (ap) =>  {
@@ -248,7 +217,7 @@ export const changeKeyEventBindings = () => {
         if( test==1 )
             console.log('down release');
         if(up.isUp){
-            ap.v.y = 0;
+            ap.vd.y = 0;
         }else{
             up.press();
         }
@@ -259,12 +228,7 @@ export const changeKeyEventBindings = () => {
 
         if (test==1)
             console.log('left press');
-        if(shift.isDown){
-            ap.v.x = -global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
-        }else{
-            ap.v.x = -global.AIRPLANE_SPEED;
-        }
-
+        ap.vd.x = -1;
     });
 
 
@@ -273,7 +237,7 @@ export const changeKeyEventBindings = () => {
         if( test==1 )
             console.log('left release');
         if(right.isUp){
-            ap.v.x = 0;
+            ap.vd.x = 0;
         }else{
             right.press();
         }
@@ -283,12 +247,7 @@ export const changeKeyEventBindings = () => {
 
         if( test==1 )
             console.log('right press');
-        if(shift.isDown){
-            ap.v.x = global.AIRPLANE_SPEED * global.AIRPLANE_SLOW_RATE;
-        }else{
-            ap.v.x = global.AIRPLANE_SPEED;
-        }
-
+        ap.vd.x = 1;
     });
 
     right.release = ifApIsValid( (ap) =>  {
@@ -296,14 +255,13 @@ export const changeKeyEventBindings = () => {
         if( test==1 )
             console.log('right release');
         if(left.isUp){
-            ap.v.x = 0;
+            ap.vd.x = 0;
         }else{
             left.press();
         }
     });
 
     skill1.press = ifApIsValid( (ap) =>  {
-
       enableSkillEngine(global.Q_SKILL);
     });
 

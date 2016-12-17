@@ -34,15 +34,19 @@ export default class Airplane extends Ball {
         // all function in actionSkill while be call in each engine loop;
         this.activeSkillList = [];
 
-        this.v = new PVector(0,0);
+        // direction of speed vector
+        this.vd = new PVector(0,0);
+        this.slowRate = 1;
+        this.speed = this.speed * global.GAME_LOOP_INTERVAL / 1000;
         this.vangle = 0;
+
         this.locationCurrent = new PVector(global.LOCAL_WIDTH/2,global.LOCAL_HEIGHT/2);
         this.defense = 1;
         gamemodel.socketCache.newBallInformation.push(this);
     }
 
     move() {
-        this.locationCurrent.add(this.v);
+        this.locationCurrent.add(PVector.mult(this.vd, this.speed*this.slowRate));
         this.attackDir += this.vangle;
     }
 

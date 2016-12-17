@@ -258,21 +258,18 @@ function getCollisionInfoToArray(dv, length) {
 		collisionInfo.willDisappear = [AWillDisappear, BWillDisappear];
 		//use this when damageInfo is changed
 		//collisionInfo.state=[Astate,Bstate];
-		let userId = 0;
-		let airPlane = gamemodel.data.engineControlData.airPlane
-		if (airPlane !== undefined)
-			userId = airPlane.userId;
-		if (userId === BUserId)
+    let userId = gamemodel.userId;
+    if (userId === BUserId)
 			deleteSelf(BId);
 		collisionInfos.push(collisionInfo);
 	}
 	return collisionInfos;
 }
 
-function deleteSelt(id) {
+function deleteSelf(id) {
 	let engine = gamemodel.data.engineControlData;
 	if (id == 0)
-		engine.airPlane = undefined;
+    engine.airPlane.state = CommonConstant.DEAD;
 	else
 		deleteBullet(0, engine.bullet.length, id);
 }
