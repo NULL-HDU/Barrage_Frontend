@@ -145,21 +145,18 @@ export const changeKeyEventBindings = () => {
     };
 
     shift.press = ifApIsValid( (ap) => {
-
         if( test==1 )
             console.log("shift press");
         ap.slowRate = global.AIRPLANE_SLOW_RATE;
     });
 
     shift.release = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log("shift release");
         ap.slowRate = 1;
     });
 
     space.press = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log('space press');
         enableSkillEngine(global.NORMAL_SKILL);
@@ -173,13 +170,11 @@ export const changeKeyEventBindings = () => {
     });
 
     f11.press = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log("f11 press");
     });
 
     f11.release = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log("f11 release");
         if (screenfull.enabled) {
@@ -188,14 +183,12 @@ export const changeKeyEventBindings = () => {
     });
 
     up.press = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log('up press');
         ap.vd.y = -1;
     });
 
     up.release = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log('up release');
         if(down.isUp){
@@ -206,14 +199,12 @@ export const changeKeyEventBindings = () => {
     });
 
     down.press = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log('down press');
         ap.vd.y = 1;
     });
 
     down.release = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log('down release');
         if(up.isUp){
@@ -225,7 +216,6 @@ export const changeKeyEventBindings = () => {
 
 
     left.press = ifApIsValid( (ap) =>  {
-
         if (test==1)
             console.log('left press');
         ap.vd.x = -1;
@@ -233,7 +223,6 @@ export const changeKeyEventBindings = () => {
 
 
     left.release = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log('left release');
         if(right.isUp){
@@ -244,14 +233,12 @@ export const changeKeyEventBindings = () => {
     });
 
     right.press = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log('right press');
         ap.vd.x = 1;
     });
 
     right.release = ifApIsValid( (ap) =>  {
-
         if( test==1 )
             console.log('right release');
         if(left.isUp){
