@@ -264,7 +264,8 @@ export function playgroundInfoAnalyis() {
 	let balls = gamemodel.data.engineControlData;
 	let displacementInfoArray = [];
 	Array.prototype.push.apply(displacementInfoArray, balls.bullet);
-	displacementInfoArray.push(balls.airPlane);
+	if (balls.airPlane != undefined)
+		displacementInfoArray.push(balls.airPlane);
 	let lengthOfDisplacementInfos = displacementInfoArray.length;
 	if (typeof(socketCache.damageInformation) == "undefined")
 		socketCache.damageInformation == [];

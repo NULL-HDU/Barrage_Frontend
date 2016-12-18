@@ -21,8 +21,7 @@ import {
 } from "../socket/transmitted";
 import {
     loopRender
-} from "../view/Nview"
-
+} from "../view/Nview";
 
 let data, backendData;
 let quad = new Quadtree({
@@ -39,21 +38,24 @@ let looper = (f, t) => setTimeout(() => {
 
 let uselessBulletsCollect = () => {
 
-    if (data.airPlane.state === DEAD) {
+    if (data.airPlane && data.airPlane.state === DEAD) {
         gamemodel.deadCache.push(data.airPlane);
         data.airPlane = undefined;
-        data.bullet.map((bullet) => {
+        data.bullet.forEach((bullet) => {
             bullet.state = DISAPPEAR;
         });
     }
 
-    if (data.bullet.length <= 0) return;
-
-    
+    backendData.airPlane = backendData.airPlane.filter((airPlane) => {
+      if (airPlane.state === DEAD) {
+        gamemodel.deadCache.push(airPlane);
+        return false;
+      }
+      return true;
+    });
 
     data.bullet = data.bullet.filter((bullet) => {
         if (bullet.state === DEAD) {
-
             gamemodel.deadCache.push(bullet);
             gamemodel.socketCache.disapperBulletInformation.push(bullet.id);
             return false;
@@ -65,15 +67,6 @@ let uselessBulletsCollect = () => {
         }
 
         return true;
-    });
-
-    backendData.airPlane = backendData.airPlane.filter((airPlane) => {
-        if (airPlane.state === DEAD) {
-            gamemodel.deadCache.push(airPlane);
-            return false;
-        }
-        return true;
-        
     });
 
     backendData.bullet = backendData.bullet.filter((bullet) => {
@@ -154,16 +147,6 @@ let collisionDetection = () => {
                     if (selfBullets[i].hp === 0) {
                         console.log("self dead");
                         selfBullets[i].state = DEAD;
-                        window.dialogs.info.Open("You are dead!!!","Try again?",(yes) => {
-                            if(yes){
-                                let airPlane = new Airplane(EVA01);
-                                airPlane.name = gamemodel.userName;
-                                airPlane.userId = gamemodel.userId;
-                                gamemodel.data.engineControlData.airPlane = airPlane;
-                                startEngine();
-                            }else{
-                            }
-                        });
                     }
                 }
 
@@ -190,6 +173,19 @@ let collisionDetection = () => {
     }
 };
 
+let askForTryAgain  = () => {
+  window.dialogs.info.Open("You are dead!!!","Try again?",(yes) => {
+    if(yes){
+      let airPlane = new Airplane(EVA01);
+      airPlane.name = gamemodel.userName;
+      airPlane.userId = gamemodel.userId;
+      gamemodel.data.engineControlData.airPlane = airPlane;
+    }else{
+
+    }
+  });
+};
+
 let engine = () => {
 
     let socketCount = 0;
@@ -198,12 +194,13 @@ let engine = () => {
     let viewCountMax = Math.floor(global.VIEW_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL);
 
     looper(() => {
-        if(data.airPlane === undefined) {
-            return;
+        if(data.airPlane !== undefined) {
+            data.airPlane.move();
+            data.airPlane.skillActive();
+            data.airPlane.skillCountDown();
+        }else{
+          if(!window.dialogs.info.State()) askForTryAgain();
         }
-        data.airPlane.move();
-        data.airPlane.skillActive();
-        data.airPlane.skillCountDown();
 
         data.bullet.forEach((bullet) => {
             bullet.pathCalculate();

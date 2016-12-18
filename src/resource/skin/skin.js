@@ -20,8 +20,8 @@ export const IMAGES = [EVA01, EVA01_B, EVA01_R, IMG_MIN_BULLET, MIN_B, MIN_R];
 
 export const bulletSkins = {
     [MIN_BULLET]: {
-        judge_radius: 20,
-        skin_radius: 20,
+        judge_radius: 10,
+        skin_radius: 10,
         skin: [IMG_MIN_BULLET],
         camp: [MIN_B, MIN_R]
     }
@@ -29,8 +29,8 @@ export const bulletSkins = {
 
 export const airplaneSkins = {
     [EVA01_AIRPLANE]: {
-        judge_radius: 20,
-        skin_radius: 120,
+        judge_radius: 10,
+        skin_radius: 60,
         skin: [EVA01],
         camp: [EVA01_B, EVA01_R]
     }

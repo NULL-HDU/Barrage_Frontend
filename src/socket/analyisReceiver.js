@@ -2,8 +2,6 @@
  ** date:11/14/2016
  ** author:yummyLcj
  */
-
-import Ball from "../model/ball.js";
 import gamemodel from "../model/gamemodel";
 import dataview from "./dataview.js";
 import * as CommonConstant from "../constant.js";
@@ -35,37 +33,39 @@ function arrayToJson(arr) {
 	return json;
 }
 
-let count = 0;
-
 function writeTobackendControlData(message) {
 	if (times++ === 0) {
 		writeNewBallInf(message);
 		return;
 	}
-	message = arrayToJson(message);
-	let backend = gamemodel.data.backendControlData;
+  message = arrayToJson(message);
+  let backend = gamemodel.data.backendControlData;
 	let airPlane = backend.airPlane;
 	let bullet = backend.bullet;
-	let disappear = [];
-	// let block = backend.block;
-	for (let i in airPlane) {
-		let userId = airPlane[i].userId;
-		if (message[userId] != undefined && message[userId][0] != undefined) {
-			Object.assign(airPlane[i], message[userId][0]);
-		} else {
-			disappear.push(airPlane.splice(i, 1));
-		}
-	}
-	for (let i in bullet) {
-		let userId = bullet[i].userId;
-		let id = bullet[i].id;
-		if (message[userId] != undefined && message[userId][id] != undefined) {
-			Object.assign(bullet[i], message[userId][id]);
-		} else {
-			disappear.push(bullet.splice(i, 1));
-		}
-	}
-	gamemodel.disappearCache = disappear;
+  let disappear = gamemodel.disappearCache;
+  // let block = backend.block;
+  backend.airPlane = airPlane.filter((ap) => {
+    let userId = ap.userId;
+    if (message[userId] != undefined && message[userId][0] != undefined) {
+      Object.assign(ap, message[userId][0]);
+      return true;
+    }
+
+    disappear.push(ap);
+    return false;
+  });
+
+  backend.bullet = bullet.filter((b) => {
+    let userId = b.userId;
+    let id = b.id;
+    if (message[userId] != undefined && message[userId][id] != undefined) {
+      Object.assign(b, message[userId][id]);
+      return true;
+    }
+
+    disappear.push(b);
+    return false;
+  });
 }
 
 function writeNewBallInf(newBall) {
@@ -75,11 +75,11 @@ function writeNewBallInf(newBall) {
 	for (let i in newBall) {
 		let roleId = newBall[i].roleId;
 		let skinId = null;
-		  if (newBall[i].ballType === CommonConstant.AIRPLANE) {
-			    skinId = airPlane[roleId]["skinId"];
-		  }else{
-			    skinId = bullet[roleId]["skinId"];
-      }
+		if (newBall[i].ballType === CommonConstant.AIRPLANE) {
+			skinId = airPlane[roleId]["skinId"];
+		} else {
+			skinId = bullet[roleId]["skinId"];
+		}
 		newBall[i]["skinId"] = skinId;
 		if (newBall[i].userId == 0) {
 			backend.food.push(newBall[i]);
@@ -132,7 +132,7 @@ export function receiveMessage(message) {
 		timestamp: timestamp,
 		type: type,
 		body: body
-	}
+  };
 
 	if (debug) {
 		console.log("receive message : ");
@@ -158,12 +158,11 @@ function fillConnectToMes(dv) {
 	// airPlane.userId = userId;
 	let room = dv.pop32();
 	// airPlane.roomNumber = room;
-	roomNumber = roomNumber;
-	state = 2;
+  state = 2;
 	return {
 		userId: userId,
 		roomNumber: room
-	}
+  };
 }
 
 
@@ -258,9 +257,43 @@ function getCollisionInfoToArray(dv, length) {
 		collisionInfo.willDisappear = [AWillDisappear, BWillDisappear];
 		//use this when damageInfo is changed
 		//collisionInfo.state=[Astate,Bstate];
+    let userId = gamemodel.userId;
+    if (userId === BUserId)
+			deleteSelf(BId);
 		collisionInfos.push(collisionInfo);
 	}
 	return collisionInfos;
+}
+
+function deleteSelf(id) {
+	let engine = gamemodel.data.engineControlData;
+	if (id == 0)
+    engine.airPlane.state = CommonConstant.DEAD;
+	else
+		deleteBullet(0, engine.bullet.length, id);
+}
+
+function deleteBullet(start, end, id) {
+	if (start > end) {
+		let tem = start;
+		start = end;
+		end = tem;
+	}
+	let bullet = gamemodel.data.engineControlData.bullet;
+	let index = Math.floor((start + end) / 2);
+	if (index > bullet.length - 1)
+		return;
+	let selfId = bullet[index].id;
+	if (selfId == id) {
+		bullet.splice(index, 1);
+		return;
+	} else if (index == start || index == end) {
+		return;
+	} else if (selfId < id) {
+		deleteBullet(index, end, id);
+	} else {
+		deleteBullet(start, index, id);
+	}
 }
 
 // //make balls information to a array
@@ -304,7 +337,7 @@ function groundToMes(dv) {
 
 		lengthOfDisappearInfos: lengthOfDisappearInfos,
 		disappearInfoArray: disappearInfoArray
-	}
+  };
 }
 
 // //fill connection information to message
