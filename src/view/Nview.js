@@ -56,12 +56,12 @@ let RATIO_CRT = VIEW_W / CUT_W,
 // resources
 let resources = PIXI.loader.resources;
 let img_url = "/static/view/imgs/",
-    img_ap_body = img_url + "ap_body.png",
-    img_ap_arrow = img_url + "ap_arrow.png",
-    img_b_bullet = img_url + "b_bullet.png",
-    img_enm_body = img_url + "enm_body.png",
-    img_enm_arrow = img_url + "enm_arrow.png",
-    img_r_bullet = img_url + "r_bullet.png";
+    eva01 = img_url + "EVA01.png",
+    eva01_b = img_url + "EVA01_B.png",
+    eva01_r = img_url + "EVA01_R.png",
+    min_bullet = img_url + "MIN_BULLET.png",
+    min_b = img_url + "MIN_B.png",
+    min_r = img_url + "MIN_R.png";
 
 // pixi renderer
 let renderer = PIXI.autoDetectRenderer(
@@ -224,16 +224,19 @@ const enm_l = 120;
 let Enemys = [], enm_gi;
 let updateEnm = (sparr, index, size, data) => {
     sparr[index].visible = true;
+    if (sparr[index].width !== size * RATIO_CRT) {
+        setObjectSize(sparr[index], size);
+    }
     sparr[index].x = centerAPX(data[0], ap_data.x_crt);
     sparr[index].y = centerAPY(data[1], ap_data.y_crt);
-    sparr[index].getChildAt(1).rotation = data[2];
+    sparr[index].rotation = data[2];
 
 };
 
 let addEnm = (con, sparr, url, size, data) => {
     let enemy = new Container();
-    enemy.addChildAt(createSprite(url[0]), 0);
-    enemy.addChildAt(createSprite(url[1]), 1);
+    enemy.addChild(createSprite(url[1]));
+    enemy.addChild(createSprite(url[0]));
     setObjectSize(enemy, size);
     sparr.push(enemy);
 
@@ -262,7 +265,10 @@ let updateBullet = (sparr, index, size, data) => {
 };
 
 let addBullet = (con, sparr, url, size, data) => {
-    sparr.push(createSprite(url));
+    let bullet = new Container();
+    bullet.addChild(createSprite(url[0]));
+    bullet.addChild(createSprite(url[1]));
+    sparr.push(bullet);
     let p = sparr.length - 1;
     updateBullet(sparr, p, size, data);
     con.addChild(sparr[p]);
@@ -271,12 +277,12 @@ let addBullet = (con, sparr, url, size, data) => {
 // export for launch
 export function initView(callback) {
     PIXI.loader
-        .add(img_ap_body)
-        .add(img_ap_arrow)
-        .add(img_b_bullet)
-        .add(img_enm_body)
-        .add(img_enm_arrow)
-        .add(img_r_bullet)
+        .add(eva01)
+        .add(eva01_b)
+        .add(eva01_r)
+        .add(min_bullet)
+        .add(min_b)
+        .add(min_r)
         .load(() =>{
             renderer.view.id = "canvas";
             document.body.appendChild(renderer.view);
@@ -322,11 +328,11 @@ function initEnemy() {
 }
 
 function initAirplane() {
-    let body = createSprite(img_ap_body),
-        arrow = createSprite(img_ap_arrow);
+    let body = createSprite(eva01_b),
+        camp = createSprite(eva01);
 
-    airplane.addChildAt(body, 0);
-    airplane.addChildAt(arrow, 1);
+    airplane.addChild(body);
+    airplane.addChild(camp);
     
     setObjectSize(airplane, ap_l);
     airplane.position.set(CENTER_X, CENTER_Y);
@@ -395,24 +401,26 @@ function rstResource() {
 function rstEnemy() {
     enm_gi = GMD.data.backendControlData.airPlane;
     // console.log("sss: " + enm_gi);
-    let url =[img_enm_body, img_enm_arrow];
+    let url =[eva01, eva01_r];
     selectBalls(EnemyLayer, Enemys, enm_gi, enm_l, url, T_ENM);
 }
 
 function rstAirplane() {
-    airplane.getChildAt(1).rotation = ap_data.r;
+    airplane.rotation = ap_data.r;
 }
 
 function rstRedBullet() {
     rblt_gi = GMD.data.backendControlData.bullet;
     // console.log(rblt_gi);
-    selectBalls(RedBulletLayer, Rbullets, rblt_gi, rblt_l, img_r_bullet, T_BULLET);
+    let url = [min_bullet, min_r];
+    selectBalls(RedBulletLayer, Rbullets, rblt_gi, rblt_l, url, T_BULLET);
 }
 
 function rstBlueBullet() {
     bblt_gi = GMD.data.engineControlData.bullet;
     // console.log(bblt_gi);
-    selectBalls(BlueBulletLayer, Bbullets, bblt_gi, bblt_l, img_b_bullet, T_BULLET);
+    let url = [min_bullet, min_b]
+    selectBalls(BlueBulletLayer, Bbullets, bblt_gi, bblt_l, url, T_BULLET);
     // console.log(Bbullets);
 }
 

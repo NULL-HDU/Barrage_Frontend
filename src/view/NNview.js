@@ -13,26 +13,29 @@ const loader = PIXI.loader,
     Container = PIXI.Container,
     Sprite = PIXI.Sprite,
     Graphics = PIXI.Graphics;
-
 let renderer;
+
+// game state
+let STATE;
 
 // cut siz
 const CUT = {width : 1280, height: 800};
 
 // local size
 let LOCAL = {
-    pre : {width: 0, height: 0},
-    crt: {width: 0, height: 0},
+    width: 0, 
+    height: 0,
+    pre: {width: 0, height: 0},
     flag: false // is the local size changed ?
 };
 let getLocalSize = () => {
-    LOCAL.pre.width = LOCAL.crt.width;
-    LOCAL.pre.height = LOCAL.crt.height;
-    LOCAL.crt.width = window.innerWidth;
-    LOCAL.crt.height = window.innerHeight;
+    LOCAL.pre.width = LOCAL.width;
+    LOCAL.pre.height = LOCAL.height;
+    LOCAL.width = window.innerWidth;
+    LOCAL.height = window.innerHeight;
 };
 let isLocalSizeChanged = () => {
-    LOCAL.flag = (LOCAL.crt.width !== LOCAL.pre.width || LOCAL.crt.height !== LOCAL.pre.height) ? true : false;
+    LOCAL.flag = (LOCAL.width !== LOCAL.pre.width || LOCAL.height !== LOCAL.pre.height) ? true : false;
     return LOCAL.flag;
 };
 
@@ -46,9 +49,9 @@ let VIEW = {
 };
 let isViewFitLocal = () => {
     if (
-        (LOCAL.crt.width !== VIEW.width && LOCAL.crt.height !== VIEW.height) ||
-        (LOCAL.crt.width === VIEW.width && LOCAL.crt.height < VIEW.height) ||
-        (LOCAL.crt.width < VIEW.width && LOCAL.crt.height === VIEW.height)
+        (LOCAL.width !== VIEW.width && LOCAL.height !== VIEW.height) ||
+        (LOCAL.width === VIEW.width && LOCAL.height < VIEW.height) ||
+        (LOCAL.width < VIEW.width && LOCAL.height === VIEW.height)
     ) {
         return false;
     } else {
@@ -56,15 +59,15 @@ let isViewFitLocal = () => {
     }
 };
 let adjustView = () => {
-    let w = LOCAL.crt.width / CUT.width, h = LOCAL.crt.height / CUT.height;
+    let w = LOCAL.width / CUT.width, h = LOCAL.height / CUT.height;
     let r = (w <= h) ? w : h;
 
     VIEW.width = CUT.width * r;
     VIEW.height = CUT.height * r;
     VIEW.center.x = VIEW.width / 2;
     VIEW.center.y = VIEW.height / 2;
-    VIEW.side.left = (LOCAL.crt.width - VIEW.width) / 2;
-    VIEW.side.top = (LOCAL.crt.height - VIEW.height) / 2;
+    VIEW.side.left = (LOCAL.width - VIEW.width) / 2;
+    VIEW.side.top = (LOCAL.height - VIEW.height) / 2;
     VIEW.ratio.pre = VIEW.ratio.crt;
     VIEW.ratio.crt = VIEW.width / CUT.width;
 };
@@ -86,15 +89,65 @@ let ORIGIN = {
 };
 let getAirplaneInfo = () => {
     ORIGIN.airplane = MODEL.data.engineControlData.airPlane;
+    if (ORIGIN.airPlane == null || ORIGIN.airPlane == undefined) {
+        return false;
+    } else {
+        return true;
+    }
 };
 let getEnemysInfo = () => {
     ORIGIN.enemys = MODEL.data.backendControlData.airPlane;
+    if (ORIGIN.enemys.length === 0) {
+        return false;
+    } else {
+        return true;
+    }
 };
 let getRedBulletInfo = () => {
     ORIGIN.red_bullets = MODEL.data.backendControlData.bullet;
+    if (ORIGIN.red_bullets.length === 0) {
+        return false;
+    } else {
+        return true;
+    }
 };
 let getBlueBulletInfo = () => {
     ORIGIN.blue_bullets = MODEL.data.engineControlData.bullet;
+    if (ORIGIN.blue_bullets.length === 0) {
+        return false;
+    } else {
+        return true;
+    }
+};
+
+// all the objects that can be seen
+let VISUAL = new Map();
+
+// container
+let Stage = new Container();
+let BackgroundLayer = new Container(),
+    ObstacleLayer = new Container(),
+    FoodLayer = new Container(),
+    EnemyLayer = new Container(),
+    AirplaneLayer = new Container(),
+    RedBulletLayer = new Container(),
+    BlueBulletLayer = new Container(),
+    EffectLayer = new Container(),
+    UILayer = new Container();
+
+// Sprite
+let createSprite = (path) => {
+    let sprite = new Sprite(resources[path].texture);
+    sprite.anchor.set(0.5, 0.5);
+    return sprite;
+};
+let setObjectSize = (object, size) => {
+    object.width = size * VIEW.ratio.crt;
+    object.height = size * VIEW.ratio.crt;
+};
+let setObjectPosition = (object, x_ori, y_ori) => {
+    object.x = (x_ori - AIRPLANE.x) * VIEW.ratio.crt + VIEW.center.x; 
+    object.y = (y_ori - AIRPLANE.y) * VIEW.ratio.crt + VIEW.center.y;
 };
 
 // background
@@ -105,7 +158,7 @@ let square = {
     y_count: 0,
     view_length: 0
 };
-let serSquare = () => {
+let setSquare = () => {
     square.x_count = CUT.width / square.const_length;
     square.y_count = CUT.height / square.const_length;
     square.view_length = square.const_length * VIEW.ratio.crt;
@@ -134,19 +187,17 @@ let drawBackground = (x_crt, y_crt) => {
 };
 
 // Airplane
-
-// Sprite
-let createSprite = (path) => {
-    let sprite = new Sprite(resources[path].texture);
-    sprite.anchor.set(0.5, 0.5);
-    return sprite;
-};
-let setObjectSize = (object, size) => {
-    object.width = size * VIEW.ratio.crt;
-    object.height = size * VIEW.ratio.crt;
-};
-let setObjectPosition = (object, x_ori, y_ori) => {
-
+let AIRPLANE = {
+    self: null, // this shoud be the sprite or the container
+    x: 0,
+    y: 0,
+    r: 0,
+    // when airplane is dead, use this state
+    pre: {
+        x: 0,
+        y: 0,
+        r: 0
+    }
 };
 
 
@@ -157,3 +208,46 @@ export function initView(callback) {
             initLayers(callback);
         });
 } 
+
+function initLayers(callback) {
+    // set the init view size
+    getLocalSize();
+    adjustView();
+
+    // set the renderer
+    renderer = autoDetectRenderer(
+        VIEW.width,
+        VIEW.height,
+        { backgroundColor: 0x000000 }
+    );
+    renderer.view.id = "canvas";
+    document.body.appendChild(renderer.view);
+
+    // center the canvas
+    centerCanvas();
+
+    // init every layers, at least add the container
+    // first init background
+    setSquare();
+    drawBackground(-square.view_length, -square.view_length);
+    BackgroundLayer.addChild(universe);
+    Stage.addChild(BackgroundLayer);
+
+    // others
+    Stage.addChild(ObstacleLayer);
+    Stage.addChild(FoodLayer);
+    Stage.addChild(EnemyLayer);
+    Stage.addChild(AirplaneLayer);
+    Stage.addChild(RedBulletLayer);
+    Stage.addChild(BlueBulletLayer);
+    Stage.addChild(EffectLayer);
+    Stage.addChild(UILayer);
+
+    // socket dealinfo and engine init
+    callback();
+}
+
+// export for engine to use less setTimeout
+export function loopRender() {
+    
+}
