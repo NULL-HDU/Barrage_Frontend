@@ -292,6 +292,7 @@ export const changeKeyEventBindings = () => {
     });
 
     right.release = ifApIsValid( (ap) =>  {
+        console.log(ap);
 
         if( test==1 )
             console.log('right release');
