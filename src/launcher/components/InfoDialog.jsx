@@ -29,6 +29,10 @@ export default class InfoDialog extends Component {
     this.handleDialogOpen();
   }
 
+  State(){
+    return this.state.open;
+  }
+
   Close(){
     this.handleDialogClose();
   }
