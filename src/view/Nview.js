@@ -1,81 +1,140 @@
-/* view.js
- *
- * Maintainer: Neoco
- * Email: Neoco.wlp1002@gmail.com
- */
-
 import * as PIXI from "./pixi.js";
-import GMD from "../model/gamemodel.js";
+import MODEL from "../model/gamemodel.js";
+import {
+    IMAGES,
+    bulletSkins,
+    airplaneSkins
+} from "../resource/skin/skin.js";
+
+// pixi alias
+const loader = PIXI.loader,
+    resources = PIXI.loader.resources,
+    autoDetectRenderer = PIXI.autoDetectRenderer,
+    Container = PIXI.Container,
+    Sprite = PIXI.Sprite,
+    Graphics = PIXI.Graphics;
+let renderer;
 
 // game state
-let state;
+let STATE;
 
-// fps
-const FPS = 60, stot = 1000 / FPS;
-
-// cut view size
-let CUT_W = 1280, CUT_H = 800; 
-
-// local window size
-let LOCAL_W = window.innerWidth,
-    LOCAL_H = window.innerHeight;
-
-// local view size
-let VIEW_W, VIEW_H;
-let adaptWindow = () => {
-    let xr = LOCAL_W / CUT_W,
-        yr = LOCAL_H / CUT_H;
-    if (xr < yr) {
-        VIEW_W = CUT_W * xr;
-        VIEW_H = CUT_H * xr;
-    } else {
-        VIEW_W = CUT_W * yr;
-        VIEW_H = CUT_H * yr;
+// cut siz
+let CUT = {
+    width : 1280, 
+    height: 800,
+    special: {
+        width: 1280 * 2,
+        height: 800 * 2
     }
 };
-adaptWindow();
 
-// center the canvas
-let centerCanvas = () => {
-    let LEFT = (LOCAL_W - VIEW_W) / 2 === 0? 0 : (LOCAL_W - VIEW_W) / 2 + "px",
-        TOP = (LOCAL_H - VIEW_H) / 2 === 0? 0 : (LOCAL_H - VIEW_H) / 2 + "px";
-
-    let canvas = document.getElementById("canvas");
-    canvas.style.margin = `${TOP} ${LEFT}`;
+// local size
+let LOCAL = {
+    width: 0, 
+    height: 0,
+    pre: {width: 0, height: 0},
+    flag: false // is the local size changed ?
+};
+let getLocalSize = () => {
+    LOCAL.pre.width = LOCAL.width;
+    LOCAL.pre.height = LOCAL.height;
+    LOCAL.width = window.innerWidth;
+    LOCAL.height = window.innerHeight;
+};
+let isLocalSizeChanged = () => {
+    LOCAL.flag = (LOCAL.width !== LOCAL.pre.width || LOCAL.height !== LOCAL.pre.height) ? true : false;
+    return LOCAL.flag;
 };
 
-// center of the local view size
-let CENTER_X = VIEW_W / 2,
-    CENTER_Y = VIEW_H / 2;
+// view size
+let VIEW = {
+    width: 0,
+    height: 0,
+    center: {x: 0, y: 0}, // center positon of the view
+    side: {left: 0, top: 0}, // view side to local window
+    ratio: 1, // the ratio of view to cut
+    pre: {ratio: 1},
+    flag: false // is the view changed?
+};
+let isViewFitLocal = () => {
+    if (
+        (LOCAL.width !== VIEW.width && LOCAL.height !== VIEW.height) ||
+        (LOCAL.width === VIEW.width && LOCAL.height < VIEW.height) ||
+        (LOCAL.width < VIEW.width && LOCAL.height === VIEW.height)
+    ) {
+        return false;
+    } else {
+        return true;
+    }
+};
+let adjustView = () => {
+    let w = LOCAL.width / CUT.width, h = LOCAL.height / CUT.height;
+    let r = (w <= h) ? w : h;
 
-// ratio
-let RATIO_CRT = VIEW_W / CUT_W,
-    RATIO_PRE = RATIO_CRT,
-    TRANS_VALUE  = RATIO_CRT / RATIO_PRE;
+    VIEW.width = CUT.width * r;
+    VIEW.height = CUT.height * r;
+    VIEW.center.x = VIEW.width / 2;
+    VIEW.center.y = VIEW.height / 2;
+    VIEW.pre.ratio = VIEW.ratio;
+    VIEW.ratio = VIEW.width / CUT.width;
+    VIEW.flag = true;
+};
 
-// resources
-let resources = PIXI.loader.resources;
-let img_url = "/static/view/imgs/",
-    eva01 = img_url + "EVA01.png",
-    eva01_b = img_url + "EVA01_B.png",
-    eva01_r = img_url + "EVA01_R.png",
-    min_bullet = img_url + "MIN_BULLET.png",
-    min_b = img_url + "MIN_B.png",
-    min_r = img_url + "MIN_R.png";
+// center canvas
+let centerCanvas = () => {
+    VIEW.side.left = (LOCAL.width - VIEW.width) / 2;
+    VIEW.side.top = (LOCAL.height - VIEW.height) / 2;
+    let canvas = document.getElementById("canvas");
+    let left = VIEW.side.left + "px",
+        top = VIEW.side.top + "px";
+    canvas.style.margin = `${top} ${left}`;
+};
 
-// pixi renderer
-let renderer = PIXI.autoDetectRenderer(
-    VIEW_W,
-    VIEW_H,
-    { backgroundColor: 0x000000 }
-); 
+// data
+let ORIGIN = {
+    airplane: null,
+    enemys: [],
+    red_bullets: [],
+    blue_bullets: []
+};
+let getAirplaneInfo = () => {
+    ORIGIN.airplane = MODEL.data.engineControlData.airPlane;
+    if (ORIGIN.airplane === null || ORIGIN.airplane === undefined) {
+        return false;
+    } else {
+        return true;
+    }
+};
+let getEnemysInfo = () => {
+    ORIGIN.enemys = MODEL.data.backendControlData.airPlane;
+    if (ORIGIN.enemys.length === 0) {
+        return false;
+    } else {
+        return true;
+    }
+};
+let getRedBulletInfo = () => {
+    ORIGIN.red_bullets = MODEL.data.backendControlData.bullet;
+    if (ORIGIN.red_bullets.length === 0) {
+        return false;
+    } else {
+        return true;
+    }
+};
+let getBlueBulletInfo = () => {
+    ORIGIN.blue_bullets = MODEL.data.engineControlData.bullet;
+    if (ORIGIN.blue_bullets.length === 0) {
+        return false;
+    } else {
+        return true;
+    }
+};
 
-// layers
-let Container = PIXI.Container;
-let Stage = new Container(),
-    BackgroundLayer = new Container(),
+// container
+let Stage = new Container();
+let BackgroundLayer = new Container(),
     ObstacleLayer = new Container(),
-    ResourceLayer = new Container(),
+    FoodLayer = new Container(),
     EnemyLayer = new Container(),
     AirplaneLayer = new Container(),
     RedBulletLayer = new Container(),
@@ -83,426 +142,344 @@ let Stage = new Container(),
     EffectLayer = new Container(),
     UILayer = new Container();
 
-// sprites
-let Sprite = PIXI.Sprite;
-let createSprite = (url) => {
-    let sp = new Sprite(resources[url].texture);
-    sp.anchor.set(0.5, 0.5);
-    return sp;
+// Sprite
+let createSprite = (path) => {
+    let sprite = new Sprite(resources[path].texture);
+    sprite.anchor.set(0.5, 0.5);
+    return sprite;
 };
-let setObjectSize = (obj, size) => {
-    obj.width = size * RATIO_CRT;
-    obj.height = size * RATIO_CRT;
+let setObjectSize = (object, size) => {
+    object.width = size * VIEW.ratio;
+    object.height = size * VIEW.ratio;
 };
-
-let centerAPX = (me, ap) => {
-    return (me - ap) * RATIO_CRT + CENTER_X;
-};
-
-let centerAPY = (me, ap) => {
-    return (me - ap) * RATIO_CRT + CENTER_Y;
+let setObjectPosition = (object, x_ori, y_ori) => {
+    object.x = (x_ori - AIRPLANE.x) * VIEW.ratio + VIEW.center.x; 
+    object.y = (y_ori - AIRPLANE.y) * VIEW.ratio + VIEW.center.y;
 };
 
-// select exact size balls to draw array from gamemodel
-let selectBalls = (con, sparr, gmd, size, url, type) => {
-    // renge
-    let right = ap_data.x_crt + (CUT_W + size) / 2,
-        left = ap_data.x_crt - (CUT_W + size) / 2,
-        top = ap_data.y_crt - (CUT_H + size) / 2,
-        bottom = ap_data.y_crt + (CUT_H + size) / 2;
+// background
+let universe = new Container();
+let square = {
+    const_length: 80,
+    x_count: 0,
+    y_count: 0,
+    view_length: 0
+};
+let setSquare = () => {
+    square.x_count = CUT.width / square.const_length;
+    square.y_count = CUT.height / square.const_length;
+    square.view_length = square.const_length * VIEW.ratio;
+};
+let drawBackground = (x_crt, y_crt) => {
+    // remove old background
+    universe.removeChildren();
 
-    let count = 0;
+    let part = new Graphics;
+    part.lineStyle(1, 0x252525, 1);
 
-    for (let i = 0; i < gmd.length; i ++) {
-        let x = gmd[i].locationCurrent.x,
-            y = gmd[i].locationCurrent.y,
-            r = gmd[i].attackDir;
-        let data = [x, y, r];
-        if (x < right && x > left && y > top && y < bottom) {
-            count += 1;
-            if (count > sparr.length) {
-                switch (type) {
-                    case T_BULLET: addBullet(con, sparr, url, size, data); break;
-                    case T_ENM: addEnm(con, sparr, url, size, data); break;
-                    default: break;
-                }
-            } else {
-                switch (type) {
-                    case T_BULLET: updateBullet(sparr, count - 1, size, data); break;
-                    case T_ENM: updateEnm(sparr, count - 1, size, data); break;
-                    default: break;
+    let i_limit = square.y_count + 2, j_limit = square.x_count + 2;
+    for (let i = 0; i < i_limit; i ++) {
+        for (let j = 0; j < j_limit; j ++) {
+            let l = square.view_length,
+                x = j * l,
+                y = i * l;
+            part.drawRect(x, y, l, l);
+        }
+    }
+    part.endFill();
+
+    universe.addChild(part);
+    universe.x = x_crt;
+    universe.y = y_crt;
+};
+
+// Airplane
+let AIRPLANE = {
+    self: null, // this shoud be the sprite or the container
+    x: 0,
+    y: 0,
+    r: 0,
+    size: 0,
+    pre: {x: 0, y:0},
+    flag: true // first read the data ?
+};
+
+// maps
+let BlueBullet = {
+    visible: null,
+    invisible: null
+};
+
+let RedBullet = {
+    visible: null,
+    invisible: null
+};
+
+let Enemy = {
+    visible: null,
+    invisible: null
+};
+
+export function initView(callback) {
+    loader
+        .add(IMAGES)
+        .load(() => {
+            initLayers(callback);
+        });
+} 
+
+function initLayers(callback) {
+    // set the init view size
+    getLocalSize();
+    adjustView();
+
+    // set the renderer
+    renderer = autoDetectRenderer(
+        VIEW.width,
+        VIEW.height,
+        { backgroundColor: 0x000000 }
+    );
+    renderer.view.id = "canvas";
+    document.body.appendChild(renderer.view);
+
+    // center the canvas
+    centerCanvas();
+
+    // init every layers, at least add the container
+    // first init background
+    setSquare();
+    drawBackground(-square.view_length, -square.view_length);
+    BackgroundLayer.addChild(universe);
+    Stage.addChild(BackgroundLayer);
+
+    // others
+    Stage.addChild(ObstacleLayer);
+    Stage.addChild(FoodLayer);
+    Stage.addChild(EnemyLayer);
+    Stage.addChild(AirplaneLayer);
+    Stage.addChild(RedBulletLayer);
+    Stage.addChild(BlueBulletLayer);
+    Stage.addChild(EffectLayer);
+    Stage.addChild(UILayer);
+
+    // set maps
+    BlueBullet.visible = new Map();
+    BlueBullet.invisible = new Map();
+    RedBullet.visible = new Map();
+    RedBullet.invisible = new Map();
+    Enemy.visible = new Map();
+    Enemy.invisible = new Map();
+
+
+    STATE = play;
+
+    // socket dealinfo and engine init
+    callback();
+}
+
+// export for engine to use less setTimeout
+export function loopRender() {
+    resizeView();
+    STATE(); 
+    renderer.render(Stage);
+
+    // cleanCache
+    MODEL.deadCache = [];
+    MODEL.disappearCache = [];
+    MODEL.collisionCache = [];
+}
+
+function resizeView() {
+    getLocalSize();
+    if (isLocalSizeChanged()) {
+        if (!isViewFitLocal()) {
+            adjustView();
+            renderer.resize(VIEW.width, VIEW.height);
+        } else {
+            VIEW.flag = false;
+        }
+        centerCanvas();
+    } else {
+        VIEW.flag = false;
+    }
+}
+
+function play () {
+    setAirplane();
+    setBackground();
+    setBalls(ORIGIN.blue_bullets, BlueBullet, BlueBulletLayer, bulletSkins, 0, getBlueBulletInfo);
+}
+
+let setAirplane = () => {
+    if (getAirplaneInfo()) {
+        // copy info to view's data
+        if (AIRPLANE.flag === true) {
+            AIRPLANE.pre.x = ORIGIN.airplane.locationCurrent.x;
+            AIRPLANE.pre.y = ORIGIN.airplane.locationCurrent.y;
+            AIRPLANE.flag = false;
+        } else {
+            AIRPLANE.pre.x = AIRPLANE.x;
+            AIRPLANE.pre.y = AIRPLANE.y;
+        }
+        AIRPLANE.x = ORIGIN.airplane.locationCurrent.x;
+        AIRPLANE.y = ORIGIN.airplane.locationCurrent.y;
+        AIRPLANE.r = ORIGIN.airplane.attackDir;
+
+        // create airplane
+        if (AIRPLANE.self === null || AIRPLANE.self === undefined) {
+            let con = new Container();
+            let skin = airplaneSkins[ORIGIN.airplane.skinId].skin,
+                camp = airplaneSkins[ORIGIN.airplane.skinId].camp[0];
+            con.addChild(createSprite(camp));
+            for (let i = 0; i < skin.length; i ++) {
+                con.addChild(createSprite(skin[i]));
+            }
+            setObjectSize(con, airplaneSkins[ORIGIN.airplane.skinId].skin_radius * 2);
+            con.position.set(VIEW.center.x, VIEW.center.y);
+            con.rotation = AIRPLANE.r;
+            AIRPLANE.self = con;
+            AirplaneLayer.addChild(AIRPLANE.self);
+        }
+        
+        // reset the state of the airplane
+        if (AIRPLANE.self.visible === false) {
+            AIRPLANE.self.visible = true;
+        }
+        AIRPLANE.self.rotation = AIRPLANE.r;
+
+        // is the view size changed ?
+        if (VIEW.flag === true) {
+            setObjectSize(AIRPLANE.self, airplaneSkins[ORIGIN.airplane.skinId].skin_radius * 2);
+            AIRPLANE.self.position.set(VIEW.center.x, VIEW.center.y);
+        }
+    } else {
+        // if airplane dead , it will be hide in the dark
+        if (AIRPLANE.self !== null || AIRPLANE.self !== undefined) {
+            AIRPLANE.self.visible = false;
+            AIRPLANE.flag = true;
+        }
+    }
+};
+
+let setBackground = () => {
+    if (VIEW.flag === true) {
+        setSquare();
+        let trans = VIEW.ratio / VIEW.pre.ratio;
+        drawBackground(universe.x * trans, universe.y * trans);
+    }
+
+    universe.x += -(AIRPLANE.x - AIRPLANE.pre.x) * VIEW.ratio;
+    if (universe.x < 2 * square.view_length || universe.x > 0) {
+        universe.x = - square.view_length + (universe.x % square.view_length);
+    }
+
+    universe.y += -(AIRPLANE.y - AIRPLANE.pre.y) * VIEW.ratio;
+    if (universe.y < 2 * square.view_length || universe.y > 0) {
+        universe.y = - square.view_length + (universe.y % square.view_length);
+    }
+};
+
+// info : the origin data array
+// map : visible and invisible
+// type: bullet or enemy
+// func: the getinfo func
+// skin: 
+let setBalls = (origin, map, layer, skin, camp, getinfo) => {
+    if (getinfo()){
+        // new visible map
+        let visible = new Map();
+
+        // console.log("origin: " + origin.length)
+        for (let i = 0; i < origin.length; i ++) {
+            // data
+            let skinId = origin[i].skinId;
+            let radius = skin[skinId].skin_radius;
+            let x = origin[i].locationCurrent.x,
+                y = origin[i].locationCurrent.y,
+                r = origin[i].attackDir;
+
+            // range
+            let left = AIRPLANE.x - (CUT.width + radius) / 2,
+                right = AIRPLANE.x + (CUT.width + radius) / 2,
+                top =  AIRPLANE.y - (CUT.height + radius) / 2,
+                bottom = AIRPLANE.y + (CUT.height + radius) / 2;
+
+            let id = origin[i].userId << 16 + origin[i].id;
+
+            if (x > left && x < right && y > top && y < bottom) {
+                if (map.visible.get(id) !== undefined) {
+                    visible.set(id, map.visible.get(id));
+                    map.visible.delete(id);
+                    updateBall(visible.get(id), x, y, r, radius * 2);
+                } else if ( 
+                    map.invisible.get(skinId) !== undefined &&
+                    map.invisible.get(skinId).length !== 0
+                ) {
+                    visible.set(id, map.invisible.get(skinId).pop());
+                    updateBall(visible.get(id), x, y, r, radius * 2);
+                    visible.get(id).visible = true;
+                } else if (
+                    map.visible.get(id) === undefined &&
+                    (map.invisible.get(skinId) === undefined || map.invisible.get(skinId).length === 0 ) 
+                )  {
+                    let con = new Container();
+                    let _skin = skin[skinId].skin,
+                        _camp = skin[skinId].camp[camp];
+                    for (let j = 0; j < _skin.length; j ++) {
+                        con.addChild(createSprite(_skin[j]));
+                    }
+                    con.addChild(createSprite(_camp));
+
+                    visible.set(id, con);
+                    setObjectPosition(visible.get(id), x, y);
+                    visible.get(id).rotation = r;
+                    setObjectSize(visible.get(id), radius * 2);
+
+                    // add self skinId
+                    visible.get(id).mySkinId = skinId;
+                    layer.addChild(visible.get(id));
+                    // console.log("new :" + count++)
                 }
             }
         }
-    }
-
-    if (count < sparr.length) {
-        for (let j = count; j < sparr.length; j ++) {
-            sparr[j].visible = false;
-        }
-    }
-};
-
-// AirplaneLayer
-const ap_l = 120;
-let airplane = new Container();
-let ap_gi,
-    ap_data = {
-        x_pre: 0,
-        x_crt: 0,
-        x_len: 0,
-        y_pre: 0,
-        y_crt: 0,
-        y_len: 0,
-        r: 0,
-        flag: 0
-    };
-let copyAirplaneInfo = () => {
-    ap_gi = GMD.data.engineControlData.airPlane;
-
-    if (ap_gi === undefined) {
-        ap_data.x_pre = 0;
-        ap_data.y_pre = 0;
-        ap_data.flag = 0;
-        ap_data.x_crt = 0;
-        ap_data.x_len = 0;
-        ap_data.y_crt = 0;
-        ap_data.y_len = 0;
-        ap_data.r = 0;
-    }else{
-        if (ap_data.flag === 0) {
-            ap_data.x_pre = ap_gi.locationCurrent.x;
-            ap_data.y_pre = ap_gi.locationCurrent.y;
-            ap_data.flag = 1;
-        } else {
-            ap_data.x_pre = ap_data.x_crt;
-            ap_data.y_pre = ap_data.y_crt;
+        // console.log("visible: " + visible.size);
+        /// deal the new visible and the old vsible
+        if (map.visible.size > 0) {
+            for (let value of map.visible.values()) {
+                let mySkinId = value.mySkinId;
+                if (map.invisible.get(mySkinId) === undefined) {
+                    map.invisible.set(mySkinId, []);
+                }
+                value.visible = false;
+                map.invisible.get(mySkinId).push(value);
+                // console.log(" map invisible: " + map.invisible.get(mySkinId).length);
+            }
         }
 
-        ap_data.x_crt = ap_gi.locationCurrent.x;
-        ap_data.x_len = ap_data.x_crt - ap_data.x_pre;
+        map.visible.clear();
+        map.visible = visible;
+        // console.log(map.visible.size);
+        // console.log(" map visible: " + map.visible.size);
 
-        ap_data.y_crt = ap_gi.locationCurrent.y;
-        ap_data.y_len = ap_data.y_crt - ap_data.y_pre;
-
-        ap_data.r = ap_gi.attackDir;    
-    }
-
-    
-};
-
-// BackgroundLayer
-let universe = new Container();
-const rect_l = 80;
-let rect_xn = CUT_W / rect_l,
-    rect_yn = CUT_H / rect_l,
-    rect_vl = rect_l * RATIO_CRT;
-
-let drawCrossLine = (x, y) => {
-    universe.removeChildren();
-
-    let Graphics = new PIXI.Graphics;
-    Graphics.lineStyle(1, 0x252525, 1);
-    let ni = rect_yn + 2, nj = rect_xn + 2;
-    for (let i = 0; i < ni; i ++) {
-        for (let j = 0; j < nj; j ++) {
-            let x = j * rect_vl,
-                y = i * rect_vl;
-            Graphics.drawRect(x, y, rect_vl, rect_vl);
+    } else {
+        if (map.visible.size > 0) {
+            for (let value of map.visible.values()) {
+                let mySkinId = value.mySkinId;
+                if (map.invisible.get(mySkinId) === undefined) {
+                    map.invisible.set(mySkinId, []);
+                }
+                value.visible = false;
+                map.invisible.get(mySkinId).push(value);
+            }
         }
+        map.visible.clear();
     }
-    Graphics.endFill();
-    
-    universe.addChild(Graphics);
-    universe.x = x;
-    universe.y = y;
 };
 
-// EnemyLayer
-const T_ENM = 0;
-const enm_l = 120; 
-let Enemys = [], enm_gi;
-let updateEnm = (sparr, index, size, data) => {
-    sparr[index].visible = true;
-    if (sparr[index].width !== size * RATIO_CRT) {
-        setObjectSize(sparr[index], size);
+let updateBall = (object, x, y, r, size) => {
+    setObjectPosition(object, x, y);
+    object.rotation = r;
+    if (VIEW.flag === true) {
+        setObjectSize(object, size);
     }
-    sparr[index].x = centerAPX(data[0], ap_data.x_crt);
-    sparr[index].y = centerAPY(data[1], ap_data.y_crt);
-    sparr[index].rotation = data[2];
-
 };
-
-let addEnm = (con, sparr, url, size, data) => {
-    let enemy = new Container();
-    enemy.addChild(createSprite(url[1]));
-    enemy.addChild(createSprite(url[0]));
-    setObjectSize(enemy, size);
-    sparr.push(enemy);
-
-    let p = sparr.length - 1;
-    updateEnm(sparr, p, size, data);
-    con.addChild(sparr[p]);
-};
-
-// BULLET
-const T_BULLET = 1;
-// BlueBulletLayer
-const bblt_l = 20;
-let Bbullets = [], bblt_gi;
-// RedBulletLayer
-const rblt_l = 20;
-let Rbullets = [], rblt_gi;
-
-let updateBullet = (sparr, index, size, data) => {
-    sparr[index].visible = true;
-    if (sparr[index].width !== size * RATIO_CRT) {
-        setObjectSize(sparr[index], size);
-    }
-    sparr[index].x = centerAPX(data[0], ap_data.x_crt);
-    sparr[index].y = centerAPY(data[1], ap_data.y_crt);
-    sparr[index].rotation = data[2];
-};
-
-let addBullet = (con, sparr, url, size, data) => {
-    let bullet = new Container();
-    bullet.addChild(createSprite(url[0]));
-    bullet.addChild(createSprite(url[1]));
-    sparr.push(bullet);
-    let p = sparr.length - 1;
-    updateBullet(sparr, p, size, data);
-    con.addChild(sparr[p]);
-};
-
-// export for launch
-export function initView(callback) {
-    PIXI.loader
-        .add(eva01)
-        .add(eva01_b)
-        .add(eva01_r)
-        .add(min_bullet)
-        .add(min_b)
-        .add(min_r)
-        .load(() =>{
-            renderer.view.id = "canvas";
-            document.body.appendChild(renderer.view);
-            centerCanvas();
-            initLayers(callback);
-        });
-}
-
-function initLayers(callback) {
-    initBackground();
-    initObstacle();
-    initResource();
-    initEnemy();
-    initAirplane();
-    initRedBullet();
-    initBlueBullet();
-    initEffect();
-    initUI();
-
-    state = play;
-    console.log("init view");
-    callback();
-    console.log("callback success");
-
-}
-
-function initBackground() {
-    drawCrossLine(-rect_vl, -rect_vl);
-    BackgroundLayer.addChild(universe);
-    Stage.addChild(BackgroundLayer);
-}
-
-function initObstacle() {
-    Stage.addChild(ObstacleLayer);
-}
-
-function initResource() {
-    Stage.addChild(ResourceLayer);
-}
-
-function initEnemy() {
-    Stage.addChild(EnemyLayer);
-}
-
-function initAirplane() {
-    let body = createSprite(eva01_b),
-        camp = createSprite(eva01);
-
-    airplane.addChild(body);
-    airplane.addChild(camp);
-    
-    setObjectSize(airplane, ap_l);
-    airplane.position.set(CENTER_X, CENTER_Y);
-
-    AirplaneLayer.addChild(airplane);
-    Stage.addChild(AirplaneLayer);
-}
-
-function initRedBullet() {
-    Stage.addChild(RedBulletLayer);
-}
-
-function initBlueBullet() {
-    Stage.addChild(BlueBulletLayer);
-}
-
-function initEffect() {
-    Stage.addChild(EffectLayer);
-}
-
-function initUI() {
-    Stage.addChild(UILayer);
-}
-
-// loop render
-export function loopRender() {
-    state();
-    rszView();
-    renderer.render(Stage);
-    GMD.deadCache = [];
-    GMD.disappearCache = [];
-    GMD.collisionCache = [];
-}
-
-function play() {
-    copyAirplaneInfo();
-
-    rstBackground();
-    rstObstacle();
-    rstResource();
-    rstEnemy();
-    rstAirplane();
-    rstRedBullet();
-    rstBlueBullet();
-    rstEffect();
-    rstUI();
-}
-
-function rstBackground() {
-    universe.x += -ap_data.x_len * RATIO_CRT;
-    if (universe.x < - 2 * rect_vl || universe.x > 0) {
-        universe.x = -rect_vl + (universe.x % rect_vl);
-    }
-    universe.y += -ap_data.y_len * RATIO_CRT;
-    if (universe.y < - 2 * rect_vl || universe.y > 0) {
-        universe.y = -rect_vl + (universe.y % rect_vl);
-    }
-}
-
-function rstObstacle() {
-}
-
-function rstResource() {
-}
-
-function rstEnemy() {
-    enm_gi = GMD.data.backendControlData.airPlane;
-    // console.log("sss: " + enm_gi);
-    let url =[eva01, eva01_r];
-    selectBalls(EnemyLayer, Enemys, enm_gi, enm_l, url, T_ENM);
-}
-
-function rstAirplane() {
-    airplane.rotation = ap_data.r;
-}
-
-function rstRedBullet() {
-    rblt_gi = GMD.data.backendControlData.bullet;
-    // console.log(rblt_gi);
-    let url = [min_bullet, min_r];
-    selectBalls(RedBulletLayer, Rbullets, rblt_gi, rblt_l, url, T_BULLET);
-}
-
-function rstBlueBullet() {
-    bblt_gi = GMD.data.engineControlData.bullet;
-    // console.log(bblt_gi);
-    let url = [min_bullet, min_b]
-    selectBalls(BlueBulletLayer, Bbullets, bblt_gi, bblt_l, url, T_BULLET);
-    // console.log(Bbullets);
-}
-
-function rstEffect() {
-}
-
-function rstUI() {
-}
-
-// resize view when window'size changed
-function rszView() {
-    // remember the last ratio;
-    RATIO_PRE = RATIO_CRT;
-
-    // current window size
-    let lw = LOCAL_W, lh = LOCAL_H;
-    LOCAL_W = window.innerWidth;
-    LOCAL_H = window.innerHeight;
-
-    if (
-        (LOCAL_W !== VIEW_W && LOCAL_H !== VIEW_H) ||
-        (LOCAL_W === VIEW_W && LOCAL_H < VIEW_H) ||
-        (LOCAL_W < VIEW_W && LOCAL_H === VIEW_H)
-    ) {
-
-        adaptWindow();
-
-        CENTER_X = VIEW_W / 2;
-        CENTER_Y = VIEW_H / 2;
-
-        RATIO_CRT = VIEW_W / CUT_W;
-        TRANS_VALUE  = RATIO_CRT / RATIO_PRE;
-        console.log("change: " + RATIO_CRT);
-
-        renderer.resize(VIEW_W, VIEW_H);
-
-        rect_vl = rect_l * RATIO_CRT;
-
-        rszBackground();
-        rszObstacle();
-        rszResource();
-        rszEnemy();
-        rszAirplane();
-        rszRedBullet();
-        rszBlueBullet();
-        rszEffect();
-        rszUI();
-    }
-    if (LOCAL_W !== lw || LOCAL_H !== lh) {
-        centerCanvas();
-    }
-}
-
-function rszBackground() {
-    drawCrossLine(universe.x * TRANS_VALUE, universe.x * TRANS_VALUE);
-}
-
-function rszObstacle() {
-}
-
-function rszResource() {
-}
-
-function rszEnemy() {
-    for (let i = 0; i < Enemys.length; i ++) {
-        setObjectSize(Enemys[i], enm_l);
-    }
-}
-
-function rszAirplane() {
-    setObjectSize(airplane, ap_l);
-    airplane.position.set(CENTER_X, CENTER_Y);
-}
-
-function rszRedBullet() {
-}
-
-function rszBlueBullet() {
-}
-
-function rszEffect() {
-}
-
-function rszUI() {
-}

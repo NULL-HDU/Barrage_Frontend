@@ -5,7 +5,8 @@
  */
 import {
     EVA01_AIRPLANE,
-    MIN_BULLET
+    MIN_BULLET,
+    MAX_BULLET
 } from "../skin/skinId.js";
 
 const RP = "/static/view/imgs/";
@@ -22,6 +23,12 @@ export const bulletSkins = {
     [MIN_BULLET]: {
         judge_radius: 10,
         skin_radius: 10,
+        skin: [IMG_MIN_BULLET],
+        camp: [MIN_B, MIN_R]
+    },
+    [MAX_BULLET]: {
+        judge_radius: 60,
+        skin_radius: 60,
         skin: [IMG_MIN_BULLET],
         camp: [MIN_B, MIN_R]
     }
