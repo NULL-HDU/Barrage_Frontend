@@ -13,8 +13,11 @@ let state;
 // fps
 const FPS = 60, stot = 1000 / FPS;
 
+// virture size
+let VIR_W = 1280 * 2, VIR_H = 800 * 2;
+
 // cut view size
-let CUT_W = 1280, CUT_H = 800; 
+let CUT_W = 1280 * 2, CUT_H = 800 * 2; 
 
 // local window size
 let LOCAL_W = window.innerWidth,
@@ -383,11 +386,20 @@ function play() {
 
 function rstBackground() {
     universe.x += -ap_data.x_len * RATIO_CRT;
-    if (universe.x < - 2 * rect_vl || universe.x > 0) {
+    if (ap_data.x_crt < CUT_W / 2) {
+        universe.x = (CUT_W / 2 - ap_data.x_crt) * RATIO_CRT;
+    } else if (ap_data.x_crt > VIR_W - CUT_W / 2) {
+        universe.x = - 2 * rect_vl - (CUT_W / 2 - (VIR_W - ap_data.x_crt)) * RATIO_CRT;
+    } else if (universe.x < - 2 * rect_vl || universe.x > 0) {
         universe.x = -rect_vl + (universe.x % rect_vl);
     }
+
     universe.y += -ap_data.y_len * RATIO_CRT;
-    if (universe.y < - 2 * rect_vl || universe.y > 0) {
+    if (ap_data.y_crt < CUT_H / 2) {
+        universe.y = (CUT_H / 2 - ap_data.y_crt) * RATIO_CRT;
+    } else if (ap_data.y_crt > VIR_H - CUT_H / 2) {
+        universe.y = - 2 * rect_vl - (CUT_H / 2 - (VIR_H - ap_data.y_crt)) * RATIO_CRT;
+    } else if (universe.y < - 2 * rect_vl || universe.y > 0) {
         universe.y = -rect_vl + (universe.y % rect_vl);
     }
 }
