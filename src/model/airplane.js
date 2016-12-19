@@ -46,7 +46,15 @@ export default class Airplane extends Ball {
     }
 
     move() {
-        this.locationCurrent.add(PVector.mult(this.vd, this.speed*this.slowRate));
+        let p = PVector.mult(this.vd, this.speed*this.slowRate);
+        if((this.locationCurrent.x > 1280 * 3 && p.x > 0) || (this.locationCurrent.x < 0 && p.x < 0)){
+            p.x = 0;
+        }
+
+        if((this.locationCurrent.y > 800 * 3 && p.y > 0) || (this.locationCurrent.y < 0 && p.y < 0)){
+            p.y = 0;
+        }
+        this.locationCurrent.add(p);
         this.attackDir += this.vangle;
     }
 
