@@ -37,9 +37,14 @@ export default class Bullet extends Ball {
 
         let distance = PVector.dist(this.srclocation, this.locationCurrent);
 
-        //距离检测，边界检测
+        //射程检测
         if (distance >= 800) {
           this.state = DISAPPEAR;
+        }
+
+        //边界检测
+        if(this.locationCurrent.x > 1280 *2 || this.locationCurrent.x < 0 || this.locationCurrent.y > 800 *2 || this.locationCurrent.y < 0){
+            this.state = DISAPPEAR;
         }
 
         //        console.log("x: " + this.locationCurrent.x + "y: " + this.locationCurrent.y);
