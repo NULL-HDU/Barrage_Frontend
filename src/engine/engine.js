@@ -174,15 +174,10 @@ let engine = () => {
     let viewCountMax = Math.floor(global.VIEW_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL);
 
     looper(() => {
-        let viewScope = undefined;
         if(data.airPlane !== undefined) {
             data.airPlane.move();
             data.airPlane.skillActive();
             data.airPlane.skillCountDown();
-            viewScope = {
-                width: data.airPlane.viewWidth,
-                height: data.airPlane.viewHeight
-            };
         }else{
           if(!window.dialogs.info.State()) askForTryAgain();
         }
@@ -202,7 +197,7 @@ let engine = () => {
 
         if(++viewCount >= viewCountMax){
             viewCount = 0;
-            loopRender(viewScope);
+            loopRender();
         }
 
 
