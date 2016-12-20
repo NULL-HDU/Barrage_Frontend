@@ -8,7 +8,8 @@ import {
     skillFramework
 } from "./utils.js";
 import {
-    CIRCLE_BULLET
+    CIRCLE_BULLET,
+    MAX_CIRCLE_BULLET,
 } from "../bullet/roleId.js";
 import Bullet from "../../model/bullet.js";
 
@@ -33,7 +34,7 @@ let skillFunc = () => {
           );
           let bullet = new Bullet(
             airPlane,
-            CIRCLE_BULLET,
+            i%2 ? CIRCLE_BULLET: MAX_CIRCLE_BULLET,
             site_angle + Math.PI,
             PVector.add(a_location, PVector.mult(dirVector, 10))
           );
@@ -52,7 +53,7 @@ let skillFunc = () => {
           );
           let bullet = new Bullet(
               airPlane,
-              CIRCLE_BULLET,
+              i%2 ? CIRCLE_BULLET: MAX_CIRCLE_BULLET,
               site_angle,
               PVector.add(a_location, PVector.mult(dirVector, 10))
           );
