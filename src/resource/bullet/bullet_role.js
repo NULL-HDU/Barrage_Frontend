@@ -14,6 +14,7 @@ import {
 import {
     STRAIGHT_LINE_BULLET,
     CIRCLE_BULLET,
+    MAX_CIRCLE_BULLET,
     MAX_UNIFORMLY_RETARDED_BULLET,
 } from "./roleId.js";
 
@@ -36,7 +37,14 @@ export default {
         hp: 100,
         damage: 50,
         speed: global.BULLET_SPEED, // px / s
-    }
+    }, [MAX_CIRCLE_BULLET]: {
+      skinId: MAX_BULLET,
+      pathFunc: circlePath,
+      hp: 300,
+      damage: 50,
+      speed: global.BULLET_SPEED, // px / s
+    },
+
 };
 
 /* bullet_role ends here */

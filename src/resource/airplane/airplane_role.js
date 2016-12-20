@@ -12,6 +12,8 @@ export default {
   [EVA01]: {
     skinId: EVA01_AIRPLANE,
     speed: 230,
+    viewWidth: 1200,
+    viewHeight: 900,
     normalSkill: LinearPark,
     qSkill: PosAndNegWheel,
   }
