@@ -106,8 +106,12 @@ let collisionDetection = () => {
         let collidors = quad.retrieve(selfBullets[i]);
         for (j = 0; j < collidors.length; j++) {
             // 1 check camp
-            // 2 check distance
+            // 2 check type
+            // 3 check distance
             if (collidors[j].camp === selfBullets[i].camp) {
+                continue;
+            }
+            if(collidors[j].ballType === AIRPLANE && selfBullets[i].ballType === AIRPLANE){
                 continue;
             }
 
@@ -115,55 +119,30 @@ let collisionDetection = () => {
             let b = collidors[j].locationCurrent;
             let distance = PVector.dist(a, b);
             if (distance <= collidors[j].radius + selfBullets[i].radius) {
-
-                if(collidors[j].ballType === AIRPLANE && selfBullets[i].ballType === AIRPLANE){
-                    break;
-                }
-
-
-                //碰撞处理和伤害计算
-                if (collidors[j].ballType === BULLET) {
-                    collidors[j].hp -= selfBullets[i].damage;
-                    if (collidors[j].hp === 0) {
-                        collidors[j].state = DEAD;
-                        //console.log("enemy bullet dead detect");
-                    }
-                }
-
-                if (collidors[j].ballType === AIRPLANE) {
-                    console.log("enemy airplane detect");
-                    //                    collidors[j].hp -= selfBullets[i].damage * collidors[j].defense;
-                    collidors[j].hp = 0;
-                    if (collidors[j].hp === 0) {
-                        console.log("enemy dead");
-                        collidors[j].state = DEAD;
-                    }
-                }
-
-                if (selfBullets[i].ballType === AIRPLANE) {
-                    console.log("self airplane detect");
-                    //                    selfBullets[i].hp -= collidors[j].damage * selfBullets[i].defense;
-                    selfBullets[i].hp = 0;
-                    if (selfBullets[i].hp === 0) {
-                        console.log("self dead");
-                        selfBullets[i].state = DEAD;
-                    }
-                }
-
-                if (selfBullets[i].ballType === BULLET) {
-                    selfBullets[i].hp -= collidors[j].damage;
-                    if (selfBullets[i].hp === 0) {
-                        selfBullets[i].state = DEAD;
-                        //console.log("self bullet dead detect");
-                    }
-                }
-
                 let damageInformation = {
-                    collision1: selfBullets[i].id,
-                    collision2: collidors[j].id,
-                    damageValue: [selfBullets[i].damageValue, collidors[j].damageValue],
-                    state: [selfBullets[i].state, collidors[j].state]
+                  collision1: selfBullets[i].id,
+                  collision2: collidors[j].id,
+                  damageValue: [selfBullets[i].hp, collidors[j].hp],
+                  state: []
                 };
+
+                // bullet <-> bullet
+                if (collidors[j].ballType === selfBullets[i].ballType) {
+                    let chp = collidors[j].hp,
+                        shp = selfBullets[i].hp;
+                    collidors[j].hp -= shp;
+                    selfBullets[i].hp -= chp;
+                }else{
+                  // TODO: There is no method to check airPlane colliding with food.
+                  collidors[j].hp = 0;
+                  selfBullets[i].hp = 0;
+                }
+
+                if (collidors[j].hp <= 0) collidors[j].state = DEAD;
+                if (selfBullets[i].hp <= 0) selfBullets[i].state = DEAD;
+
+                damageInformation.state[0] = selfBullets[i].state;
+                damageInformation.state[1] = collidors[j].state;
                 gamemodel.socketCache.damageInformation.push(damageInformation);
 
                 //只判断两个相撞
@@ -181,7 +160,8 @@ let askForTryAgain  = () => {
       airPlane.userId = gamemodel.userId;
       gamemodel.data.engineControlData.airPlane = airPlane;
     }else{
-
+      window.location.hash = "";
+      window.location.reload();
     }
   });
 };
