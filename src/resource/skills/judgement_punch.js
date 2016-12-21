@@ -1,4 +1,4 @@
-/* normalStraigthShut.js --- shut one normal ball.
+/* judgement_punch.js --- shut one big bullet
  *
  * Maintainer: Mephis Pheies ( MephistoMMM )
  * Email: mephistommm@gmail.com
@@ -14,12 +14,12 @@ import {
 } from "./utils.js";
 import PVector from "../../model/Point.js";
 import {
-    STRAIGHT_LINE_BULLET
+    MAX_UNIFORMLY_RETARDED_BULLET
 } from "../bullet/roleId.js";
 import Bullet from "../../model/bullet.js";
 
 const TWO_BULLET_INTERVAL = 100; // ms
-const BULLET_NUM = 3;
+const BULLET_NUM = 1;
 
 let skillFunc = () => {
     let bulletCount = 0;
@@ -32,14 +32,14 @@ let skillFunc = () => {
         );
         let bullet = new Bullet(
             airPlane,
-            STRAIGHT_LINE_BULLET,
+            MAX_UNIFORMLY_RETARDED_BULLET,
             angle,
             PVector.add(
               airPlane.locationCurrent,
               PVector.mult(dirVector, airPlane.skin_radius)
             )
         );
-        bullet.run = bullet.pathFunc(bullet);
+        bullet.run = bullet.pathFunc(bullet, 4, 500);
         data.bullet.push(bullet);
 
         return ++bulletCount < bulletCountMax;
@@ -47,9 +47,9 @@ let skillFunc = () => {
 };
 
 export default {
-    skillName: "Linear Park",
+    skillName: "Judgement Punch",
     skillFunc: skillFunc,
-    skillCD: 900,
+    skillCD: 1800,
 };
 
-/* normalStraigthShut.js ends here */
+/* judgement_punch.js ends here */

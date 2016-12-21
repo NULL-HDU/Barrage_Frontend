@@ -27,10 +27,12 @@ export default class Airplane extends Ball {
 
         // init skills and its cd.
         // **SkillCount > 0, means this skill is in cd.
-        this.normalSkillCount = 0;
-        this.normalSkillCD = this.normalSkill.skillCD / global.GAME_LOOP_INTERVAL;
-        this.qSkillCount = 0;
-        this.qSkillCD = this.qSkill.skillCD / global.GAME_LOOP_INTERVAL;
+        this.CDCount = {};
+        this.CD = {};
+        for(let skillType in this.skills){
+            this.CDCount[skillType] = 0;
+            this.CD[skillType] = this.skills[skillType].skillCD / global.GAME_LOOP_INTERVAL;
+        }
         // all function in actionSkill while be call in each engine loop;
         this.activeSkillList = [];
 
@@ -61,8 +63,9 @@ export default class Airplane extends Ball {
     }
 
     skillCountDown() {
-        if(this.qSkillCount > 0) this.qSkillCount--;
-        if(this.normalSkillCount > 0) this.normalSkillCount--;
+        for(let skillType in this.CDCount){
+            if(this.CDCount[skillType] > 0) this.CDCount[skillType]--;
+        }
     }
 
     // skillActive call all functions in activeSkillList, those functions may generate
@@ -72,19 +75,13 @@ export default class Airplane extends Ball {
       this.activeSkillList = this.activeSkillList.filter(f => f(this,this.attackDir + Math.PI*3/2));
     }
 
-    useQSkill() {
-      if (this.qSkillCount > 0) return;
+    useSkill(skillType) {
+        if(this.CDCount[skillType] > 0) return;
 
-      this.qSkillCount = this.qSkillCD;
-      this.activeSkillList.push(this.qSkill.skillFunc());
+        this.CDCount[skillType] = this.CD[skillType];
+        this.activeSkillList.push(this.skills[skillType].skillFunc());
     }
 
-    useNormalSkill() {
-      if (this.normalSkillCount > 0) return;
-
-      this.normalSkillCount = this.normalSkillCD;
-      this.activeSkillList.push(this.normalSkill.skillFunc());
-    }
 }
 
 /*airplane.js ends here*/
