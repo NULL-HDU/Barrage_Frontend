@@ -22,12 +22,29 @@ let STATE;
 let VIRTUAL = {
     width : 1280 * 2,
     height : 800 * 2
-}
+};
 
 // cut siz
 let CUT = {
     width : 1280 * 2, 
     height: 800 * 2,
+    pre: {
+        width: 1280 * 2,
+        height : 800 * 2
+    }
+};
+let isCutChanged = () => {
+    if (getAirplaneInfo()) {
+        CUT.pre.width = CUT.width;
+        CUT.pre.height = CUT.height;
+        CUT.width = ORIGIN.airplane.viewWidth;
+        CUT.height = ORIGIN.airplane.viewHeight;
+    }
+    if (CUT.width !== CUT.pre.width || CUT.height !== CUT.pre.height) {
+        return true;
+    } else {
+        return false;
+    }
 };
 
 // local size
@@ -56,6 +73,7 @@ let VIEW = {
     side: {left: 0, top: 0}, // view side to local window
     ratio: 1, // the ratio of view to cut
     pre: {ratio: 1},
+    mark: {local: false, cut: false},
     flag: false // is the view changed?
 };
 let isViewFitLocal = () => {
@@ -69,6 +87,8 @@ let isViewFitLocal = () => {
         return true;
     }
 };
+
+
 let adjustView = () => {
     let w = LOCAL.width / CUT.width, h = LOCAL.height / CUT.height;
     let r = (w <= h) ? w : h;
@@ -79,7 +99,6 @@ let adjustView = () => {
     VIEW.center.y = VIEW.height / 2;
     VIEW.pre.ratio = VIEW.ratio;
     VIEW.ratio = VIEW.width / CUT.width;
-    VIEW.flag = true;
 };
 
 // center canvas
@@ -162,7 +181,7 @@ let setObjectPosition = (object, x_ori, y_ori) => {
 // background
 let universe = new Container();
 let square = {
-    const_length: 80,
+    const_length: 60,
     x_count: 0,
     y_count: 0,
     view_length: 0
@@ -212,6 +231,18 @@ let BlueBullet = {};
 let RedBullet = {};
 
 let Enemy = {};
+
+// types
+let TYPE = {
+    airplane: 0,
+    bullet: 0
+}
+
+// camps
+let CAMP = {
+    blue: 0,
+    red: 1
+}
 
 export function initView(callback) {
     loader
@@ -274,15 +305,32 @@ export function loopRender() {
 }
 
 function resizeView() {
+    if (isCutChanged()) {
+        // adjustView();
+        // renderer.resize(VIEW.width, VIEW.height);
+        // centerCanvas();
+        VIEW.mark.cut = true;
+    } else {
+        VIEW.mark.cut = false;
+    }
+
     getLocalSize();
     if (isLocalSizeChanged()) {
         if (!isViewFitLocal()) {
-            adjustView();
-            renderer.resize(VIEW.width, VIEW.height);
-        } else {
-            VIEW.flag = false;
+            // adjustView();
+            // renderer.resize(VIEW.width, VIEW.height);
+            VIEW.mark.local = true;
+        }else {
+            VIEW.mark.local = false;
         }
         centerCanvas();
+    } 
+
+    if (VIEW.mark.cut === true || VIEW.mark.local === true) {
+        adjustView();
+        renderer.resize(VIEW.width, VIEW.height);
+        centerCanvas();
+        VIEW.flag = true;
     } else {
         VIEW.flag = false;
     }
@@ -294,6 +342,9 @@ function play () {
     // setBalls(ORIGIN.blue_bullets, BlueBullet, BlueBulletLayer, bulletSkins, 0, 1, getBlueBulletInfo);
     // setBalls(ORIGIN.red_bullets, RedBullet, RedBulletLayer, bulletSkins, 1, 1, getRedBulletInfo);
     // setBalls(ORIGIN.enemys, Enemy,  EnemyLayer, airplaneSkins, 1, 0, getEnemysInfo);
+    selectBalls(TYPE.airplane, CAMP.red, airplaneSkins, EnemyLayer, Enemy, ORIGIN.enemys, getEnemysInfo);
+    selectBalls(TYPE.bullet, CAMP.red, bulletSkins, RedBulletLayer, RedBullet, ORIGIN.red_bullets, getRedBulletInfo);
+    selectBalls(TYPE.bullet, CAMP.blue, bulletSkins, BlueBulletLayer, BlueBullet, ORIGIN.blue_bullets, getBlueBulletInfo);
 }
 
 let setAirplane = () => {
@@ -393,16 +444,69 @@ let selectBalls = (type, camp, skins, layer, map, origin, getinfo) => {
 
             if (x > left && x < right && y > top && y < bottom) {
                 if (count[skinId] === undefined) {
-                    count[skinId] = 0
+                    count[skinId] = 0;
                 }
                 count[skinId] += 1;
 
-                
+                if (map[skinId] === undefined) {
+                    map[skinId] = [];
+                }
+
+                if (count[skinId] > map[skinId].length) {
+                    let ct = new Container();
+                    let sk = skins[skinId].skin,
+                        cp = skins[skinId].camp[camp];
+                    switch (type) {
+                        case TYPE.airplane :
+                            ct.addChild(createSprite(cp));
+                            for (let j = 0; j < sk.length; j ++) {
+                                ct.addChild(createSprite(sk[j]));
+                            }
+                            break;
+
+                        case TYPE.bullet :
+                            for (let j = 0; j < sk.length; j ++) {
+                                ct.addChild(createSprite(sk[j]));
+                            }
+                            ct.addChild(createSprite(cp));
+                            break;
+
+                        default: break;
+                    }
+
+                    updateBall(ct, x, y, r, radius);
+                    layer.addChild(ct);
+
+                    map[skinId].push(ct);
+                } else {
+                    let crtObj = map[skinId][count[skinId] - 1];
+                    crtObj.visible = true;
+                    updateBall(crtObj, x, y, r , radius * 2);
+                    // update balls
+                }
 
             }
         }
+
+        let map_keys = Object.keys(map);
+        for (let n = 0; n < map_keys.length; n ++) {
+            let begin = 0;
+            if (count[map_keys[n]] !== undefined) {
+                begin = count[map_keys[n]];
+            }
+            for (let m = begin; m < map[map_keys[n]].length; m ++) {
+                map[map_keys[n]][m].visible = false;
+            }
+        }
+    } else {
+        let map_keys = Object.keys(map);
+        for (let n = 0; n < map_keys.length; n ++) {
+            for (let m = 0; m < map[map_keys[n]].length; m ++) {
+                map[map_keys[n]][m].visible = false;
+            }
+        }
     }
-}
+};
 
 // let setBalls = (origin, map, layer, skin, camp, type, getinfo) => {
 //     if (getinfo()){
