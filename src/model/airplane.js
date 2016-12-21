@@ -42,6 +42,7 @@ export default class Airplane extends Ball {
         this.speed = this.speed * global.GAME_LOOP_INTERVAL / 1000;
         this.vangle = 0;
 
+        this.dLocation = new PVector();
         this.locationCurrent = new PVector(global.LOCAL_WIDTH/2,global.LOCAL_HEIGHT/2);
         this.defense = 1;
         gamemodel.socketCache.newBallInformation.push(this);
@@ -58,7 +59,8 @@ export default class Airplane extends Ball {
             p.y = 0;
         }
 
-        this.locationCurrent.add(p);
+        this.dLocation = p;
+        this.locationCurrent.add(this.dLocation);
         this.attackDir += this.vangle;
     }
 

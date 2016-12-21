@@ -1,4 +1,4 @@
-/* judgement_punch.js --- shut one big bullet
+/* judgementPunch.js --- shut one big bullet
  *
  * Maintainer: Mephis Pheies ( MephistoMMM )
  * Email: mephistommm@gmail.com
@@ -52,4 +52,4 @@ export default {
     skillCD: 1800,
 };
 
-/* judgement_punch.js ends here */
+/* judgementPunch.js ends here */

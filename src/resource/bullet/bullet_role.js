@@ -13,6 +13,7 @@ import {
 } from "../skin/skinId.js";
 import {
     STRAIGHT_LINE_BULLET,
+    MAX_STRAIGHT_LINE_BULLET,
     CIRCLE_BULLET,
     MAX_CIRCLE_BULLET,
     MAX_UNIFORMLY_RETARDED_BULLET,
@@ -24,25 +25,36 @@ export default {
         pathFunc: straightLinePath,
         hp: 100,
         damage: 50,
+        distance: 800,
+        speed: global.BULLET_SPEED, // px / s
+    }, [MAX_STRAIGHT_LINE_BULLET]: {
+        skinId: MAX_BULLET,
+        pathFunc: straightLinePath,
+        hp: 300,
+        damage: 50,
+        distance: 700,
         speed: global.BULLET_SPEED, // px / s
     }, [MAX_UNIFORMLY_RETARDED_BULLET]: {
         skinId: MAX_BULLET,
         pathFunc: uniformlyRetardedPath,
         hp: 300,
         damage: 50,
+        distance: 700,
         speed: global.BULLET_SPEED, // px / s
     }, [CIRCLE_BULLET]: {
         skinId: MIN_BULLET,
         pathFunc: circlePath,
         hp: 100,
         damage: 50,
+        distance: 800,
         speed: global.BULLET_SPEED, // px / s
     }, [MAX_CIRCLE_BULLET]: {
-      skinId: MAX_BULLET,
-      pathFunc: circlePath,
-      hp: 300,
-      damage: 50,
-      speed: global.BULLET_SPEED, // px / s
+        skinId: MAX_BULLET,
+        pathFunc: circlePath,
+        hp: 300,
+        damage: 50,
+        distance: 700,
+        speed: global.BULLET_SPEED, // px / s
     },
 
 };

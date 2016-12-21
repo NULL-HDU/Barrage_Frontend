@@ -1,17 +1,21 @@
 import Ball from "./ball";
 import global from "../global.js";
 import PVector from "./Point";
-import {BULLET, DISAPPEAR} from "../constant";
+import {
+    ALIVE,
+    BULLET,
+    DISAPPEAR
+} from "../constant";
 import gamemodel from "./gamemodel.js";
 
-let Count = ((id) => () => id++ )(1);
+let Count = ((id) => () => id++)(1);
 
 export default class Bullet extends Ball {
-  constructor(father, roleId, angle, srclocation) {
+    constructor(father, roleId, angle, srclocation, following = false) {
         let bulletResource = gamemodel.resourceRecord.bulletTable;
         let skinResource = gamemodel.resourceRecord.skinTable.bullet;
-        if(bulletResource[roleId] === undefined) {
-          throw "Invalid bullet roleId!";
+        if (bulletResource[roleId] === undefined) {
+            throw "Invalid bullet roleId!";
         }
         super();
         this.ballType = BULLET;
@@ -19,6 +23,7 @@ export default class Bullet extends Ball {
         this.userId = father.userId;
         this.id = Count();
         this.father = father;
+        this.following = following;
         this.attackDir = angle;
         Object.assign(this, bulletResource[roleId]);
         this.roleId = roleId;
@@ -26,24 +31,38 @@ export default class Bullet extends Ball {
         this.skin_radius = skinResource[this.skinId].skin_radius;
 
         this.srclocation = srclocation;
+        this.dLocation = new PVector();
         this.locationCurrent = PVector.mult(this.srclocation, 1);
 
-       this.speed *= global.GAME_LOOP_INTERVAL / 1000;
-      gamemodel.socketCache.newBallInformation.push(this);
+        this.roleSpeed = this.speed;
+        this.speed *= global.GAME_LOOP_INTERVAL / 1000;
+        gamemodel.socketCache.newBallInformation.push(this);
     }
 
     pathCalculate() {
-        this.run();
+        this.dLocation = PVector.mult(this.run(), 1);
+        this.locationCurrent.add(this.dLocation);
 
-        let distance = PVector.dist(this.srclocation, this.locationCurrent);
+        if (this.following) {
+            if (this.father.state !== ALIVE) {
+                this.state = DISAPPEAR;
+                return;
+            }
+            this.locationCurrent.add(this.father.dLocation);
+        } else {
+            let distance = PVector.dist(this.srclocation, this.locationCurrent);
 
-        //射程检测
-        if (distance >= 800) {
-          this.state = DISAPPEAR;
+            //射程检测
+            if (distance >= this.distance) {
+                this.state = DISAPPEAR;
+            }
         }
 
         //边界检测
-        if(this.locationCurrent.x > 1280 *2 || this.locationCurrent.x < 0 || this.locationCurrent.y > 800 *2 || this.locationCurrent.y < 0){
+        if (this.locationCurrent.x > 1280 * 2 ||
+            this.locationCurrent.x < 0 ||
+            this.locationCurrent.y > 800 * 2 ||
+            this.locationCurrent.y < 0) {
             this.state = DISAPPEAR;
         }
 

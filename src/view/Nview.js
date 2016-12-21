@@ -412,29 +412,24 @@ function rstResource() {
 
 function rstEnemy() {
     enm_gi = GMD.data.backendControlData.airPlane;
-    console.log(enm_gi);
     let url =[eva01, eva01_r];
     selectBalls(EnemyLayer, Enemys, enm_gi, enm_l, url, T_ENM);
 }
 
 function rstAirplane() {
     airplane.rotation = ap_data.r;
-    console.log(ap_gi);
 }
 
 function rstRedBullet() {
     rblt_gi = GMD.data.backendControlData.bullet;
-    console.log(rblt_gi);
     let url = [min_bullet, min_r];
     selectBalls(RedBulletLayer, Rbullets, rblt_gi, rblt_l, url, T_BULLET);
 }
 
 function rstBlueBullet() {
     bblt_gi = GMD.data.engineControlData.bullet;
-    console.log(bblt_gi);
     let url = [min_bullet, min_b]
     selectBalls(BlueBulletLayer, Bbullets, bblt_gi, bblt_l, url, T_BULLET);
-    // console.log(Bbullets);
 }
 
 function rstEffect() {

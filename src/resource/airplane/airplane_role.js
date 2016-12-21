@@ -6,8 +6,9 @@
 import {EVA01} from "./roleId.js";
 import {EVA01_AIRPLANE} from "../skin/skinId.js";
 import LinearPark from "../skills/normalStraightShut.js";
-import JudgementPunch from "../skills/judgement_punch.js";
-import PosAndNegWheel from "../skills/posAndNegWheel.js";
+import JudgementPunch from "../skills/judgementPunch.js";
+// import PosAndNegWheel from "../skills/posAndNegWheel.js";
+import fortuneWheel from "../skills/fortuneWheel.js";
 import {
   LEFT_SKILL,
   RIGHT_SKILL,
@@ -23,7 +24,7 @@ export default {
     skills: {
       [LEFT_SKILL]: LinearPark,
       [RIGHT_SKILL]: JudgementPunch,
-      [Q_SKILL]: PosAndNegWheel,
+      [Q_SKILL]: fortuneWheel,
     }
   }
 };
