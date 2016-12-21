@@ -1,4 +1,4 @@
-/* posAndNegWheel.js --- two circle wheel round and round
+/* fortuneWheel.js --- two circle wheel round and round
  *
  * Maintainer: Mephis Pheies ( MephistoMMM )
  * Email: mephistommm@gmail.com
@@ -8,8 +8,8 @@ import {
     skillFramework
 } from "./utils.js";
 import {
+    MAX_STRAIGHT_LINE_BULLET,
     CIRCLE_BULLET,
-    MAX_CIRCLE_BULLET,
 } from "../bullet/roleId.js";
 import Bullet from "../../model/bullet.js";
 
@@ -18,46 +18,57 @@ const TWO_BULLET_INTERVAL = 200; // ms
 
 let skillFunc = () => {
     let bulletCount = 0;
-    let bulletCountMax = 2;
+    let bulletCountMax = 1;
 
     return skillFramework(TWO_BULLET_INTERVAL, (data, airPlane, angle) => {
-        let a_angle = angle + Math.PI / 2;
-        let to_circle_center = new PVector(Math.cos(a_angle) * 50, Math.sin(a_angle) * 50);
-        let a_location = PVector.add(airPlane.locationCurrent, to_circle_center);
+        let srcLocation = PVector.add(
+            airPlane.locationCurrent,
+            PVector.mult(new PVector(Math.cos(angle), Math.sin(angle)), airPlane.skin_radius)
+        )
+
+        // centre
+        let centre = new Bullet(
+            airPlane,
+            MAX_STRAIGHT_LINE_BULLET,
+            angle,
+            srcLocation
+        );
+        centre.run = centre.pathFunc(centre);
+        data.bullet.push(centre);
+
         let roundAngleRatio = bulletNumEverWheel / 2;
 
         for (let i = 0; i < bulletNumEverWheel; i++) {
-            let site_angle = a_angle + Math.PI / roundAngleRatio * i;
+            let site_angle = angle + Math.PI / roundAngleRatio * i;
             let dirVector = new PVector(
                 Math.cos(site_angle),
                 Math.sin(site_angle)
             );
             let bullet = new Bullet(
-                airPlane,
-                i % 2 ? CIRCLE_BULLET : MAX_CIRCLE_BULLET,
+                centre,
+                CIRCLE_BULLET,
                 site_angle + Math.PI,
-                PVector.add(a_location, PVector.mult(dirVector, 10))
+                PVector.add(srcLocation, PVector.mult(dirVector, 5)),
+                true
             );
-            bullet.run = bullet.pathFunc(bullet, 1, 30);
+            bullet.run = bullet.pathFunc(bullet, 1, 15, centre.radius + 40, 1000);
             data.bullet.push(bullet);
         }
 
-        to_circle_center.mult(-1);
-        a_location = PVector.add(airPlane.locationCurrent, to_circle_center);
-
         for (let i = 0; i < bulletNumEverWheel; i++) {
-            let site_angle = a_angle + Math.PI / roundAngleRatio * i;
+            let site_angle = angle + Math.PI / roundAngleRatio * i;
             let dirVector = new PVector(
                 Math.cos(site_angle),
                 Math.sin(site_angle)
             );
             let bullet = new Bullet(
-                airPlane,
-                i % 2 ? CIRCLE_BULLET : MAX_CIRCLE_BULLET,
-                site_angle,
-                PVector.add(a_location, PVector.mult(dirVector, 10))
+                centre,
+                CIRCLE_BULLET,
+                site_angle + Math.PI,
+                PVector.add(srcLocation, PVector.mult(dirVector, 5)),
+                true
             );
-            bullet.run = bullet.pathFunc(bullet, -1, 30);
+            bullet.run = bullet.pathFunc(bullet, -1, 15, centre.radius + 20, 1000);
             data.bullet.push(bullet);
         }
 
@@ -68,9 +79,9 @@ let skillFunc = () => {
 };
 
 export default {
-    skillName: "Pos and Neg wheel",
+    skillName: "Fortune Wheel",
     skillFunc: skillFunc,
     skillCD: 3000,
 };
 
-/* posAndNegWheel.js ends here */
+/* fortuneWheel.js ends here */

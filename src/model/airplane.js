@@ -27,10 +27,12 @@ export default class Airplane extends Ball {
 
         // init skills and its cd.
         // **SkillCount > 0, means this skill is in cd.
-        this.normalSkillCount = 0;
-        this.normalSkillCD = this.normalSkill.skillCD / global.GAME_LOOP_INTERVAL;
-        this.qSkillCount = 0;
-        this.qSkillCD = this.qSkill.skillCD / global.GAME_LOOP_INTERVAL;
+        this.CDCount = {};
+        this.CD = {};
+        for(let skillType in this.skills){
+            this.CDCount[skillType] = 0;
+            this.CD[skillType] = this.skills[skillType].skillCD / global.GAME_LOOP_INTERVAL;
+        }
         // all function in actionSkill while be call in each engine loop;
         this.activeSkillList = [];
 
@@ -40,6 +42,7 @@ export default class Airplane extends Ball {
         this.speed = this.speed * global.GAME_LOOP_INTERVAL / 1000;
         this.vangle = 0;
 
+        this.dLocation = new PVector();
         this.locationCurrent = new PVector(global.LOCAL_WIDTH/2,global.LOCAL_HEIGHT/2);
         this.defense = 1;
         gamemodel.socketCache.newBallInformation.push(this);
@@ -56,13 +59,15 @@ export default class Airplane extends Ball {
             p.y = 0;
         }
 
-        this.locationCurrent.add(p);
+        this.dLocation = p;
+        this.locationCurrent.add(this.dLocation);
         this.attackDir += this.vangle;
     }
 
     skillCountDown() {
-        if(this.qSkillCount > 0) this.qSkillCount--;
-        if(this.normalSkillCount > 0) this.normalSkillCount--;
+        for(let skillType in this.CDCount){
+            if(this.CDCount[skillType] > 0) this.CDCount[skillType]--;
+        }
     }
 
     // skillActive call all functions in activeSkillList, those functions may generate
@@ -72,19 +77,13 @@ export default class Airplane extends Ball {
       this.activeSkillList = this.activeSkillList.filter(f => f(this,this.attackDir + Math.PI*3/2));
     }
 
-    useQSkill() {
-      if (this.qSkillCount > 0) return;
+    useSkill(skillType) {
+        if(this.CDCount[skillType] > 0) return;
 
-      this.qSkillCount = this.qSkillCD;
-      this.activeSkillList.push(this.qSkill.skillFunc());
+        this.CDCount[skillType] = this.CD[skillType];
+        this.activeSkillList.push(this.skills[skillType].skillFunc());
     }
 
-    useNormalSkill() {
-      if (this.normalSkillCount > 0) return;
-
-      this.normalSkillCount = this.normalSkillCD;
-      this.activeSkillList.push(this.normalSkill.skillFunc());
-    }
 }
 
 /*airplane.js ends here*/

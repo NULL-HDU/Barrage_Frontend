@@ -13,7 +13,7 @@ export const straightLinePath = (bullet) => {
   );
 
   return () => {
-    bullet.locationCurrent.add(sv);
+      return sv;
   };
 };
 

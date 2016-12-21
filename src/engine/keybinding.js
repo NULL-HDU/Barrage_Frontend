@@ -6,6 +6,11 @@ import {
   disableSkillEngine,
   enableSkillEngine
 } from "./skill.js";
+import {
+  LEFT_SKILL,
+  RIGHT_SKILL,
+  Q_SKILL,
+}from "../constant.js";
 
 let data = gamemodel.data.engineControlData;
 let test = -1;
@@ -24,9 +29,10 @@ let mouseRelease=(e)=>{
 
   if(e.which === 3){
     // console.log("right click");
+    disableSkillEngine(RIGHT_SKILL);
   }else if(e.which === 1){
     //        console.log("left click");
-    disableSkillEngine(global.NORMAL_SKILL);
+    disableSkillEngine(LEFT_SKILL);
   }
 };
 
@@ -34,9 +40,10 @@ let mousePress=(e)=>{
 
   if(e.which === 3){
     // console.log("right click");
+    enableSkillEngine(RIGHT_SKILL);
   }else if(e.which === 1){
     // console.log("left click");
-    enableSkillEngine(global.NORMAL_SKILL);
+    enableSkillEngine(LEFT_SKILL);
   }
 };
 
@@ -250,10 +257,10 @@ export const changeKeyEventBindings = () => {
     });
 
     skill1.press = ifApIsValid( (ap) =>  {
-      enableSkillEngine(global.Q_SKILL);
+      enableSkillEngine(Q_SKILL);
     });
 
     skill1.release = ifApIsValid( (ap) =>  {
-      disableSkillEngine(global.Q_SKILL);
+      disableSkillEngine(Q_SKILL);
     });
 };
