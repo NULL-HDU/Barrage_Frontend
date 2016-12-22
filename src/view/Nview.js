@@ -59,8 +59,6 @@ let getLocalSize = () => {
     LOCAL.pre.height = LOCAL.height;
     LOCAL.width = window.innerWidth;
     LOCAL.height = window.innerHeight;
-    MODEL.width = LOCAL.width;
-    MODEL.height = LOCAL.height;
 };
 let isLocalSizeChanged = () => {
     LOCAL.flag = (LOCAL.width !== LOCAL.pre.width || LOCAL.height !== LOCAL.pre.height) ? true : false;
@@ -101,6 +99,9 @@ let adjustView = () => {
     VIEW.center.y = VIEW.height / 2;
     VIEW.pre.ratio = VIEW.ratio;
     VIEW.ratio = VIEW.width / CUT.width;
+
+    MODEL.width = VIEW.width;
+    MODEL.height = VIEW.height;
 };
 
 // center canvas
@@ -350,6 +351,7 @@ function play () {
 }
 
 let setAirplane = () => {
+    console.log(MODEL)
     if (getAirplaneInfo()) {
         // copy info to view's data
         if (AIRPLANE.flag === true) {
@@ -391,12 +393,24 @@ let setAirplane = () => {
             setObjectSize(AIRPLANE.self, airplaneSkins[ORIGIN.airplane.skinId].skin_radius * 2);
             AIRPLANE.self.position.set(VIEW.center.x, VIEW.center.y);
         }
-    } else {
+    } else if (MODEL.gameMode === 0){
+        if (AIRPLANE.flag === true) {
+            AIRPLANE.pre.x = VIRTUAL.width / 2;
+            AIRPLANE.pre.y = VIRTUAL.height / 2;
+            AIRPLANE.flag = false;
+        } else {
+            AIRPLANE.pre.x = AIRPLANE.x;
+            AIRPLANE.pre.y = AIRPLANE.y;
+        }
+        AIRPLANE.x = VIRTUAL.width / 2;
+        AIRPLANE.y = VIRTUAL.height / 2;
+    } else if (MODEL.gameMode === 1) {
         // if airplane dead , it will be hide in the dark
-        if (AIRPLANE.self !== null || AIRPLANE.self !== undefined) {
+        if (AIRPLANE.self !== null && AIRPLANE.self !== undefined) {
             AIRPLANE.self.visible = false;
             AIRPLANE.flag = true;
         }
+
     }
 };
 
