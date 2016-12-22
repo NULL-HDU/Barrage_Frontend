@@ -1,58 +1,57 @@
 import global from "../global";
-import {KEY} from "../constant.js";
+import {
+    KEY
+} from "../constant.js";
 import screenfull from "./screenfull.js"
 import gamemodel from "../model/gamemodel";
 import {
-  disableSkillEngine,
-  enableSkillEngine
+    disableSkillEngine,
+    enableSkillEngine
 } from "./skill.js";
 import {
-  LEFT_SKILL,
-  RIGHT_SKILL,
-  Q_SKILL,
-}from "../constant.js";
+    LEFT_SKILL,
+    RIGHT_SKILL,
+    Q_SKILL,
+} from "../constant.js";
 
 let data = gamemodel.data.engineControlData;
 let test = -1;
 
-let mouseMove=(e)=>{
-  if(data.airPlane === undefined) return;
+let mouseMove = (e) => {
+    if (data.airPlane === undefined) return;
+    let vs = gamemodel.viewScope;
 
-    let rateOfW = gamemodel.width / global.LOCAL_WIDTH;
-    let rateOfH = gamemodel.height / global.LOCAL_HEIGHT;
-    let oppositeSide = (e.screenX - global.LOCAL_WIDTH/2) * rateOfW;
-    let limb = (e.screenY - global.LOCAL_HEIGHT/2) * rateOfH;
-//    let oppositeSide = e.screenX - gamemodel.width/2;
-//    let limb = e.screenY -gamemodel.height/2;
-  let A = Math.atan2(limb,oppositeSide) + Math.PI/2;
-  data.airPlane.attackDir = A;
+    let oppositeSide = (e.screenX - (vs.width + vs.left) / 2);
+    let limb = (e.screenY - (vs.height + vs.top) / 2);
+    let A = Math.atan2(limb, oppositeSide) + Math.PI / 2;
+    data.airPlane.attackDir = A;
 };
 
 
-let mouseRelease=(e)=>{
+let mouseRelease = (e) => {
 
-  if(e.which === 3){
-    // console.log("right click");
-    disableSkillEngine(RIGHT_SKILL);
-  }else if(e.which === 1){
-    //        console.log("left click");
-    disableSkillEngine(LEFT_SKILL);
-  }
+    if (e.which === 3) {
+        // console.log("right click");
+        disableSkillEngine(RIGHT_SKILL);
+    } else if (e.which === 1) {
+        //        console.log("left click");
+        disableSkillEngine(LEFT_SKILL);
+    }
 };
 
-let mousePress=(e)=>{
+let mousePress = (e) => {
 
-  if(e.which === 3){
-    // console.log("right click");
-    enableSkillEngine(RIGHT_SKILL);
-  }else if(e.which === 1){
-    // console.log("left click");
-    enableSkillEngine(LEFT_SKILL);
-  }
+    if (e.which === 3) {
+        // console.log("right click");
+        enableSkillEngine(RIGHT_SKILL);
+    } else if (e.which === 1) {
+        // console.log("left click");
+        enableSkillEngine(LEFT_SKILL);
+    }
 };
 
 //shift like event detect
-let shiftLikeEvent=(desc)=> {
+let shiftLikeEvent = (desc) => {
 
     let key = {};
     key.desc = desc;
@@ -61,21 +60,21 @@ let shiftLikeEvent=(desc)=> {
     key.press = undefined;
     key.release = undefined;
 
-    if(key.desc === "shift"){
-        key.downHandler = (event)=> {
-            if(event.shiftKey){
+    if (key.desc === "shift") {
+        key.downHandler = (event) => {
+            if (event.shiftKey) {
                 //console.log("down detect");
-                if(key.isUp && key.press) key.press();
+                if (key.isUp && key.press) key.press();
                 key.isDown = true;
                 key.isUp = false;
             }
             event.preventDefault();
         };
 
-        key.upHandler = (event)=> {
-            if(!event.shiftKey){
+        key.upHandler = (event) => {
+            if (!event.shiftKey) {
                 //console.log("up detect");
-                if(key.isDown && key.release) key.release();
+                if (key.isDown && key.release) key.release();
                 key.isDown = false;
                 key.isUp = true;
             }
@@ -83,15 +82,15 @@ let shiftLikeEvent=(desc)=> {
         };
     }
 
-    window.addEventListener("keydown",key.downHandler.bind(key),false);
-    window.addEventListener("keyup",key.upHandler.bind(key),false);
+    window.addEventListener("keydown", key.downHandler.bind(key), false);
+    window.addEventListener("keyup", key.upHandler.bind(key), false);
 
     return key;
 
 };
 
 //keyboard
-let keyboard=(keyCode)=> {
+let keyboard = (keyCode) => {
     let key = {};
     key.code = keyCode;
     key.isDown = false;
@@ -100,7 +99,7 @@ let keyboard=(keyCode)=> {
     key.release = undefined;
 
     //The `downHandler`
-    key.downHandler = (event)=> {
+    key.downHandler = (event) => {
         if (event.keyCode === key.code) {
             if (key.isUp && key.press) key.press();
             key.isDown = true;
@@ -110,33 +109,33 @@ let keyboard=(keyCode)=> {
     };
 
     //The `upHandler`
-    key.upHandler = (event)=> {
+    key.upHandler = (event) => {
         if (event.keyCode === key.code) {
             if (key.isDown && key.release) key.release();
             key.isDown = false;
             key.isUp = true;
 
-        event.preventDefault();
+            event.preventDefault();
         }
     };
 
     //Attach event listeners
-    window.addEventListener( "keydown", key.downHandler.bind(key), false);
-    window.addEventListener( "keyup", key.upHandler.bind(key), false);
+    window.addEventListener("keydown", key.downHandler.bind(key), false);
+    window.addEventListener("keyup", key.upHandler.bind(key), false);
 
     return key;
 };
 
-export const configCanvasEventListen=()=>{
-  //屏蔽右键菜单
-  document.addEventListener("contextmenu", (e)=>{
-    e.preventDefault();
-  }, false);
+export const configCanvasEventListen = () => {
+    //屏蔽右键菜单
+    document.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+    }, false);
 
-  let canvas = document.getElementById("canvas");
-  canvas.addEventListener("mousedown",mousePress);
-  canvas.addEventListener("mouseup",mouseRelease);
-  canvas.addEventListener("mousemove",mouseMove);
+    let canvas = document.getElementById("canvas");
+    canvas.addEventListener("mousedown", mousePress);
+    canvas.addEventListener("mouseup", mouseRelease);
+    canvas.addEventListener("mousemove", mouseMove);
 };
 
 export const changeKeyEventBindings = () => {
@@ -152,119 +151,119 @@ export const changeKeyEventBindings = () => {
         f11 = keyboard(KEY.F11);
 
     let ifApIsValid = (f) => () => {
-        if(ecdata.airPlane !== undefined) return f(ecdata.airPlane);
+        if (ecdata.airPlane !== undefined) return f(ecdata.airPlane);
     };
 
-    shift.press = ifApIsValid( (ap) => {
-        if( test==1 )
+    shift.press = ifApIsValid((ap) => {
+        if (test == 1)
             console.log("shift press");
         ap.slowRate = global.AIRPLANE_SLOW_RATE;
     });
 
-    shift.release = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    shift.release = ifApIsValid((ap) => {
+        if (test == 1)
             console.log("shift release");
         ap.slowRate = 1;
     });
 
-    space.press = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    space.press = ifApIsValid((ap) => {
+        if (test == 1)
             console.log('space press');
-        enableSkillEngine(global.NORMAL_SKILL);
+        enableSkillEngine(LEFT_SKILL);
     });
 
-    space.release = ifApIsValid( (ap) =>  {
+    space.release = ifApIsValid((ap) => {
 
-        if( test==1 )
+        if (test == 1)
             console.log('space release');
-        disableSkillEngine(global.NORMAL_SKILL);
+        disableSkillEngine(LEFT_SKILL);
     });
 
-    f11.press = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    f11.press = ifApIsValid((ap) => {
+        if (test == 1)
             console.log("f11 press");
     });
 
-    f11.release = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    f11.release = ifApIsValid((ap) => {
+        if (test == 1)
             console.log("f11 release");
         if (screenfull.enabled) {
             screenfull.request();
         }
     });
 
-    up.press = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    up.press = ifApIsValid((ap) => {
+        if (test == 1)
             console.log('up press');
         ap.vd.y = -1;
     });
 
-    up.release = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    up.release = ifApIsValid((ap) => {
+        if (test == 1)
             console.log('up release');
-        if(down.isUp){
-             ap.vd.y = 0;
-        }else{
-             down.press();
+        if (down.isUp) {
+            ap.vd.y = 0;
+        } else {
+            down.press();
         }
     });
 
-    down.press = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    down.press = ifApIsValid((ap) => {
+        if (test == 1)
             console.log('down press');
         ap.vd.y = 1;
     });
 
-    down.release = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    down.release = ifApIsValid((ap) => {
+        if (test == 1)
             console.log('down release');
-        if(up.isUp){
+        if (up.isUp) {
             ap.vd.y = 0;
-        }else{
+        } else {
             up.press();
         }
     });
 
 
-    left.press = ifApIsValid( (ap) =>  {
-        if (test==1)
+    left.press = ifApIsValid((ap) => {
+        if (test == 1)
             console.log('left press');
         ap.vd.x = -1;
     });
 
 
-    left.release = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    left.release = ifApIsValid((ap) => {
+        if (test == 1)
             console.log('left release');
-        if(right.isUp){
+        if (right.isUp) {
             ap.vd.x = 0;
-        }else{
+        } else {
             right.press();
         }
     });
 
-    right.press = ifApIsValid( (ap) =>  {
-        if( test==1 )
+    right.press = ifApIsValid((ap) => {
+        if (test == 1)
             console.log('right press');
         ap.vd.x = 1;
     });
 
-    right.release = ifApIsValid( (ap) =>  {
+    right.release = ifApIsValid((ap) => {
 
-        if( test==1 )
+        if (test == 1)
             console.log('right release');
-        if(left.isUp){
+        if (left.isUp) {
             ap.vd.x = 0;
-        }else{
+        } else {
             left.press();
         }
     });
 
-    skill1.press = ifApIsValid( (ap) =>  {
-      enableSkillEngine(Q_SKILL);
+    skill1.press = ifApIsValid((ap) => {
+        enableSkillEngine(Q_SKILL);
     });
 
-    skill1.release = ifApIsValid( (ap) =>  {
-      disableSkillEngine(Q_SKILL);
+    skill1.release = ifApIsValid((ap) => {
+        disableSkillEngine(Q_SKILL);
     });
 };

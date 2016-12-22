@@ -4,8 +4,12 @@
  * Email: arthury.me@gmail.com
  */
 export default {
-    width: 0,
-    height: 0,
+    viewScope: {
+      width: 0,
+      height: 0,
+      top: 0,
+      left: 0
+    },
     background: null,
     userName: null,
     gameMode: 0, //0 visitMode,1 fightMode
