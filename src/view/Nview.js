@@ -353,7 +353,6 @@ function play () {
 }
 
 let setAirplane = () => {
-    console.log(MODEL)
     if (getAirplaneInfo()) {
         // copy info to view's data
         if (AIRPLANE.flag === true) {
