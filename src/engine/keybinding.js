@@ -21,8 +21,8 @@ let mouseMove = (e) => {
     if (data.airPlane === undefined) return;
     let vs = gamemodel.viewScope;
 
-    let oppositeSide = (e.screenX - (vs.width + vs.left) / 2);
-    let limb = (e.screenY - (vs.height + vs.top) / 2);
+    let oppositeSide = (e.pageX - vs.width / 2 );
+    let limb = (e.pageY - vs.height / 2 );
     let A = Math.atan2(limb, oppositeSide) + Math.PI / 2;
     data.airPlane.attackDir = A;
 };
