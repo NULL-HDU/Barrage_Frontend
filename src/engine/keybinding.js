@@ -20,8 +20,12 @@ let test = -1;
 let mouseMove = (e) => {
     if (data.airPlane === undefined) return;
 
-    let oppositeSide = e.screenX - global.LOCAL_WIDTH / 2;
-    let limb = e.screenY - global.LOCAL_HEIGHT / 2;
+    let rateOfW = gamemodel.width / global.LOCAL_WIDTH;
+    let rateOfH = gamemodel.height / global.LOCAL_HEIGHT;
+    let oppositeSide = (e.screenX - global.LOCAL_WIDTH / 2) * rateOfW;
+    let limb = (e.screenY - global.LOCAL_HEIGHT / 2) * rateOfH;
+    //    let oppositeSide = e.screenX - gamemodel.width/2;
+    //    let limb = e.screenY -gamemodel.height/2;
     let A = Math.atan2(limb, oppositeSide) + Math.PI / 2;
     data.airPlane.attackDir = A;
 };

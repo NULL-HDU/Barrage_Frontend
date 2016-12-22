@@ -8,6 +8,7 @@ export default {
     height: 0,
     background: null,
     userName: null,
+    gameMode: 0, //0 visitMode,1 fightMode
     userId: null,
     data: {
         engineControlData:{
