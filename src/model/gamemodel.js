@@ -4,6 +4,8 @@
  * Email: arthury.me@gmail.com
  */
 export default {
+    width: 0,
+    height: 0,
     background: null,
     userName: null,
     userId: null,
