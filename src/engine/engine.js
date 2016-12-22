@@ -120,8 +120,8 @@ let collisionDetection = () => {
             let distance = PVector.dist(a, b);
             if (distance <= collidors[j].radius + selfBullets[i].radius) {
                 let damageInformation = {
-                  collision1: [selfBullets[i].uid, selfBullets[i].id],
-                  collision2: [collidors[j].uid, collidors[j].id],
+                  collision1: [selfBullets[i].userId, selfBullets[i].id],
+                  collision2: [collidors[j].userId, collidors[j].id],
                   damageValue: [selfBullets[i].hp, collidors[j].hp],
                   state: []
                 };
