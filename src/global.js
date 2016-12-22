@@ -9,7 +9,7 @@ export default {
 
     // airPlane and bullet
     AIRPLANE_SPEED: 2.5,
-    AIRPLANE_SLOW_RATE: 0.3,
+    AIRPLANE_SLOW_RATE: 0.5,
     BULLET_SPEED: 200, // px / s
 
     // loops
