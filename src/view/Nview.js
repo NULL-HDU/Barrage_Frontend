@@ -100,8 +100,8 @@ let adjustView = () => {
     VIEW.pre.ratio = VIEW.ratio;
     VIEW.ratio = VIEW.width / CUT.width;
 
-    MODEL.width = VIEW.width;
-    MODEL.height = VIEW.height;
+    MODEL.viewScope.width = LOCAL.width;
+    MODEL.viewScope.height = LOCAL.height;
 };
 
 // center canvas
@@ -353,7 +353,6 @@ function play () {
 }
 
 let setAirplane = () => {
-    console.log(MODEL)
     if (getAirplaneInfo()) {
         // copy info to view's data
         if (AIRPLANE.flag === true) {
