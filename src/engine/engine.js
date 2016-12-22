@@ -179,7 +179,9 @@ let engine = () => {
             data.airPlane.skillActive();
             data.airPlane.skillCountDown();
         }else{
-          if(!window.dialogs.info.State()) askForTryAgain();
+            if(gamemodel.gameMode === 1){
+                if(!window.dialogs.info.State()) askForTryAgain();
+            }
         }
 
         data.bullet.forEach((bullet) => {
