@@ -108,7 +108,7 @@ let skillFunc = () => {
 export default {
 
     skillFunc: skillFunc,
-    skillCD: 3000,
+    skillCD: 5000,
 };
 
 /* fortuneWheel.js ends here */

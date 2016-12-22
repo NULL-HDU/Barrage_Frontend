@@ -52,7 +52,7 @@ let skillFunc = () => {
 export default {
     skillName: "Linear Park",
     skillFunc: skillFunc,
-    skillCD: 900,
+    skillCD: 1000,
 };
 
 /* normalStraigthShut.js ends here */

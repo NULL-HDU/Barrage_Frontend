@@ -59,8 +59,8 @@ let getLocalSize = () => {
     LOCAL.pre.height = LOCAL.height;
     LOCAL.width = window.innerWidth;
     LOCAL.height = window.innerHeight;
-    MODEL.width = LOCAL.width;
-    MODEL.height = LOCAL.height;
+    MODEL.viewScope.width = LOCAL.width;
+    MODEL.viewScope.height = LOCAL.height;
 };
 let isLocalSizeChanged = () => {
     LOCAL.flag = (LOCAL.width !== LOCAL.pre.width || LOCAL.height !== LOCAL.pre.height) ? true : false;
@@ -107,6 +107,8 @@ let adjustView = () => {
 let centerCanvas = () => {
     VIEW.side.left = (LOCAL.width - VIEW.width) / 2;
     VIEW.side.top = (LOCAL.height - VIEW.height) / 2;
+    MODEL.viewScope.top = VIEW.side.top;
+    MODEL.viewScope.left = VIEW.side.left;
     let canvas = document.getElementById("canvas");
     let left = VIEW.side.left + "px",
         top = VIEW.side.top + "px";

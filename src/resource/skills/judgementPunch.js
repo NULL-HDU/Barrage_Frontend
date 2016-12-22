@@ -81,7 +81,7 @@ let skillFunc = () => {
 export default {
     skillName: "Judgement Punch",
     skillFunc: skillFunc,
-    skillCD: 1800,
+    skillCD: 2500,
 };
 
 /* judgementPunch.js ends here */
