@@ -14,12 +14,15 @@ import {
 } from "./utils.js";
 import PVector from "../../model/Point.js";
 import {
-    STRAIGHT_LINE_BULLET
+    STRAIGHT_LINE_BULLET1,
+    STRAIGHT_LINE_BULLET2,
+    MIN_STRAIGHT_LINE_BULLET,
 } from "../bullet/roleId.js";
 import Bullet from "../../model/bullet.js";
 
-const TWO_BULLET_INTERVAL = 100; // ms
+const TWO_BULLET_INTERVAL = 150; // ms
 const BULLET_NUM = 3;
+const bullets = [STRAIGHT_LINE_BULLET2, STRAIGHT_LINE_BULLET1, MIN_STRAIGHT_LINE_BULLET];
 
 let skillFunc = () => {
     let bulletCount = 0;
@@ -32,7 +35,7 @@ let skillFunc = () => {
         );
         let bullet = new Bullet(
             airPlane,
-            STRAIGHT_LINE_BULLET,
+            bullets[bulletCount],
             angle,
             PVector.add(
               airPlane.locationCurrent,

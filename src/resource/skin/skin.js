@@ -6,7 +6,11 @@
 import {
     EVA01_AIRPLANE,
     MIN_BULLET,
-    MAX_BULLET
+    MAX_BULLET,
+    BULLET1,
+    BULLET2,
+    BULLET3,
+    BULLET4,
 } from "../skin/skinId.js";
 
 const RP = "/static/view/imgs/";
@@ -25,6 +29,30 @@ export const bulletSkins = {
         skin_radius: 10,
         skin: [IMG_MIN_BULLET],
         camp: [MIN_B, MIN_R]
+    },
+    [BULLET1]: {
+        judge_radius: 20,
+        skin_radius: 20,
+        skin: [IMG_MIN_BULLET],
+        camp: [MIN_B, MIN_R]
+    },
+    [BULLET2]: {
+        judge_radius: 30,
+        skin_radius: 30,
+        skin: [IMG_MIN_BULLET],
+        camp: [MIN_B, MIN_R]
+    },
+    [BULLET3]: {
+      judge_radius: 40,
+      skin_radius: 40,
+      skin: [IMG_MIN_BULLET],
+      camp: [MIN_B, MIN_R]
+    },
+    [BULLET4]: {
+      judge_radius: 50,
+      skin_radius: 50,
+      skin: [IMG_MIN_BULLET],
+      camp: [MIN_B, MIN_R]
     },
     [MAX_BULLET]: {
         judge_radius: 60,

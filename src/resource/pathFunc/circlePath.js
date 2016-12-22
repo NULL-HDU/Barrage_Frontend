@@ -12,25 +12,31 @@ import global from "../../global.js";
 // tt: time of transform from minRadius to maxRadius
 export const circlePath = (bullet, clockwise = 1, minRadius = 50, maxRadius = 900, tt = 3000) => {
     let angle = bullet.attackDir % (2 * Math.PI);
+    let rAngle = angle + Math.PI;
     let sv = new PVector(
         Math.cos(angle) * bullet.speed,
         Math.sin(angle) * bullet.speed
     );
-    // sv.mult(direaction);
+
     let R = minRadius; // a = v**2 / R
+    let preRv = new PVector(
+        Math.cos(rAngle) * R,
+        Math.sin(rAngle) * R
+    );
     let dR = (maxRadius - minRadius) / (tt / global.GAME_LOOP_INTERVAL);
-    let asvMag = Math.pow(bullet.speed, 2) / R;
 
     return () => {
-        let asv = new PVector(-sv.y, sv.x);
-        asv.setMag(asvMag);
-        asv.mult(clockwise);
-        sv.add(asv);
+        rAngle += bullet.speed / R;
+        let rv = new PVector(
+          Math.cos(rAngle) * R,
+          Math.sin(rAngle) * R
+        );
+        sv.add(PVector.sub(rv, preRv));
         sv.setMag(bullet.speed);
+        preRv = rv;
+        // sv.setMag(bullet.speed);
         if (R <= maxRadius) {
-            asvMag *= R;
             R += dR;
-            asvMag /= R;
         }
         return sv;
     };
