@@ -1,13 +1,5 @@
 export default {
     // skill
-    LEFT_SKILL: "leftSkill",
-    RIGHT_SKILL: "rightSkill",
-    Q_SKILL: "qSkill",
-    E_DEFEND_SKILL: "eDefendSkill",
-
-    NORMAL_SKILL_CD: 500,
-    E_SKILL_CD: 1000 * 8,
-    Q_SKILL_CD: 1000,
     E_SKILL_DURATION: 1000 * 4,
     SKILL_CHECK_LOOP_INTERVAL: 50,
 
