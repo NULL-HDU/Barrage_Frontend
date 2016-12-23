@@ -19,18 +19,18 @@ let renderer;
 let STATE;
 
 //virtual
-let VIRTUAL = {
+const VIRTUAL = {
     width : 1280 * 2,
     height : 800 * 2
 };
 
 // cut siz
 let CUT = {
-    width : 1280 * 2, 
-    height: 800 * 2,
+    width : VIRTUAL.width, 
+    height: VIRTUAL.height,
     pre: {
-        width: 1280 * 2,
-        height : 800 * 2
+        width: VIRTUAL.width,
+        height : VIRTUAL.height
     }
 };
 let isCutChanged = () => {
@@ -49,9 +49,12 @@ let isCutChanged = () => {
 
 // local size
 let LOCAL = {
-    width: 0, 
-    height: 0,
-    pre: {width: 0, height: 0},
+    width: window.innerWidth, 
+    height: window.innerHeight,
+    pre: {
+        width: window.innerWidth,
+        height: window,innerHeight
+    },
     flag: false // is the local size changed ?
 };
 let getLocalSize = () => {
@@ -441,8 +444,8 @@ let setBackground = () => {
     }
 };
 
-let selectBalls = (type, camp, skins, layer, map, origin, getinfo) => {
-    if (getinfo()) {
+let selectBalls = (type, camp, skins, layer, map, origin, getInfo) => {
+    if (getInfo()) {
         let count = {};
         for (let i = 0; i < origin.length; i ++) {
             let skinId = origin[i].skinId,
