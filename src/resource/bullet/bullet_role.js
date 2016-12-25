@@ -31,6 +31,7 @@ import {
     UNIFORMLY_RETARDED_BULLET3,
     UNIFORMLY_RETARDED_BULLET2,
     UNIFORMLY_RETARDED_BULLET1,
+    MIN_UNIFORMLY_RETARDED_BULLET,
     MAX_UNIFORMLY_RETARDED_BULLET,
 } from "./roleId.js";
 
@@ -72,6 +73,13 @@ export default {
         damage: 50,
         distance: 900,
         speed: global.BULLET_SPEED * 1.5, // px / s
+    }, [MIN_UNIFORMLY_RETARDED_BULLET]: {
+        skinId: MIN_BULLET,
+        pathFunc: uniformlyRetardedPath,
+        hp: 10,
+        damage: 50,
+        distance: 900,
+        speed: global.BULLET_SPEED, // px / s
     }, [UNIFORMLY_RETARDED_BULLET1]: {
         skinId: BULLET1,
         pathFunc: uniformlyRetardedPath,

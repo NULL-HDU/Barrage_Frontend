@@ -53,11 +53,11 @@
      move() {
          let p = PVector.mult(this.vd, this.speed * this.slowRate);
 
-         if ((this.locationCurrent.x > 1280 * 2 && p.x > 0) || (this.locationCurrent.x < 0 && p.x < 0)) {
+         if ((this.locationCurrent.x > global.V_WIDTH && p.x > 0) || (this.locationCurrent.x < 0 && p.x < 0)) {
              p.x = 0;
          }
 
-         if ((this.locationCurrent.y > 800 * 2 && p.y > 0) || (this.locationCurrent.y < 0 && p.y < 0)) {
+         if ((this.locationCurrent.y > global.V_WIDTH && p.y > 0) || (this.locationCurrent.y < 0 && p.y < 0)) {
              p.y = 0;
          }
 

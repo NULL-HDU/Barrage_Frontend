@@ -23,18 +23,21 @@ PVector.prototype.add = function (p) {
     if(! p instanceof PVector ) return;
     this.x += p.x;
     this.y += p.y;
+    return this;
 };
 
 PVector.prototype.sub = function (p) {
     if(! p instanceof PVector ) return;
     this.x -= p.x;
     this.y -= p.y;
+    return this;
 };
 
 //向量乘法
 PVector.prototype.mult = function (mulfFactor) {
     this.x *= mulfFactor;
     this.y *= mulfFactor;
+    return this;
 };
 
 //向量除法
@@ -47,6 +50,7 @@ PVector.prototype.div = function (divFactor) {
         this.x /= divFactor;
         this.y /= divFactor;
     }
+    return this;
 };
 
 //设定模长
@@ -57,6 +61,7 @@ PVector.prototype.setMag = function (newMag) {
         var m = newMag / PVector.mag(this);
         this.mult(m);
     }
+    return this;
 };
 
 //限制模长
@@ -64,6 +69,7 @@ PVector.prototype.limit = function (limitation) {
     if(this.mag() > limitation ){
         this.setMag(limitation);
     }
+    return this;
 };
 
 //向量单位化
