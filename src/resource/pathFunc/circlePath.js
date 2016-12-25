@@ -34,7 +34,6 @@ export const circlePath = (bullet, clockwise = 1, minRadius = 50, maxRadius = 90
         sv.add(PVector.sub(rv, preRv));
         sv.setMag(bullet.speed);
         preRv = rv;
-        // sv.setMag(bullet.speed);
         if (R <= maxRadius) {
             R += dR;
         }

@@ -25,4 +25,10 @@ export const UNIFORMLY_RETARDED_BULLET3 = 73;
 export const UNIFORMLY_RETARDED_BULLET4 = 74;
 export const MAX_UNIFORMLY_RETARDED_BULLET = 8;
 
+export const MIN_LAZY_BULLET = 9;
+export const LAZY_BULLET1 = 91;
+export const LAZY_BULLET2 = 92;
+export const LAZY_BULLET3 = 93;
+export const LAZY_BULLET4 = 94;
+export const MAX_LAZY_BULLET = 10;
 /* roleId of bullet ends here */

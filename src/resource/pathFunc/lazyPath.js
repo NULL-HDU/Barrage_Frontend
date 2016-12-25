@@ -20,7 +20,7 @@ export const lazyPath = (bullet, waitMS = 500, maxAS = 500) => {
     return () => {
         if (count < waitCount) {
             count++;
-            return;
+            return new PVector();
         }
         if (sv.mag() < bullet.speed) {
             sv.add(asv);

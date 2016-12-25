@@ -12,6 +12,7 @@ import {
     LEFT_SKILL,
     RIGHT_SKILL,
     Q_SKILL,
+    E_DEFEND_SKILL
 } from "../constant.js";
 
 let data = gamemodel.data.engineControlData;
@@ -266,4 +267,11 @@ export const changeKeyEventBindings = () => {
     skill1.release = ifApIsValid((ap) => {
         disableSkillEngine(Q_SKILL);
     });
-};
+
+    defend_skill.press = ifApIsValid((ap) => {
+        enableSkillEngine(E_DEFEND_SKILL);
+    });
+
+    defend_skill.release = ifApIsValid((ap) => {
+        disableSkillEngine(E_DEFEND_SKILL);
+    });};
