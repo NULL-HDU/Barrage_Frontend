@@ -30,7 +30,6 @@ export const startGame = (userId,userName)=> {
       gamemodel.gameMode = 0;
   }else{
       gamemodel.gameMode = 1;
-
       airPlane = new Airplane(EVA01);
       airPlane.name = userName;
       airPlane.userId = userId;
