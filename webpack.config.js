@@ -9,8 +9,6 @@ let webpack = require("webpack");
 let HtmlWebpackPlugin = require("html-webpack-plugin");
 let entry = require("./entry.js");
 let defaultStaticDir = "static";
-let dist = "dist";
-let index = "index_test.html"
 
 let _static_dir = process.env.STATICDIR ?
   process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, '').trim() : defaultStaticDir;
@@ -22,6 +20,9 @@ let webpackDefineConfig = {
   "__ENV__": JSON.stringify(node_env)
 }
 
+let dist = node_env === "production" ? "prodist" : "dist";
+let index = node_env === "production" ? "index.html" : "index_test.html";
+
 // https://github.com/ampedandwired/html-webpack-plugin
 let htmlWebpackPluginConfig = {
   filename: join(static_dir, `./${index}`),
@@ -32,8 +33,6 @@ let htmlWebpackPluginConfig = {
 let isDebug = true;
 if (node_env === "production") {
     isDebug = false;
-    dist = "prodist"
-    index = "index.html"
     Object.assign(htmlWebpackPluginConfig, {
       minify: {
         removeComments: true,
@@ -46,7 +45,6 @@ if (node_env === "production") {
 }
 
 let uglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
-
 
 let webpackconfig = {
     devtool: isDebug ? "eval" : "#source-map",
