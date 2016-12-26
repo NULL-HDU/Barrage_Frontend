@@ -7,4 +7,5 @@
 npm-debug.log
 .DS_Store
 .idea/
+*.map
 TAGS

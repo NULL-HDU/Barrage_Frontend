@@ -7,8 +7,9 @@
 let join = require("path").join;
 let webpack = require("webpack");
 let HtmlWebpackPlugin = require("html-webpack-plugin");
-let entry = require("./entry.js")
-let defaultStaticDir = "static"
+let entry = require("./entry.js");
+let defaultStaticDir = "static";
+let dist = "dist";
 
 let _static_dir = process.env.STATICDIR ?
   process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, '').trim() : defaultStaticDir;
@@ -30,6 +31,7 @@ let htmlWebpackPluginConfig = {
 let isDebug = true;
 if (node_env === "production") {
     isDebug = false;
+    dist = "prodist"
     Object.assign(htmlWebpackPluginConfig, {
       minify: {
         removeComments: true,
@@ -49,9 +51,9 @@ let webpackconfig = {
     entry: entry,
     output: {
         //where compiled files be put
-        path: join(static_dir, "./dist"),
+        path: join(static_dir, `./${dist}`),
         //url for develop server
-        publicPath: `/${_static_dir}/dist/`, //uri while web set run
+        publicPath: `/${_static_dir}/${dist}/`, //uri while web set run
         filename: "[name].js"
     },
     module: {
