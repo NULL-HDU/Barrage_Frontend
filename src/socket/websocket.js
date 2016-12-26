@@ -10,9 +10,9 @@ let debug = false;
 
 //action for websocket
 export default class socket {
-
+	// constructor(wsUrl = "ws://192.168.31.87:2334/test") {
 	constructor(wsUrl = "ws://139.199.174.225:2333/test") {
-		// constructor(wsUrl="ws://172.20.10.2:2334/test"){
+		// constructor(wsUrl = "ws://172.20.10.4:2334/test") {
 		this.wsUrl = wsUrl;
 		this.ws = null;
 	}
