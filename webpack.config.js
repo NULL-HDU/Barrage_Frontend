@@ -10,6 +10,7 @@ let HtmlWebpackPlugin = require("html-webpack-plugin");
 let entry = require("./entry.js");
 let defaultStaticDir = "static";
 let dist = "dist";
+let index = "index_test.html"
 
 let _static_dir = process.env.STATICDIR ?
   process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, '').trim() : defaultStaticDir;
@@ -23,7 +24,7 @@ let webpackDefineConfig = {
 
 // https://github.com/ampedandwired/html-webpack-plugin
 let htmlWebpackPluginConfig = {
-  filename: join(static_dir, "./index.html"),
+  filename: join(static_dir, `./${index}`),
   template: "template.html",
   inject: true,
 };
@@ -32,6 +33,7 @@ let isDebug = true;
 if (node_env === "production") {
     isDebug = false;
     dist = "prodist"
+    index = "index.html"
     Object.assign(htmlWebpackPluginConfig, {
       minify: {
         removeComments: true,
@@ -102,7 +104,7 @@ let webpackconfig = {
         historyApiFallback: {
             rewrites: [{
                 from: /^\/(|index.html)$/,
-                to: `/${_static_dir}/index.html`
+                to: `/${_static_dir}/${index}`
             }],
         },
         proxy: {

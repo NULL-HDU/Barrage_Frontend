@@ -1,11 +1,11 @@
 /node_modules/
 /static/dist/
 /Barrage_IntroductionPage/
-/static/index.html
 *.swp
 .#*
 npm-debug.log
 .DS_Store
 .idea/
 *.map
+index_test.html
 TAGS
