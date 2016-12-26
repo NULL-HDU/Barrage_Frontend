@@ -1,10 +1,12 @@
 import * as PIXI from "./pixi.js";
 import MODEL from "../model/gamemodel.js";
+import factorForSpecialDatumMark from "../utils/special_factor.js";
 import {
     IMAGES,
     bulletSkins,
     airplaneSkins
 } from "../resource/skin/skin.js";
+import global from "../global.js";
 
 // pixi alias
 const loader = PIXI.loader,
@@ -20,17 +22,17 @@ let STATE;
 
 //virtual
 const VIRTUAL = {
-    width : 1280 * 2,
-    height : 800 * 2
+    width: global.V_WIDTH,
+    height: global.V_HEIGHT
 };
 
 // cut siz
 let CUT = {
-    width : VIRTUAL.width, 
+    width: VIRTUAL.width,
     height: VIRTUAL.height,
     pre: {
         width: VIRTUAL.width,
-        height : VIRTUAL.height
+        height: VIRTUAL.height
     }
 };
 let isCutChanged = () => {
@@ -49,11 +51,12 @@ let isCutChanged = () => {
 
 // local size
 let LOCAL = {
-    width: window.innerWidth, 
+    width: window.innerWidth,
     height: window.innerHeight,
     pre: {
         width: window.innerWidth,
-        height: window,innerHeight
+        height: window,
+        innerHeight
     },
     flag: false // is the local size changed ?
 };
@@ -72,11 +75,22 @@ let isLocalSizeChanged = () => {
 let VIEW = {
     width: 0,
     height: 0,
-    center: {x: 0, y: 0}, // center positon of the view
-    side: {left: 0, top: 0}, // view side to local window
+    center: {
+        x: 0,
+        y: 0
+    }, // center positon of the view
+    side: {
+        left: 0,
+        top: 0
+    }, // view side to local window
     ratio: 1, // the ratio of view to cut
-    pre: {ratio: 1},
-    mark: {local: false, cut: false},
+    pre: {
+        ratio: 1
+    },
+    mark: {
+        local: false,
+        cut: false
+    },
     flag: false // is the view changed?
 };
 let isViewFitLocal = () => {
@@ -93,7 +107,8 @@ let isViewFitLocal = () => {
 
 
 let adjustView = () => {
-    let w = LOCAL.width / CUT.width, h = LOCAL.height / CUT.height;
+    let w = LOCAL.width / CUT.width,
+        h = LOCAL.height / CUT.height;
     let r = (w <= h) ? w : h;
 
     VIEW.width = CUT.width * r;
@@ -182,7 +197,7 @@ let setObjectSize = (object, size) => {
     object.height = size * VIEW.ratio;
 };
 let setObjectPosition = (object, x_ori, y_ori) => {
-    object.x = (x_ori - AIRPLANE.x) * VIEW.ratio + VIEW.center.x; 
+    object.x = (x_ori - AIRPLANE.x) * VIEW.ratio + VIEW.center.x;
     object.y = (y_ori - AIRPLANE.y) * VIEW.ratio + VIEW.center.y;
 };
 
@@ -195,6 +210,13 @@ let square = {
     view_length: 0
 };
 let setSquare = () => {
+    if (ORIGIN.airplane) {
+        let ap = ORIGIN.airplane;
+        square.const_length = factorForSpecialDatumMark(ap.viewWidth, ap.viewHeight, 120);
+    } else {
+        square.const_length = factorForSpecialDatumMark(global.V_WIDTH, global.V_HEIGHT, 120);
+    }
+
     square.x_count = CUT.width / square.const_length;
     square.y_count = CUT.height / square.const_length;
     square.view_length = square.const_length * VIEW.ratio;
@@ -206,9 +228,10 @@ let drawBackground = (x_crt, y_crt) => {
     let part = new Graphics;
     part.lineStyle(1, 0x454545, 1);
 
-    let i_limit = square.y_count + 2, j_limit = square.x_count + 2;
-    for (let i = 0; i < i_limit; i ++) {
-        for (let j = 0; j < j_limit; j ++) {
+    let i_limit = square.y_count + 2,
+        j_limit = square.x_count + 2;
+    for (let i = 0; i < i_limit; i++) {
+        for (let j = 0; j < j_limit; j++) {
             let l = square.view_length,
                 x = j * l,
                 y = i * l;
@@ -229,7 +252,10 @@ let AIRPLANE = {
     y: 0,
     r: 0,
     size: 0,
-    pre: {x: 0, y:0},
+    pre: {
+        x: 0,
+        y: 0
+    },
     flag: true // first read the data ?
 };
 
@@ -258,7 +284,7 @@ export function initView(callback) {
         .load(() => {
             initLayers(callback);
         });
-} 
+}
 
 function initLayers(callback) {
     // set the init view size
@@ -268,8 +294,9 @@ function initLayers(callback) {
     // set the renderer
     renderer = autoDetectRenderer(
         VIEW.width,
-        VIEW.height,
-        { backgroundColor: 0x000000 }
+        VIEW.height, {
+            backgroundColor: 0x000000
+        }
     );
     renderer.view.id = "canvas";
     document.body.appendChild(renderer.view);
@@ -303,7 +330,7 @@ function initLayers(callback) {
 // export for engine to use less setTimeout
 export function loopRender() {
     resizeView();
-    STATE(); 
+    STATE();
     renderer.render(Stage);
 
     // cleanCache
@@ -328,11 +355,11 @@ function resizeView() {
             // adjustView();
             // renderer.resize(VIEW.width, VIEW.height);
             VIEW.mark.local = true;
-        }else {
+        } else {
             VIEW.mark.local = false;
         }
         centerCanvas();
-    } 
+    }
 
     if (VIEW.mark.cut === true || VIEW.mark.local === true) {
         adjustView();
@@ -344,7 +371,7 @@ function resizeView() {
     }
 }
 
-function play () {
+function play() {
     setAirplane();
     setBackground();
     // setBalls(ORIGIN.blue_bullets, BlueBullet, BlueBulletLayer, bulletSkins, 0, 1, getBlueBulletInfo);
@@ -376,7 +403,7 @@ let setAirplane = () => {
             let skin = airplaneSkins[ORIGIN.airplane.skinId].skin,
                 camp = airplaneSkins[ORIGIN.airplane.skinId].camp[0];
             con.addChild(createSprite(camp));
-            for (let i = 0; i < skin.length; i ++) {
+            for (let i = 0; i < skin.length; i++) {
                 con.addChild(createSprite(skin[i]));
             }
             setObjectSize(con, airplaneSkins[ORIGIN.airplane.skinId].skin_radius * 2);
@@ -385,7 +412,7 @@ let setAirplane = () => {
             AIRPLANE.self = con;
             AirplaneLayer.addChild(AIRPLANE.self);
         }
-        
+
         // reset the state of the airplane
         if (AIRPLANE.self.visible === false) {
             AIRPLANE.self.visible = true;
@@ -397,7 +424,7 @@ let setAirplane = () => {
             setObjectSize(AIRPLANE.self, airplaneSkins[ORIGIN.airplane.skinId].skin_radius * 2);
             AIRPLANE.self.position.set(VIEW.center.x, VIEW.center.y);
         }
-    } else if (MODEL.gameMode === 0){
+    } else if (MODEL.gameMode === 0) {
         if (AIRPLANE.flag === true) {
             AIRPLANE.pre.x = VIRTUAL.width / 2;
             AIRPLANE.pre.y = VIRTUAL.height / 2;
@@ -428,26 +455,26 @@ let setBackground = () => {
     universe.x += -(AIRPLANE.x - AIRPLANE.pre.x) * VIEW.ratio;
     if (AIRPLANE.x < CUT.width / 2) {
         universe.x = (CUT.width / 2 - AIRPLANE.x) * VIEW.ratio;
-    } else if (AIRPLANE.x > VIRTUAL.width - CUT.width / 2){
-        universe.x = - 2 * square.view_length - (CUT.width / 2 - (VIRTUAL.width - AIRPLANE.x)) * VIEW.ratio;
+    } else if (AIRPLANE.x > VIRTUAL.width - CUT.width / 2) {
+        universe.x = -2 * square.view_length - (CUT.width / 2 - (VIRTUAL.width - AIRPLANE.x)) * VIEW.ratio;
     } else if (universe.x < 2 * square.view_length || universe.x > 0) {
-        universe.x = - square.view_length + (universe.x % square.view_length);
+        universe.x = -square.view_length + (universe.x % square.view_length);
     }
 
     universe.y += -(AIRPLANE.y - AIRPLANE.pre.y) * VIEW.ratio;
     if (AIRPLANE.y < CUT.height / 2) {
         universe.y = (CUT.height / 2 - AIRPLANE.y) * VIEW.ratio;
-    } else if (AIRPLANE.y > VIRTUAL.height - CUT.height / 2){
-        universe.y = - 2 * square.view_length - (CUT.height / 2 - (VIRTUAL.height - AIRPLANE.y)) * VIEW.ratio;
+    } else if (AIRPLANE.y > VIRTUAL.height - CUT.height / 2) {
+        universe.y = -2 * square.view_length - (CUT.height / 2 - (VIRTUAL.height - AIRPLANE.y)) * VIEW.ratio;
     } else if (universe.y < 2 * square.view_length || universe.y > 0) {
-        universe.y = - square.view_length + (universe.y % square.view_length);
+        universe.y = -square.view_length + (universe.y % square.view_length);
     }
 };
 
 let selectBalls = (type, camp, skins, layer, map, origin, getInfo) => {
     if (getInfo()) {
         let count = {};
-        for (let i = 0; i < origin.length; i ++) {
+        for (let i = 0; i < origin.length; i++) {
             let skinId = origin[i].skinId,
                 radius = skins[skinId].skin_radius,
                 x = origin[i].locationCurrent.x,
@@ -477,21 +504,22 @@ let selectBalls = (type, camp, skins, layer, map, origin, getInfo) => {
                     let sk = skins[skinId].skin,
                         cp = skins[skinId].camp[camp];
                     switch (type) {
-                        case TYPE.airplane :
+                        case TYPE.airplane:
                             ct.addChild(createSprite(cp));
-                            for (let j = 0; j < sk.length; j ++) {
+                            for (let j = 0; j < sk.length; j++) {
                                 ct.addChild(createSprite(sk[j]));
                             }
                             break;
 
-                        case TYPE.bullet :
-                            for (let j = 0; j < sk.length; j ++) {
+                        case TYPE.bullet:
+                            for (let j = 0; j < sk.length; j++) {
                                 ct.addChild(createSprite(sk[j]));
                             }
                             ct.addChild(createSprite(cp));
                             break;
 
-                        default: break;
+                        default:
+                            break;
                     }
 
                     updateBall(ct, x, y, r, radius);
@@ -501,7 +529,7 @@ let selectBalls = (type, camp, skins, layer, map, origin, getInfo) => {
                 } else {
                     let crtObj = map[skinId][count[skinId] - 1];
                     crtObj.visible = true;
-                    updateBall(crtObj, x, y, r , radius * 2);
+                    updateBall(crtObj, x, y, r, radius * 2);
                     // update balls
                 }
 
@@ -509,19 +537,19 @@ let selectBalls = (type, camp, skins, layer, map, origin, getInfo) => {
         }
 
         let map_keys = Object.keys(map);
-        for (let n = 0; n < map_keys.length; n ++) {
+        for (let n = 0; n < map_keys.length; n++) {
             let begin = 0;
             if (count[map_keys[n]] !== undefined) {
                 begin = count[map_keys[n]];
             }
-            for (let m = begin; m < map[map_keys[n]].length; m ++) {
+            for (let m = begin; m < map[map_keys[n]].length; m++) {
                 map[map_keys[n]][m].visible = false;
             }
         }
     } else {
         let map_keys = Object.keys(map);
-        for (let n = 0; n < map_keys.length; n ++) {
-            for (let m = 0; m < map[map_keys[n]].length; m ++) {
+        for (let n = 0; n < map_keys.length; n++) {
+            for (let m = 0; m < map[map_keys[n]].length; m++) {
                 map[map_keys[n]][m].visible = false;
             }
         }
