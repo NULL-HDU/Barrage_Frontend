@@ -5,11 +5,11 @@
  */
 
 import gamemodel from "./model/gamemodel";
-import Airplane from "./model/airplane";
 import {EVA01} from "./resource/airplane/roleId.js";
 
 import {
-  startEngine
+  startEngine,
+  createAirplane
 } from "./engine/engine.js";
 import {
   configCanvasEventListen,
@@ -30,11 +30,14 @@ export const startGame = (userId,userName)=> {
       gamemodel.gameMode = 0;
   }else{
       gamemodel.gameMode = 1;
-      airPlane = new Airplane(EVA01);
-      airPlane.name = userName;
-      airPlane.userId = userId;
+
+//      airPlane = new Airplane(EVA01);
+//      airPlane.name = userName;
+//      airPlane.userId = userId;
+
+      airPlane = createAirplane(EVA01);
+
   }
-  
   gamemodel.data.engineControlData.airPlane = airPlane;
 
   startEngine();

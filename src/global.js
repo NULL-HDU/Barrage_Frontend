@@ -3,6 +3,10 @@ export default {
     E_SKILL_DURATION: 1000 * 4,
     SKILL_CHECK_LOOP_INTERVAL: 50,
 
+    // virtual ground size
+    V_HEIGHT: 800 * 2,
+    V_WIDTH:  1280*2,
+
     // quadtree
     QUAD_BALL_AMOUNT: 4,
     QUAD_TREE_DEPTH: 30,

@@ -16,7 +16,7 @@ export const circlePath = (bullet, clockwise = 1, minRadius = 50, maxRadius = 90
     let sv = new PVector(
         Math.cos(angle) * bullet.speed,
         Math.sin(angle) * bullet.speed
-    );
+    ).mult(clockwise);
 
     let R = minRadius; // a = v**2 / R
     let preRv = new PVector(
@@ -26,15 +26,14 @@ export const circlePath = (bullet, clockwise = 1, minRadius = 50, maxRadius = 90
     let dR = (maxRadius - minRadius) / (tt / global.GAME_LOOP_INTERVAL);
 
     return () => {
-        rAngle += bullet.speed / R;
+        rAngle += bullet.speed / R * clockwise;
         let rv = new PVector(
-          Math.cos(rAngle) * R,
-          Math.sin(rAngle) * R
+            Math.cos(rAngle) * R,
+            Math.sin(rAngle) * R
         );
         sv.add(PVector.sub(rv, preRv));
         sv.setMag(bullet.speed);
         preRv = rv;
-        // sv.setMag(bullet.speed);
         if (R <= maxRadius) {
             R += dR;
         }

@@ -17,7 +17,6 @@ import Bullet from "../../model/bullet.js";
 
 let bulletNumEverWheel = 6;
 const TWO_BULLET_INTERVAL = 200; // ms
-let layerNum = 5;
 
 let skillFunc = () => {
     let bulletCount = 0;
@@ -39,64 +38,94 @@ let skillFunc = () => {
         centre.run = centre.pathFunc(centre);
         data.bullet.push(centre);
 
-        let roundAngleRatio = bulletNumEverWheel / 2;
         let clockdir = 1;
+        let dAngle = (30 + 20) / (centre.radius + 50);
 
-        for (let i = 0; i < bulletNumEverWheel; i++) {
-          let site_angle = angle + Math.PI / roundAngleRatio * i;
-          let dirVector = new PVector(
-            Math.cos(site_angle),
-            Math.sin(site_angle)
-          );
-          let bullet = new Bullet(
-            centre,
-            CIRCLE_BULLET2,
-            site_angle + Math.PI,
-            PVector.add(srcLocation, PVector.mult(dirVector, 50)),
-            true
-          );
-          bullet.run = bullet.pathFunc(bullet, -clockdir, 50, centre.radius + 50, 1000);
-          data.bullet.push(bullet);
-        }
-
-        for (let j = 0; j < 2; j++) {
-          for (let i = 0; i < bulletNumEverWheel; i++) {
+        let bulletNum = bulletNumEverWheel / 2;
+        let roundAngleRatio = bulletNum / 2;
+        for (let i = 0; i < bulletNum; i++) {
             let site_angle = angle + Math.PI / roundAngleRatio * i;
             let dirVector = new PVector(
-              Math.cos(site_angle),
-              Math.sin(site_angle)
+                Math.cos(site_angle),
+                Math.sin(site_angle)
             );
             let bullet = new Bullet(
-              centre,
-              CIRCLE_BULLET1,
-              site_angle + Math.PI,
-              PVector.add(srcLocation, PVector.mult(dirVector, 50)),
-              true
+                centre,
+                CIRCLE_BULLET2,
+                site_angle + Math.PI,
+                PVector.add(srcLocation, PVector.mult(dirVector, 50)),
+                true
             );
-            bullet.run = bullet.pathFunc(bullet, clockdir, 50, centre.radius + 50 * (j + 2), 1000);
+            bullet.run = bullet.pathFunc(bullet, clockdir, 50, centre.radius + 50, 1000);
             data.bullet.push(bullet);
-          }
-          clockdir = clockdir > 0 ? -1 : 1;
+
+            site_angle = angle + Math.PI / roundAngleRatio * i - dAngle;
+            dirVector = new PVector(Math.cos(site_angle), Math.sin(site_angle));
+            bullet = new Bullet(
+                centre,
+                CIRCLE_BULLET1,
+                site_angle + Math.PI,
+                PVector.add(srcLocation, PVector.mult(dirVector, 50)),
+                true
+            );
+            bullet.run = bullet.pathFunc(bullet, clockdir, 50, centre.radius + 50, 1000);
+            data.bullet.push(bullet);
+
+            site_angle = angle + Math.PI / roundAngleRatio * i - 2 * dAngle;
+            dirVector = new PVector(Math.cos(site_angle), Math.sin(site_angle));
+            bullet = new Bullet(
+                centre,
+                MIN_CIRCLE_BULLET,
+                site_angle + Math.PI,
+                PVector.add(srcLocation, PVector.mult(dirVector, 50)),
+                true
+            );
+            bullet.run = bullet.pathFunc(bullet, clockdir, 50, centre.radius + 50, 1000);
+            data.bullet.push(bullet);
         }
 
-        for (let j = 0; j < layerNum; j++) {
-            for (let i = 0; i < bulletNumEverWheel; i++) {
-                let site_angle = angle + Math.PI / roundAngleRatio * i;
-                let dirVector = new PVector(
-                    Math.cos(site_angle),
-                    Math.sin(site_angle)
-                );
-                let bullet = new Bullet(
-                    centre,
-                    MIN_CIRCLE_BULLET,
-                    site_angle + Math.PI,
-                    PVector.add(srcLocation, PVector.mult(dirVector, 50)),
-                    true
-                );
-                bullet.run = bullet.pathFunc(bullet, clockdir, 50, centre.radius + 50 * (j + 4), 1000);
-                data.bullet.push(bullet);
-            }
-            clockdir = clockdir > 0 ? -1 : 1;
+        bulletNum = bulletNumEverWheel;
+        roundAngleRatio = bulletNum / 2;
+        dAngle = dAngle = (30 + 10) / (centre.radius + 120);
+        for (let i = 0; i < bulletNum; i++) {
+            let site_angle = angle + Math.PI / roundAngleRatio * i;
+            let dirVector = new PVector(
+                Math.cos(site_angle),
+                Math.sin(site_angle)
+            );
+            let bullet = new Bullet(
+                centre,
+                CIRCLE_BULLET2,
+                site_angle + Math.PI,
+                PVector.add(srcLocation, PVector.mult(dirVector, 50)),
+                true
+            );
+            bullet.run = bullet.pathFunc(bullet, -clockdir, 50, centre.radius + 130, 1000);
+            data.bullet.push(bullet);
+
+            site_angle = angle + Math.PI / roundAngleRatio * i + dAngle;
+            dirVector = new PVector(Math.cos(site_angle), Math.sin(site_angle));
+            bullet = new Bullet(
+                centre,
+                CIRCLE_BULLET1,
+                site_angle + Math.PI,
+                PVector.add(srcLocation, PVector.mult(dirVector, 50)),
+                true
+            );
+            bullet.run = bullet.pathFunc(bullet, -clockdir, 50, centre.radius + 130, 1000);
+            data.bullet.push(bullet);
+
+            site_angle = angle + Math.PI / roundAngleRatio * i + 2 * dAngle;
+            dirVector = new PVector(Math.cos(site_angle), Math.sin(site_angle));
+            bullet = new Bullet(
+                centre,
+                MIN_CIRCLE_BULLET,
+                site_angle + Math.PI,
+                PVector.add(srcLocation, PVector.mult(dirVector, 50)),
+                true
+            );
+            bullet.run = bullet.pathFunc(bullet, -clockdir, 50, centre.radius + 130, 1000);
+            data.bullet.push(bullet);
         }
 
         // if bullet_count is less than bulletNumEverWheel, skill end

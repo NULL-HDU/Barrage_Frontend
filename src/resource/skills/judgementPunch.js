@@ -14,18 +14,16 @@ import {
 } from "./utils.js";
 import PVector from "../../model/Point.js";
 import {
+    MIN_UNIFORMLY_RETARDED_BULLET,
     UNIFORMLY_RETARDED_BULLET1,
     UNIFORMLY_RETARDED_BULLET2
 } from "../bullet/roleId.js";
 import Bullet from "../../model/bullet.js";
+import randomRanger from "../../utils/random.js";
 
 const TWO_BULLET_INTERVAL = 80; // ms
 const BULLET_NUM = 7;
 const RANGER = Math.PI / 6;
-
-let randomRanger = (min, max) => {
-    return Math.random() * (max - min) + min;
-};
 
 let skillFunc = () => {
     let bulletCount = 0;
@@ -51,7 +49,7 @@ let skillFunc = () => {
 
         bullet = new Bullet(
             airPlane,
-            UNIFORMLY_RETARDED_BULLET1,
+            MIN_UNIFORMLY_RETARDED_BULLET,
             2 * angle - _angle,
             PVector.add(
                 airPlane.locationCurrent,

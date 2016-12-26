@@ -6,13 +6,15 @@
 
 import global from "../global";
 import Airplane from "../model/airplane";
-import {EVA01} from "../resource/airplane/roleId.js";
+import {
+    EVA01
+} from "../resource/airplane/roleId.js";
 import {
     DEAD,
     DISAPPEAR,
     AIRPLANE,
-    BULLET
 } from "../constant.js";
+import randomRanger from "../utils/random.js";
 import gamemodel from "../model/gamemodel";
 import Quadtree from "./quadtree";
 import PVector from "../model/Point";
@@ -47,11 +49,11 @@ let uselessBulletsCollect = () => {
     }
 
     backendData.airPlane = backendData.airPlane.filter((airPlane) => {
-      if (airPlane.state === DEAD) {
-        gamemodel.deadCache.push(airPlane);
-        return false;
-      }
-      return true;
+        if (airPlane.state === DEAD) {
+            gamemodel.deadCache.push(airPlane);
+            return false;
+        }
+        return true;
     });
 
     data.bullet = data.bullet.filter((bullet) => {
@@ -90,7 +92,7 @@ let collisionDetection = () => {
       3.碰撞效果和伤害检测处理之后清空四叉树，进行下一轮碰撞检测
     */
 
-    if(data.airPlane === undefined) {
+    if (data.airPlane === undefined) {
         return;
     }
 
@@ -111,7 +113,7 @@ let collisionDetection = () => {
             if (collidors[j].camp === selfBullets[i].camp) {
                 continue;
             }
-            if(collidors[j].ballType === AIRPLANE && selfBullets[i].ballType === AIRPLANE){
+            if (collidors[j].ballType === AIRPLANE && selfBullets[i].ballType === AIRPLANE) {
                 continue;
             }
 
@@ -120,10 +122,10 @@ let collisionDetection = () => {
             let distance = PVector.dist(a, b);
             if (distance <= collidors[j].radius + selfBullets[i].radius) {
                 let damageInformation = {
-                  collision1: [selfBullets[i].userId, selfBullets[i].id],
-                  collision2: [collidors[j].userId, collidors[j].id],
-                  damageValue: [selfBullets[i].hp, collidors[j].hp],
-                  state: []
+                    collision1: [selfBullets[i].userId, selfBullets[i].id],
+                    collision2: [collidors[j].userId, collidors[j].id],
+                    damageValue: [selfBullets[i].hp, collidors[j].hp],
+                    state: []
                 };
 
                 // bullet <-> bullet
@@ -132,10 +134,10 @@ let collisionDetection = () => {
                         shp = selfBullets[i].hp;
                     collidors[j].hp -= shp;
                     selfBullets[i].hp -= chp;
-                }else{
-                  // TODO: There is no method to check airPlane colliding with food.
-                  collidors[j].hp = 0;
-                  selfBullets[i].hp = 0;
+                } else {
+                    // TODO: There is no method to check airPlane colliding with food.
+                    collidors[j].hp = 0;
+                    selfBullets[i].hp = 0;
                 }
 
                 if (collidors[j].hp <= 0) collidors[j].state = DEAD;
@@ -152,18 +154,15 @@ let collisionDetection = () => {
     }
 };
 
-let askForTryAgain  = () => {
-  window.dialogs.info.Open("You are dead!!!","Try again?",(yes) => {
-    if(yes){
-      let airPlane = new Airplane(EVA01);
-      airPlane.name = gamemodel.userName;
-      airPlane.userId = gamemodel.userId;
-      gamemodel.data.engineControlData.airPlane = airPlane;
-    }else{
-      window.location.hash = "";
-      window.location.reload();
-    }
-  });
+let askForTryAgain = () => {
+    window.dialogs.info.Open("You are dead!!!", "Try again?", (yes) => {
+        if (yes) {
+            gamemodel.data.engineControlData.airPlane = createAirplane(EVA01);
+        } else {
+            window.location.hash = "";
+            window.location.reload();
+        }
+    });
 };
 
 let engine = () => {
@@ -174,13 +173,13 @@ let engine = () => {
     let viewCountMax = Math.floor(global.VIEW_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL);
 
     looper(() => {
-        if(data.airPlane !== undefined) {
+        if (data.airPlane !== undefined) {
             data.airPlane.move();
             data.airPlane.skillActive();
             data.airPlane.skillCountDown();
-        }else{
-            if(gamemodel.gameMode === 1){
-                if(!window.dialogs.info.State()) askForTryAgain();
+        } else {
+            if (gamemodel.gameMode === 1) {
+                if (!window.dialogs.info.State()) askForTryAgain();
             }
         }
 
@@ -192,18 +191,26 @@ let engine = () => {
         // uselessBulletsCollect useless balls always are in the end of a engine cycle;
         uselessBulletsCollect();
 
-        if(++socketCount >= socketCountMax){
+        if (++socketCount >= socketCountMax) {
             socketCount = 0;
             playgroundInfo();
         }
 
-        if(++viewCount >= viewCountMax){
+        if (++viewCount >= viewCountMax) {
             viewCount = 0;
             loopRender();
         }
 
-
     }, global.GAME_LOOP_INTERVAL);
+};
+
+export const createAirplane = (roleId) => {
+    let airPlane = new Airplane(roleId);
+    airPlane.name = gamemodel.userName;
+    airPlane.userId = gamemodel.userId;
+    airPlane.locationCurrent.x = randomRanger(0, global.V_WIDTH);
+    airPlane.locationCurrent.y = randomRanger(0, global.V_HEIGHT);
+    return airPlane;
 };
 
 export const startEngine = () => {

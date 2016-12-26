@@ -6,6 +6,7 @@
 import global from "../../global.js";
 import straightLinePath from "../pathFunc/straightLine.js";
 import circlePath from "../pathFunc/circlePath.js";
+import lazyPath from "../pathFunc/lazyPath.js";
 import uniformlyRetardedPath from "../pathFunc/uniformlyRetardedPath.js";
 import {
     BULLET1,
@@ -28,9 +29,16 @@ import {
     CIRCLE_BULLET4,
     MAX_CIRCLE_BULLET,
     MIN_CIRCLE_BULLET,
+    LAZY_BULLET1,
+    LAZY_BULLET2,
+    LAZY_BULLET3,
+    LAZY_BULLET4,
+    MAX_LAZY_BULLET,
+    MIN_LAZY_BULLET,
     UNIFORMLY_RETARDED_BULLET3,
     UNIFORMLY_RETARDED_BULLET2,
     UNIFORMLY_RETARDED_BULLET1,
+    MIN_UNIFORMLY_RETARDED_BULLET,
     MAX_UNIFORMLY_RETARDED_BULLET,
 } from "./roleId.js";
 
@@ -72,6 +80,13 @@ export default {
         damage: 50,
         distance: 900,
         speed: global.BULLET_SPEED * 1.5, // px / s
+    }, [MIN_UNIFORMLY_RETARDED_BULLET]: {
+        skinId: MIN_BULLET,
+        pathFunc: uniformlyRetardedPath,
+        hp: 10,
+        damage: 50,
+        distance: 900,
+        speed: global.BULLET_SPEED, // px / s
     }, [UNIFORMLY_RETARDED_BULLET1]: {
         skinId: BULLET1,
         pathFunc: uniformlyRetardedPath,
@@ -93,7 +108,7 @@ export default {
         damage: 50,
         distance: 800,
         speed: global.BULLET_SPEED, // px / s
-    },[MAX_UNIFORMLY_RETARDED_BULLET]: {
+    }, [MAX_UNIFORMLY_RETARDED_BULLET]: {
         skinId: MAX_BULLET,
         pathFunc: uniformlyRetardedPath,
         hp: 100,
@@ -128,6 +143,34 @@ export default {
         damage: 50,
         distance: 900,
         speed: global.BULLET_SPEED, // px / s
+    }, [LAZY_BULLET1]: {
+        skinId: BULLET1,
+        pathFunc: lazyPath,
+        hp: 10,
+        damage: 50,
+        distance: 850,
+        speed: global.BULLET_SPEED * 2, // px / s
+    }, [LAZY_BULLET2]: {
+        skinId: BULLET2,
+        pathFunc: lazyPath,
+        hp: 20,
+        damage: 50,
+        distance: 800,
+        speed: global.BULLET_SPEED * 2, // px / s
+    }, [MAX_LAZY_BULLET]: {
+        skinId: MAX_BULLET,
+        pathFunc: lazyPath,
+        hp: 60,
+        damage: 50,
+        distance: 700,
+        speed: global.BULLET_SPEED * 2, // px / s
+    }, [MIN_LAZY_BULLET]: {
+        skinId: MIN_BULLET,
+        pathFunc: lazyPath,
+        hp: 10,
+        damage: 50,
+        distance: 900,
+        speed: global.BULLET_SPEED * 2, // px / s
     }
 };
 
