@@ -57,7 +57,7 @@
              p.x = 0;
          }
 
-         if ((this.locationCurrent.y > global.V_WIDTH && p.y > 0) || (this.locationCurrent.y < 0 && p.y < 0)) {
+         if ((this.locationCurrent.y > global.V_HEIGHT && p.y > 0) || (this.locationCurrent.y < 0 && p.y < 0)) {
              p.y = 0;
          }
 
