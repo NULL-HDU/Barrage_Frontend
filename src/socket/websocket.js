@@ -90,6 +90,12 @@ function onClose(e) {
 
 //when socket is error
 function onError(e) {
+<<<<<<< HEAD
     console.log("Socket error code: " + e.code);
     console.log("Socket error: " + e.data);
 }
+=======
+	console.log("Socket error code: " + e.code);
+	console.log("Socket error: " + e.data);
+}
+>>>>>>> d5b9ffe6e3707d5ab6fa2b118de881c960e915ee
