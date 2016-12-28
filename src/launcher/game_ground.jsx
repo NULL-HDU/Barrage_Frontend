@@ -8,12 +8,17 @@ import React, { Component } from "react";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
 
 import ghostTheme from "./ghostTheme.js";
+import {changeHash} from "../utils/url.js";
+import gamemodel from "../model/gamemodel.js";
 import InfoDialog from "./components/InfoDialog.jsx";
 
 import Data from "./launcher_data.js";
 import {
   initEngine,
   initView,
+  overEngine,
+  overView,
+  overSocket,
 } from "./bridge.js";
 
 window.dialogs = {};
@@ -31,25 +36,32 @@ export default class GameGroundPage extends Component {
   }
 
   componentDidMount() {
-    if(!Data.UserId){
-      window.location.hash = "/";
-      window.location.reload();
-      return;
-    }
-    if(!Data.Name){
-      window.location.hash = "/";
-      return;
-    }
+      if(!Data.UserId){
+          changeHash("/");
+          return;
+      }
+      if(!Data.Name){
+          changeHash("/");
+          return;
+      }
 
-    initView(() => {
-        initEngine(Data.UserId, Data.Name);
-    });
+      initView(() => {
+          initEngine(Data.UserId, Data.Name);
+      });
+  }
+
+  componentWillUnmount() {
+      Data.UserId = 0;
+      Data.Name = "";
+      overEngine();
+      overView();
+      overSocket();
   }
 
   render() {
     return (
-      <div>
-        <InfoDialog ref={(c)=>window.dialogs.info = c}/>
+      <div ref={(c)=>gamemodel.gameground = c} id="gameground">
+          <InfoDialog ref={(c)=>window.dialogs.info = c}/>
       </div>
     );
   }
