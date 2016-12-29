@@ -10,7 +10,6 @@ let debug = false;
 
 export let state = 0;
 export let userId = undefined;
-export let roomNumber = undefined;
 let times = 0;
 
 //convert array to json and serveral item from array as keys

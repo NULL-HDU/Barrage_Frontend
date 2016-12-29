@@ -1,8 +1,6 @@
 import global from "../global";
 import gamemodel from "../model/gamemodel";
 
-let data = gamemodel.data.engineControlData;
-
 let skillFlags = {
     engineOn: 0, //0 for enable,1 for disable;
     currentSkillType: null, // which skill user current use.
@@ -11,6 +9,7 @@ let skillFlags = {
 // if skillOnFlag is on and currentSkillType is the same as the skillType parameter,
 // it will call skill fucntion, then loop itself.
 let checkToCallSkillFuncThenLoop = (skillType) => {
+    let data = gamemodel.data.engineControlData;
     if(data.airPlane === undefined){
         return;
     }

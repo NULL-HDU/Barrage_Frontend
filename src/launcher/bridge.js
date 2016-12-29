@@ -5,23 +5,40 @@
  */
 
 import {
-    startGame
-} from "../engine_init.js";
+    startGame,
+    overGame
+} from "../engine/index.js";
 import * as tm from "../socket/transmitted.js";
 import iGameModel from "../model/gamemodel_init.js";
 import {
-    initView as iview
-} from "../view/Nview.js"
+    initView as iview,
+    overView as oview
+} from "../view/Nview.js";
 
 let _initGameModel = iGameModel;
 let _initSocket = (cb) => {
     console.log("socket inited.");
     cb(null, 1234);
 };
-let _initView = iview;
+let _overSocket = () => {
+    tm.overSocket();
+    console.log("socket over.");
+};
+let _initView = (cb) => {
+    iview(cb);
+    console.log("view init.");
+};
+let _overView = () => {
+    oview();
+    console.log("view over.");
+};
 let _initEngine = (userId, name) => {
     console.log(`engine inited with ${userId} and ${name}`);
     startGame(userId, name);
+};
+let _overEngine = () => {
+    overGame();
+    console.log("engine over.");
 };
 let _socketConnect = (roomId, cb) => {
     setTimeout(() => {
@@ -47,5 +64,9 @@ export const initView = _initView;
 export const initEngine = _initEngine;
 export const socketConnect = _socketConnect;
 export const initGameModel = _initGameModel;
+
+export const overEngine = _overEngine;
+export const overSocket = _overSocket;
+export const overView = _overView;
 
 /* bridge.js ends here */

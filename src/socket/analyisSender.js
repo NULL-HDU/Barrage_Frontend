@@ -3,9 +3,9 @@
  ** author:yummyLcj
  */
 
-import gamemodel from "../model/gamemodel"
-import dataview from "./dataview.js"
-import * as receiver from "./analyisReceiver.js"
+import gamemodel from "../model/gamemodel";
+import dataview from "./dataview.js";
+import * as receiver from "./analyisReceiver.js";
 
 let debug = false;
 

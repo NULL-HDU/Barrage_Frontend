@@ -16,6 +16,7 @@ const loader = PIXI.loader,
     Sprite = PIXI.Sprite,
     Graphics = PIXI.Graphics;
 let renderer;
+let imgHasLoad = false;
 
 // game state
 let STATE;
@@ -270,20 +271,29 @@ let Enemy = {};
 let TYPE = {
     airplane: 0,
     bullet: 0
-}
+};
 
 // camps
 let CAMP = {
     blue: 0,
     red: 1
-}
+};
 
 export function initView(callback) {
-    loader
-        .add(IMAGES)
-        .load(() => {
+    if(imgHasLoad) {
+        initLayers(callback);
+    }else{
+        loader.add(IMAGES).load(() => {
+            imgHasLoad = true;
             initLayers(callback);
         });
+    }
+}
+
+export function overView() {
+    MODEL.deadCache = [];
+    MODEL.disappearCache = [];
+    MODEL.collisionCache = [];
 }
 
 function initLayers(callback) {
@@ -299,7 +309,7 @@ function initLayers(callback) {
         }
     );
     renderer.view.id = "canvas";
-    document.body.appendChild(renderer.view);
+    MODEL.gameground.appendChild(renderer.view);
 
     // center the canvas
     centerCanvas();
