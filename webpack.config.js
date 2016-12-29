@@ -7,8 +7,8 @@
 let join = require("path").join;
 let webpack = require("webpack");
 let HtmlWebpackPlugin = require("html-webpack-plugin");
-let entry = require("./entry.js")
-let defaultStaticDir = "static"
+let entry = require("./entry.js");
+let defaultStaticDir = "static";
 
 let _static_dir = process.env.STATICDIR ?
   process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, '').trim() : defaultStaticDir;
@@ -20,9 +20,12 @@ let webpackDefineConfig = {
   "__ENV__": JSON.stringify(node_env)
 }
 
+let dist = node_env === "production" ? "prodist" : "dist";
+let index = node_env === "production" ? "index.html" : "index_test.html";
+
 // https://github.com/ampedandwired/html-webpack-plugin
 let htmlWebpackPluginConfig = {
-  filename: join(static_dir, "./index.html"),
+  filename: join(static_dir, `./${index}`),
   template: "template.html",
   inject: true,
 };
@@ -43,15 +46,14 @@ if (node_env === "production") {
 
 let uglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
-
 let webpackconfig = {
     devtool: isDebug ? "eval" : "#source-map",
     entry: entry,
     output: {
         //where compiled files be put
-        path: join(static_dir, "./dist"),
+        path: join(static_dir, `./${dist}`),
         //url for develop server
-        publicPath: `/${_static_dir}/dist/`, //uri while web set run
+        publicPath: `/${_static_dir}/${dist}/`, //uri while web set run
         filename: "[name].js"
     },
     module: {
@@ -100,7 +102,7 @@ let webpackconfig = {
         historyApiFallback: {
             rewrites: [{
                 from: /^\/(|index.html)$/,
-                to: `/${_static_dir}/index.html`
+                to: `/${_static_dir}/${index}`
             }],
         },
         proxy: {

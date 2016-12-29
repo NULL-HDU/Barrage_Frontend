@@ -7,8 +7,12 @@
 import React, { Component } from "react";
 
 import TextField from "./components/TextField.jsx";
+import {changeHash} from "../utils/url.js";
 import Data from "./launcher_data.js";
-import {socketConnect,initEngine} from "./bridge.js";
+import {
+    socketConnect,
+    initSocket,
+} from "./bridge.js";
 
 export default class UsernameInputPage extends Component {
 
@@ -55,18 +59,23 @@ export default class UsernameInputPage extends Component {
     });
 
     Data.Name = v;
-    socketConnect(Data.RoomId, (err) => {
-      // change hash
-      if(err !== null){
-        window.location.hash = `/error?error=${err.toString()}`;
-        return;
-      }
+    initSocket((err, userId) => {
+        if(err !== null){
+            changeHash(`error?error=${err.toString()}`);
+            return;
+        }
+        Data.UserId = userId;
 
-      //when socket done,init engine
-      //initEngine(Data.UserId,Data.Name);
-      window.location.hash = "/game";
+        socketConnect(Data.RoomId, (err) => {
+            // change hash
+            if(err !== null){
+                changeHash(`error?error=${err.toString()}`);
+                return;
+            }
+
+            window.location.hash = "/game";
+        });
     });
-
   }
 
   render() {

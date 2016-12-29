@@ -5,7 +5,6 @@
  */
 
 import global from "../global";
-import Airplane from "../model/airplane";
 import {
     EVA01
 } from "../resource/airplane/roleId.js";
@@ -14,7 +13,6 @@ import {
     DISAPPEAR,
     AIRPLANE,
 } from "../constant.js";
-import randomRanger from "../utils/random.js";
 import gamemodel from "../model/gamemodel";
 import Quadtree from "./quadtree";
 import PVector from "../model/Point";
@@ -24,8 +22,13 @@ import {
 import {
     loopRender
 } from "../view/Nview";
+import {
+  createAirplane
+} from "../model/airplane.js";
 
 let data, backendData;
+// store information about looper
+let loopInfo = {};
 let quad = new Quadtree({
     x: 0,
     y: 0,
@@ -33,9 +36,9 @@ let quad = new Quadtree({
     height: global.LOCAL_HEIGHT
 }, 10, 5);
 
-let looper = (f, t) => setTimeout(() => {
+let looper = (t, i, f) => setTimeout(() => {
     f();
-    looper(f, t);
+    i.loop = looper(t, i, f);
 }, t);
 
 let uselessBulletsCollect = () => {
@@ -171,8 +174,7 @@ let engine = () => {
     let socketCountMax = global.SOCKET_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL;
     let viewCount = 0;
     let viewCountMax = Math.floor(global.VIEW_LOOP_INTERVAL / global.GAME_LOOP_INTERVAL);
-
-    looper(() => {
+    let _engine = () => {
         if (data.airPlane !== undefined) {
             data.airPlane.move();
             data.airPlane.skillActive();
@@ -201,20 +203,17 @@ let engine = () => {
             loopRender();
         }
 
-    }, global.GAME_LOOP_INTERVAL);
-};
+    };
 
-export const createAirplane = (roleId) => {
-    let airPlane = new Airplane(roleId);
-    airPlane.name = gamemodel.userName;
-    airPlane.userId = gamemodel.userId;
-    airPlane.locationCurrent.x = randomRanger(0, global.V_WIDTH);
-    airPlane.locationCurrent.y = randomRanger(0, global.V_HEIGHT);
-    return airPlane;
+    loopInfo.loop = looper(global.GAME_LOOP_INTERVAL, loopInfo, _engine);
 };
 
 export const startEngine = () => {
     data = gamemodel.data.engineControlData;
     backendData = gamemodel.data.backendControlData;
     engine();
+};
+
+export const overEngine = () => {
+    clearTimeout(loopInfo.loop);
 };

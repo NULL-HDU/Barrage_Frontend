@@ -67,22 +67,25 @@ export default class socket {
 			}, 200);
 		}
 	}
+
 }
 
 
 
 //when socket is open
 function onOpen(e) {
-	console.log("websocket connected succeed!!");
+    console.log("websocket connected succeed!!");
 }
 
 //when socket is close
 function onClose(e) {
-	console.log("websocket closed succeed!!");
+    console.log("websocket closed succeed!!");
 }
 
 //when socket is error
 function onError(e) {
-	console.log("Socket error code: " + e.code);
-	console.log("Socket error: " + e.data);
+    console.log("Socket error code: " + e.code);
+    console.log("Socket error: " + e.data);
 }
+
+

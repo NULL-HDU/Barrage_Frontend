@@ -2,7 +2,7 @@ import global from "../global";
 import {
     KEY
 } from "../constant.js";
-import screenfull from "./screenfull.js"
+import screenfull from "./screenfull.js";
 import gamemodel from "../model/gamemodel";
 import {
     disableSkillEngine,
@@ -15,80 +15,9 @@ import {
     E_DEFEND_SKILL
 } from "../constant.js";
 
-let data = gamemodel.data.engineControlData;
 let test = -1;
 
-let mouseMove = (e) => {
-    if (data.airPlane === undefined) return;
-    let vs = gamemodel.viewScope;
-
-    let oppositeSide = (e.pageX - vs.width / 2 );
-    let limb = (e.pageY - vs.height / 2 );
-    let A = Math.atan2(limb, oppositeSide) + Math.PI / 2;
-    data.airPlane.attackDir = A;
-};
-
-
-let mouseRelease = (e) => {
-
-    if (e.which === 3) {
-        // console.log("right click");
-        disableSkillEngine(RIGHT_SKILL);
-    } else if (e.which === 1) {
-        //        console.log("left click");
-        disableSkillEngine(LEFT_SKILL);
-    }
-};
-
-let mousePress = (e) => {
-
-    if (e.which === 3) {
-        // console.log("right click");
-        enableSkillEngine(RIGHT_SKILL);
-    } else if (e.which === 1) {
-        // console.log("left click");
-        enableSkillEngine(LEFT_SKILL);
-    }
-};
-
-//shift like event detect
-let shiftLikeEvent = (desc) => {
-
-    let key = {};
-    key.desc = desc;
-    key.isDown = false;
-    key.isUp = true;
-    key.press = undefined;
-    key.release = undefined;
-
-    if (key.desc === "shift") {
-        key.downHandler = (event) => {
-            if (event.shiftKey) {
-                //console.log("down detect");
-                if (key.isUp && key.press) key.press();
-                key.isDown = true;
-                key.isUp = false;
-            }
-            event.preventDefault();
-        };
-
-        key.upHandler = (event) => {
-            if (!event.shiftKey) {
-                //console.log("up detect");
-                if (key.isDown && key.release) key.release();
-                key.isDown = false;
-                key.isUp = true;
-            }
-            event.preventDefault();
-        };
-    }
-
-    window.addEventListener("keydown", key.downHandler.bind(key), false);
-    window.addEventListener("keyup", key.upHandler.bind(key), false);
-
-    return key;
-
-};
+let windowEventTuples = [];
 
 //keyboard
 let keyboard = (keyCode) => {
@@ -120,39 +49,82 @@ let keyboard = (keyCode) => {
         }
     };
 
+    let keydownTuple = ["keydown", key.downHandler.bind(key), false];
+    let keyupTuple = ["keyup", key.upHandler.bind(key), false];
+
     //Attach event listeners
-    window.addEventListener("keydown", key.downHandler.bind(key), false);
-    window.addEventListener("keyup", key.upHandler.bind(key), false);
+    window.addEventListener(...keydownTuple);
+    window.addEventListener(...keyupTuple);
+
+    windowEventTuples.push(keydownTuple);
+    windowEventTuples.push(keyupTuple);
 
     return key;
 };
 
-export const configCanvasEventListen = () => {
+let configCanvasEventListen = () => {
+    let data = gamemodel.data.engineControlData;
+
+    let mouseMove = (e) => {
+        if (data.airPlane === undefined) return;
+        let vs = gamemodel.viewScope;
+
+        let oppositeSide = (e.pageX - vs.width / 2);
+        let limb = (e.pageY - vs.height / 2);
+        let A = Math.atan2(limb, oppositeSide) + Math.PI / 2;
+        data.airPlane.attackDir = A;
+    };
+
+
+    let mouseRelease = (e) => {
+        if (e.which === 3) {
+            // console.log("right click");
+            disableSkillEngine(RIGHT_SKILL);
+        } else if (e.which === 1) {
+            //        console.log("left click");
+            disableSkillEngine(LEFT_SKILL);
+        }
+    };
+
+    let mousePress = (e) => {
+
+        if (e.which === 3) {
+            // console.log("right click");
+            enableSkillEngine(RIGHT_SKILL);
+        } else if (e.which === 1) {
+            // console.log("left click");
+            enableSkillEngine(LEFT_SKILL);
+        }
+    };
+
     //屏蔽右键菜单
     document.addEventListener("contextmenu", (e) => {
         e.preventDefault();
     }, false);
 
     let canvas = document.getElementById("canvas");
-    canvas.addEventListener("mousedown", mousePress);
-    canvas.addEventListener("mouseup", mouseRelease);
-    canvas.addEventListener("mousemove", mouseMove);
+    let mousedownTuple = ["mousedown", mousePress];
+    let mouseupTuple = ["mouseup", mouseRelease];
+    let mousemoveTuple = ["mousemove", mouseMove];
+    canvas.addEventListener(...mousemoveTuple);
+    canvas.addEventListener(...mouseupTuple);
+    canvas.addEventListener(...mousedownTuple);
 };
 
-export const changeKeyEventBindings = () => {
-    let ecdata = gamemodel.data.engineControlData;
+let configKeyEventListen = () => {
+    let data = gamemodel.data.engineControlData;
     let left = keyboard(KEY.A),
         up = keyboard(KEY.W),
         right = keyboard(KEY.D),
         down = keyboard(KEY.S),
         defend_skill = keyboard(KEY.E),
         skill1 = keyboard(KEY.Q),
-        shift = shiftLikeEvent("shift"),
+        shift = keyboard(KEY.SHIFT),
         space = keyboard(KEY.SPACE),
         f11 = keyboard(KEY.F11);
 
     let ifApIsValid = (f) => () => {
-        if (ecdata.airPlane !== undefined) return f(ecdata.airPlane);
+        if (data.airPlane !== undefined) return f(data.airPlane);
     };
 
     shift.press = ifApIsValid((ap) => {
@@ -274,4 +246,16 @@ export const changeKeyEventBindings = () => {
 
     defend_skill.release = ifApIsValid((ap) => {
         disableSkillEngine(E_DEFEND_SKILL);
-    });};
+    });
+};
+
+export const changeKeyEventBindings = () => {
+    configKeyEventListen();
+    configCanvasEventListen();
+};
+
+export const deleteKeyEventBindings = () => {
+    for (let tuple of windowEventTuples) {
+        window.removeEventListener(...tuple);
+    }
+};
