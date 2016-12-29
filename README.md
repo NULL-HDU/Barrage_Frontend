@@ -9,19 +9,19 @@ Barrage is a multiplayer shooting web-based game like touhou shooting game.While
 
 So, how users can play this web-based game. Have you heard about this game and don’t know how to play it?Actually,you have to control your own warplane to destory the other players in the scene,and there will be some supplies on the scene some time,you can use these supplies to strengthen your warplane.
 
-Obstacles:There will be some obstacles in the scene to hinder the plane,you can choose to destory these obstacles to expand the flight range.
+**Obstacles:**There will be some obstacles in the scene to hinder the plane,you can choose to destory these obstacles to expand the flight range.
 
-Supplies:There will be some supplies in the scene some time,these supplies can give variety kinds of buff to strengthen players.So,you'd better get these supplies as soon as possible,you will never want these supplies fall into the hand of the enemies.
+**Supplies:**There will be some supplies in the scene some time,these supplies can give variety kinds of buff to strengthen players.So,you'd better get these supplies as soon as possible,you will never want these supplies fall into the hand of the enemies.
 
-Skills:Different types of warplane may have different skills.Different skills may shoot different kinds of bullet.Different kinds of bullets have different damage and motion curve.Skills may have cooling time.Every warplane has three skills.You can left click to make a heavy attack,press E button to defend and press Q button to  use ultimate skill.
+**Skills:**Different types of warplane may have different skills.Different skills may shoot different kinds of bullet.Different kinds of bullets have different damage and motion curve.Skills may have cooling time.Every warplane has three skills.You can left click to make a heavy attack,press E button to defend and press Q button to  use ultimate skill.
 
-Move:You can use WASD buttons to move the warplane.
+**Move:**You can use WASD buttons to move the warplane.
 
-Slow Mode:You can hold the Shift key to slow down the warplane.This may help you avoid the dense bullets.
+**Slow Mode:**You can hold the Shift key to slow down the warplane.This may help you avoid the dense bullets.
 
-Shoot:While playing the game you have to shoot the obstacles and other players around you, for this task you should point your target by mouse and left-click or tap space button of your keyboard to shoot. In order to shoot continuously, you can hold the space bar button or the left button of the mouse.
+**Shoot:**While playing the game you have to shoot the obstacles and other players around you, for this task you should point your target by mouse and left-click or tap space button of your keyboard to shoot. In order to shoot continuously, you can hold the space bar button or the left button of the mouse.
 
-Requirements: Now, what are the requirements to play this game, it is pretty easy to play this game. It does not need bulk requirements.
+**Requirements:** Now, what are the requirements to play this game, it is pretty easy to play this game. It does not need bulk requirements.
 
 
 Still waiting for what?Grab the source and join in the fun!
@@ -220,3 +220,10 @@ All rights reserved.
 
 [issues]: https://github.com/NULL-HDU/Barrage_Frontend/issues
 [contribute]: https://github.com/NULL-HDU/Barrage_Frontend/issues
+[get-zip]: https://github.com/NULL-HDU/Barrage_Frontend/archive/v1.0-beta.zip
+[get-tgz]: https://github.com/NULL-HDU/Barrage_Frontend/archive/v1.0-beta.gz
+[clone-http]: https://github.com/NULL-HDU/Barrage_Frontend.git
+[clone-ssh]: git@github.com:NULL-HDU/Barrage_Frontend.git
+[clone-svn]: https://github.com/NULL-HDU/Barrage_Frontend
+[clone-ghwin]: github-windows://openRepo/https://github.com/NULL-HDU/Barrage_Frontend
+[clone-ghmac]: github-mac://openRepo/https://github.com/NULL-HDU/Barrage_Frontend
