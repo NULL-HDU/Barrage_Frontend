@@ -26,11 +26,11 @@ So, how users can play this web-based game. Have you heard about this game and d
 
 Still waiting for what?Grab the source and join in the fun!
 
-**Visit:** The Barrage website
-**Learn:**API Docs,Support Forun and StackOverflow
-**Code:**Source code available in this repo.
-**Chat:**Slack
-**Be awesome:**Support the future of Barrage,we are glad to develop with you.
+**Visit:** The Barrage website<br />
+**Learn:**API Docs,Support Forun and StackOverflow<br />
+**Code:**Source code available in this repo.<br />
+**Chat:**Slack<br />
+**Be awesome:**Support the future of Barrage,we are glad to develop with you.<br />
 
 Contents
 - [What's New?](#whats-new)
@@ -227,3 +227,4 @@ All rights reserved.
 [clone-svn]: https://github.com/NULL-HDU/Barrage_Frontend
 [clone-ghwin]: github-windows://openRepo/https://github.com/NULL-HDU/Barrage_Frontend
 [clone-ghmac]: github-mac://openRepo/https://github.com/NULL-HDU/Barrage_Frontend
+[Barrage]: https://github.com/NULL-HDU/Barrage_Frontend
