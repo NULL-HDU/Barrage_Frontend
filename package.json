@@ -1,6 +1,6 @@
 {
   "name": "barrage_frontend",
-  "version": "0.0.0",
+  "version": "2.5.0",
   "description": "the frontend of barrage",
   "main": "index.js",
   "scripts": {
