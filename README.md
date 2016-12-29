@@ -180,7 +180,7 @@ Run `grunt` to perform a default build to the `dist` folder.
 
 <a name="getting-started"></a>
 ## Getting Started
-Our [Getting Started Guide]() will get you up to speed quickly. From setting up a web server, to picking an IDE. After which read our [Before Coding]() tutorial. Please work through this, no matter what your development experience, to learn how Barrage approaches things.
+Our [Getting Started Guide](https://github.com/NULL-HDU/Barrage_Frontend/wiki/Getting-Started-Guide) will get you up to speed quickly. From setting up a web server, to picking an IDE. After which read our [Before Coding]() tutorial. Please work through this, no matter what your development experience, to learn how Barrage approaches things.
 
 <a name="requirements"></a>
 ## Requirements
