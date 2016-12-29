@@ -50,9 +50,9 @@ Welcome!
 
 We've made some important structural changes to our git repo. You have a choice of 2 versions:
 
-**[Barrage 1.0]()**
+**[Barrage 1]()**
 
-**[Barrage 2.0]()**
+**[Barrage 2]()**
 
 For the latest information visit the Barrage web site, where we cover all two versions.Follow on Twitter and chat with fellow  Barrage developers in our Slack channels.
 
@@ -174,7 +174,7 @@ See the [Building by Webpack tutorial]() for details.
 
 ##### Building from source
 
-Should you wish to build Barrage 2.0 from source you can take advantage of the provided [Grunt](http://gruntjs.com/) scripts. Ensure you have the required packages, and running `npm install` first.
+Should you wish to build Barrage 2 from source you can take advantage of the provided [Grunt](http://gruntjs.com/) scripts. Ensure you have the required packages, and running `npm install` first.
 
 Run `grunt` to perform a default build to the `dist` folder.
 
@@ -197,7 +197,7 @@ Barrage is developed in ES6 JavaScript. We've made no assumptions about how you 
 
 We have always been meticulous in recording changes to the Barrage code base, and where relevant, giving attribution to those in the community who helped with the change. You can find comprehensive Change Logs for all versions:
 
-- [Barrage 2.0 Change Log]().
+- [Barrage 2 Change Log]().
 
 <a name="contributing"></a>
 ## Contributing
