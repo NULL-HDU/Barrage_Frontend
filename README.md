@@ -3,7 +3,7 @@
 [![Travis](https://img.shields.io/travis/olistic/warriorjs.svg?style=flat-square)](https://travis-ci.org/olistic/warriorjs)
 [![npm](https://img.shields.io/npm/v/warriorjs.svg?style=flat-square)](https://www.npmjs.com/package/warriorjs)
 
-# Barrage_Frontend - A Touhou Like Battle Shooting Game
+# Barrage - A Touhou Like Battle Shooting Game
 
 Barrage is a multiplayer shooting web-based game like touhou shooting game.While playing this game,you have to control a warplane to destory the other players and obstacles.
 
