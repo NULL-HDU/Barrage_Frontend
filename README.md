@@ -33,14 +33,14 @@ Still waiting for what?Grab the source and join in the fun!
 **Be awesome:**Support the future of Barrage,we are glad to develop with you.
 
 Contents
-- What's New?(#whats-new)
-- Support Barrage(#support)
-- Download Barrage(#download)
-- Getting Started(#getting-started)
-- Building Barrage(#building-barrage)
-- Change Log(#change-log)
-- Requirements(#requirements)
-- Contributing(#contributing)
+- [What's New?](#whats-new)
+- [Support Barrage](#support)
+- [Download Barrage](#download)
+- [Getting Started](#getting-started)
+- [Building Barrage](#building-barrage)
+- [Change Log](#change-log)
+- [Requirements](#requirements)
+- [Contributing](#contributing)
 
 <a name="whats-new"></a>
 ## What's New?
@@ -50,9 +50,9 @@ Welcome!
 
 We've made some important structural changes to our git repo. You have a choice of 2 versions:
 
-**[Barrage 1.0]**
+**[Barrage 1.0]()**
 
-**[Barrage 2.0]**
+**[Barrage 2.0]()**
 
 For the latest information visit the Barrage web site, where we cover all two versions.Follow on Twitter and chat with fellow  Barrage developers in our Slack channels.
 
@@ -197,7 +197,7 @@ Barrage is developed in ES6 JavaScript. We've made no assumptions about how you 
 
 We have always been meticulous in recording changes to the Barrage code base, and where relevant, giving attribution to those in the community who helped with the change. You can find comprehensive Change Logs for all versions:
 
-- Barrage 2.0 Change Log.
+- [Barrage 2.0 Change Log]().
 
 <a name="contributing"></a>
 ## Contributing
@@ -217,3 +217,6 @@ The Barrage logo and characters are © 2016 NULL Team Limited.
 All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
+
+[issues]: https://github.com/NULL-HDU/Barrage_Frontend/issues
+[contribute]: https://github.com/NULL-HDU/Barrage_Frontend/issues
