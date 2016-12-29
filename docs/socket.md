@@ -5,6 +5,7 @@
 ---
 #socket
 ##socket传输数据格式
+为了尽量解决网速慢的问题，减少数据的传输量，因此采用二进制来传输数据
 ###dataview
 双方数据为二进制，websocket的binaryType为arraybuffer，js新建dataview来传输二进制。
 
@@ -61,7 +62,8 @@ js自带的dataview需制定下标来存/取，不利于代码的修改与版本
 	}
 
 ###解析数据
-在将传过来的二进制数据收取完成后，通过制定的格式来拆封各个数据，通过头的type字段来判断传递的数据的数据格式，按照固定的位数来确认具体解析方法。
+因为传递过来的数据的具体内容不可预知，因此需要加一个固定格式的数据头来定义具体的内容信息
+在将传过来的二进制数据收取完成后，通过指定的格式来拆封各个数据，通过头的type字段来判断传递的数据的数据格式，按照固定的位数来确认具体解析方法。
 如：
 
     export function receiveMessage(message) {
@@ -131,6 +133,8 @@ js自带的dataview需制定下标来存/取，不利于代码的修改与版本
 #####**displacement更新gamemodel**
 将displacement的信息由array转化为json，然后将gamemodel的airplace与bullet去除，遍历，通过userId与id在json中查找元素，若不存在则从gamemodel删除，存在则更新。
 
+并且为了解决初始化时没有newBall，因此第一次应将displacement中的信息加入到newBall中。
+
     function arrayToJson(arr) {
 	if( /\[(\.*:{.*\})*\]/.test( JSON.stringify(arr) ) ){
     console.error(arr)
@@ -186,13 +190,15 @@ js自带的dataview需制定下标来存/取，不利于代码的修改与版本
 	});
 }
 
-同时需要注意的是，应为用in遍历，所有不能直接更新gamemodel的整个数组，用filter来过去数组，完成所需的任务。
+同时需要注意的是，应为用in遍历，所有不能直接更新gamemodel的整个数组，用filter来过去数组，完成所需的任务。不可用assign更新整个数组。
 
 ####登陆信息
 解析成功以后，向airPlace中写入获得的userId，并将socket状态改为申请登陆(1)
 
 ####成功登陆
 解析成功以后，将socket状态改为成功登陆(2)
+
+为防止在获得id或者登陆成功之前进行下一步骤，因此添加了状态量
 
 ####错误信息
 解析成功以后，将二进制转化为文字并输出
@@ -212,6 +218,25 @@ String.fromCodePoint是es6的新方法
 ###发送信息
 获取要发送的信息后，根据不同的信息，准备不同的type，并计算对应的信息长度，然后根据不同的type将信息写入dataview
 
+####socket send函数封装
+为了确保socket send时在连接状态，因此封装了send函数
+
+	sendMessage(dv, times = 0) {
+		// console.log(this.ws.readyState);
+		if (this.ws.readyState === 1) {
+			this.ws.send(dv);
+			return true;
+		} else {
+			if (times == 10) {
+				return false;
+			}
+			let that = this;
+			window.setTimeout(function() {
+				that.sendMessage(dv, ++times);
+			}, 200);
+		}
+	}
+	
 ####写入头数据
 
 #####**场地信息**
