@@ -170,7 +170,7 @@ module.exports = webpackconfig;
 
 ```
 
-See the [Building by Webpack tutorial]() for details.
+See the [Building by Webpack tutorial][build-by-webpack] for details.
 
 ##### Building from source
 
@@ -228,3 +228,4 @@ All rights reserved.
 [clone-ghwin]: github-windows://openRepo/https://github.com/NULL-HDU/Barrage_Frontend
 [clone-ghmac]: github-mac://openRepo/https://github.com/NULL-HDU/Barrage_Frontend
 [Barrage]: https://github.com/NULL-HDU/Barrage_Frontend
+[build-by-webpack]: https://github.com/NULL-HDU/Barrage_Frontend/wiki/Building-by-Webpack-tutorial
