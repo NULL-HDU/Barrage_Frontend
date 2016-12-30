@@ -52,9 +52,9 @@ Welcome!
 
 We've made some important structural changes to our git repo. You have a choice of 2 versions:
 
-**[Barrage 1]()**
+**[Barrage 1](https://github.com/NULL-HDU/Barrage_Frontend/archive/v1.0-beta.zip)**
 
-**[Barrage 2]()**
+**[Barrage 2](https://github.com/NULL-HDU/Barrage_Frontend/archive/v2.0.zip)**
 
 For the latest information visit the Barrage web site, where we cover all two versions.Follow on Twitter and chat with fellow  Barrage developers in our Slack channels.
 
@@ -172,7 +172,7 @@ module.exports = webpackconfig;
 
 ```
 
-See the [Building by Webpack tutorial]() for details.
+See the [Building by Webpack tutorial][build-by-webpack] for details.
 
 ##### Building from source
 
@@ -182,7 +182,7 @@ Run `grunt` to perform a default build to the `dist` folder.
 
 <a name="getting-started"></a>
 ## Getting Started
-Our [Getting Started Guide](https://github.com/NULL-HDU/Barrage_Frontend/wiki/Getting-Started-Guide) will get you up to speed quickly. From setting up a web server, to picking an IDE. After which read our [Before Coding]() tutorial. Please work through this, no matter what your development experience, to learn how Barrage approaches things.
+Our [Getting Started Guide](https://github.com/NULL-HDU/Barrage_Frontend/wiki/Getting-Started-Guide) will get you up to speed quickly. From setting up a web server, to picking an IDE. After which read our [API Documentation](https://github.com/NULL-HDU/Barrage_Frontend/wiki/API-Documentation). Please work through this, no matter what your development experience, to learn how Barrage approaches things.
 
 <a name="requirements"></a>
 ## Requirements
@@ -208,7 +208,7 @@ The [Contributors Guide][contribute] contains full details on how to help with B
 
 - Found a bug? Report it on [GitHub Issues][issues] and include a code sample. Please state which version of Barrage you are using! This is vitally important.
 
-- Before contributing read the [code of conduct]().
+- Before contributing read the [code of conduct](https://github.com/NULL-HDU/Barrage_Frontend/wiki/Contributor-Code-of-Conduct).
 
 ## Created By
 
@@ -221,12 +221,13 @@ All rights reserved.
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
 [issues]: https://github.com/NULL-HDU/Barrage_Frontend/issues
-[contribute]: https://github.com/NULL-HDU/Barrage_Frontend/issues
-[get-zip]: https://github.com/NULL-HDU/Barrage_Frontend/archive/v1.0-beta.zip
-[get-tgz]: https://github.com/NULL-HDU/Barrage_Frontend/archive/v1.0-beta.gz
+[contribute]: https://github.com/NULL-HDU/Barrage_Frontend/wiki/Contributors-Guide
+[get-zip]: https://github.com/NULL-HDU/Barrage_Frontend/archive/v2.0.zip
+[get-tgz]: https://github.com/NULL-HDU/Barrage_Frontend/archive/v2.0.gz
 [clone-http]: https://github.com/NULL-HDU/Barrage_Frontend.git
 [clone-ssh]: git@github.com:NULL-HDU/Barrage_Frontend.git
 [clone-svn]: https://github.com/NULL-HDU/Barrage_Frontend
 [clone-ghwin]: github-windows://openRepo/https://github.com/NULL-HDU/Barrage_Frontend
 [clone-ghmac]: github-mac://openRepo/https://github.com/NULL-HDU/Barrage_Frontend
 [Barrage]: https://github.com/NULL-HDU/Barrage_Frontend
+[build-by-webpack]: https://github.com/NULL-HDU/Barrage_Frontend/wiki/Building-by-Webpack-tutorial
