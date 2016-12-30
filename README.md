@@ -28,7 +28,7 @@ So, how users can play this web-based game. Have you heard about this game and d
 
 Still waiting for what?Grab the source and join in the fun!
 
-**Visit:** The Barrage website<br />
+**Visit:** [The Barrage website](http://139.199.174.225/)<br />
 **Learn:**API Docs,Support Forun and StackOverflow<br />
 **Code:**Source code available in this repo.<br />
 **Chat:**Slack<br />
