@@ -85,7 +85,7 @@ All Barrage versions are [hosted on Github][Barrage].You can:
 
 ### License
 
-Phaser is released under the [GPL-3.0 License](http://opensource.org/licenses/GPL-3.0)
+Barrage is released under the [GPL-3.0 License](http://opensource.org/licenses/GPL-3.0)
 
 <a name="building-barrage"></a>
 ## Building Barrage
