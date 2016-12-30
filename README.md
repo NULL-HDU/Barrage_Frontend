@@ -1,3 +1,5 @@
+![](https://github.com/NULL-HDU/Barrage_Frontend/blob/develop/Logo.png)
+
 *Special thanks to [Neoco](https://github.com/Neoco) for the logo.*
 
 [![Travis](https://img.shields.io/travis/olistic/warriorjs.svg?style=flat-square)](https://travis-ci.org/olistic/warriorjs)
