@@ -199,7 +199,7 @@ Barrage is developed in ES6 JavaScript. We've made no assumptions about how you 
 
 We have always been meticulous in recording changes to the Barrage code base, and where relevant, giving attribution to those in the community who helped with the change. You can find comprehensive Change Logs for all versions:
 
-- [Barrage 2 Change Log]().
+- [Barrage 2 Change Log](https://github.com/NULL-HDU/Barrage_Frontend/wiki/V2-ChangeLog).
 
 <a name="contributing"></a>
 ## Contributing
